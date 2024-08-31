@@ -1,0 +1,184 @@
+.background {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background-image: url('../../images/Hexagon.svg');
+    background-size: cover; /* 背景圖像覆蓋整個容器 */
+    background-position: center;
+    background-repeat: no-repeat;
+}
+
+
+.home-container {
+    position: flex;
+    background-color: rgba(51,51,51,0.5);
+    width: 100%;
+    height: 100%;
+
+}
+
+.box{
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    flex-direction: column;
+    align-content: center;
+    margin-left: 150px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    
+}
+
+.b1 {
+    align-content: center;
+}
+
+.title {
+    font-size: 8.5rem; 
+    font-weight: bold;
+    color: white;
+    margin: 1rem 0;
+}
+
+.subtitle {
+    display: inline-block; 
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+@keyframes typing {
+    0% {
+        width: 0;
+    }
+    50% {
+        width: 100%;
+    }
+    100%{
+        width: 100%;
+    }
+}
+@keyframes borderBlink {
+    0% {
+        border-right-color: rgb(62, 204, 181);
+    }
+    50% {
+        border-right-color: transparent;
+    }
+    100% {
+        border-right-color: rgb(62, 204, 181);
+    }
+}
+.subtitle-text{
+    font-size: 1.5rem; 
+    font-weight: bolder;
+    color: white;
+    margin-bottom: 3.5rem;
+    box-sizing: border-box;
+    border-right: 2.5px solid transparent;
+    overflow: hidden;
+    white-space: nowrap;
+    width: 0px;
+    animation: typing 4s steps(40, end) 0.5s infinite, borderBlink 1s steps(1, end) 0.5s infinite;
+}
+
+.btn-container {
+    display: flex;
+}
+
+.home-btn {
+    padding: 0.1em 0.25em;
+    width: 13em;
+    height: 4.3em;
+    background-color: gray;
+    border: 0.08em solid #fff;
+    border-radius: 0.3em;
+    font-size: 16px;
+    cursor: pointer;
+    display: flex;
+    align-content: center;
+    font-weight: bolder;
+}
+  
+.home-btn span {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 8.25em;
+    height: 2.5em;
+    bottom: 0.5em;
+    background-color: gray;
+    border-radius: 0.2em;
+    font-size: 1.5em;
+    color: #fff;
+    border: 0.08em solid #fff;
+    box-shadow: 0 0.45em 0.1em 0.019em #fff;
+    
+    
+}
+  
+.home-btn span:hover {
+    transition: all 0.3s;
+    transform: translate(0, 0.25em);
+    box-shadow: 0 0.1em 0.1em 0.019em #fff;
+}
+  
+.home-btn span:not(hover) {
+    transition: all 0.35s;
+}
+  
+.home-btn span:active {
+    box-shadow: 0 0 0 0 #fff;
+    bottom: 0;
+    transition: all 0.2s;
+    
+}
+
+.mr-150 {
+    margin-right: 50px;
+    
+}
+
+.website-check .home-btn,
+.website-check .home-btn span {
+    background-color: rgb(41, 36, 33);
+}
+
+.website-check .home-btn:hover {
+    box-shadow: 0px 0px 10px 1px black;
+}
+
+.learn-more .home-btn:hover {
+    box-shadow: 0px 0px 10px 1px white;
+}
+
+.learn-more, .website-check {
+    text-decoration: none;
+}
+@keyframes picture {
+    0% {
+        transform: scale(0.7);
+    }
+    50% {
+        transform: scale(0.6);
+    }
+    100% {
+        transform: scale(0.7);
+    }
+}
+.home-img {
+    width: 100%;
+    filter: drop-shadow(0px 0px 10px white);
+    animation: picture 5s ease-in-out infinite;
+}
+
+
+  

@@ -1,0 +1,76 @@
+.msg-area {
+    width: 800px;
+    padding: 10px;
+    background-color: white;
+    border-radius: 10px;
+    display: flex;
+    height: 130px;
+    margin: 24px 0;
+}
+
+.msg-area > div {
+    margin-right: 10px;
+}
+
+.msg-input {
+    align-content: center;
+}
+
+.msg-input > textarea {
+    resize: none;
+    height: 110px;
+    font-size: 16px;
+    width: 670px;
+    border: none;
+    padding: 10px 10px;
+    border: 1px solid gray;
+    border-radius: 10px;
+}
+
+.msg-submit {
+    display: flex;
+    align-items: center;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 17px;
+    padding: 5px;
+    color: white;
+    background: #ad5389;
+    background: linear-gradient(to right, #0f0c29, #302b63, #24243e);
+    border: none;
+    letter-spacing: 0.05em;
+    border-radius: 16px;
+    width: 90px;
+    height: 50px;
+}
+
+.msg-submit > svg {
+    margin-left: 5px;
+    transform: rotate(30deg);
+    transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.msg-submit > span {
+    margin-left: 10px;
+    transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
+}
+
+.msg-submit:hover > svg {
+    transform: translateX(5px) rotate(90deg);
+}
+
+.msg-clear {
+    width: 90px;
+    height: 50px;
+    color: gray;
+    border: 1px solid grey;
+    border-radius: 16px;
+    font-size: 17px;
+    margin-top: 10px;
+}
+
+.msg-clear:hover {
+    background-color: lightgray;
+    color: black;
+}
