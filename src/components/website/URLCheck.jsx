@@ -18,8 +18,12 @@ function URLCheckTitle() {
 export { URLCheckTitle };
 
 function URLCheckTextArea() {
+  const [url, setUrl] = useState('');
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const [pythonResult, setPythonResult] = useState('未知');
+  const [keyword, setKeyword] = useState([]); // 设为数组以存储多个关键字
+  const [type, setType] = useState('無');
 
   const handleClose = () => {
     setShow(false);
@@ -34,13 +38,70 @@ function URLCheckTextArea() {
     }, 1500);
   };
 
+  const handleButtonClick = async () => {
+    if (!url) {
+        alert('請輸入或貼上網址');
+        return;
+    }
+
+    console.log('Button clicked with URL:', url); // 確認按鈕點擊事件
+
+    try {
+      const response = await fetch('/api/fetch-content', { // 更新 API 路径
+          method: 'POST',
+          headers: {
+              'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ url }), // 传送 URL 作为请求内容
+      });
+  
+      const data = await response.json();
+      console.log('Response from server:', data);
+  
+      // 输出到终端机
+      if (data.pythonResult) {
+          
+          // 提取 matched_keywords 并拆解
+          const matchedKeywords = data.pythonResult.matched_keywords || [];
+
+          // 处理 matched_keywords 数组
+          const keywords = matchedKeywords.map(keywordObj => keywordObj.keyword);
+          const types = matchedKeywords.map(keywordObj => keywordObj.type);
+                    
+          setPythonResult(data.pythonResult.result || '未知');
+          setKeyword(keywords); // 存储关键字数组
+          setType(types.join(', ')); // 存储所有类型的组合
+      } else {
+          console.log('Python Result: 未知');
+          console.log('Matched Keywords: []');
+          setPythonResult('未知');
+          setKeyword([]);
+          setType('無');
+      }
+    } catch (error) {
+        console.error('Error:', error);
+    }
+  };
+
+  const handleCombinedClick = async () => {
+    await handleButtonClick();
+    handleShow();
+  };
+
   return (
     <>
       <div className="url-area">
         <div className="url-input">
-          <input type='text' placeholder='請輸入或貼上網址...' required />
+          <input
+              className="url-input"
+              type='text'
+              placeholder='請輸入或貼上網址...'
+              value={url}
+              onChange={(e) => setUrl(e.target.value)}
+              required
+          />
         </div>
-        <button className='url-submit' onClick={ handleShow }>
+        <button className='url-submit' onClick={handleCombinedClick}>
           <svg
             height="24"
             width="24"
@@ -61,14 +122,18 @@ function URLCheckTextArea() {
             <Modal.Title><b>檢測結果：</b></Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Rating />
+            <Rating 
+              pythonResult={pythonResult} 
+              keyword={keyword} 
+              type={type} 
+            />
           </Modal.Body>
           {isLoading && (
             <Modal.Footer>
-              <Button variant="secondary" onClick={ handleClose }>
+              <Button variant="secondary" onClick={handleClose}>
                 跳過
               </Button>
-              <Button variant="primary" onClick={ handleClose }>
+              <Button variant="primary" onClick={handleClose}>
                 送出
               </Button>
             </Modal.Footer>

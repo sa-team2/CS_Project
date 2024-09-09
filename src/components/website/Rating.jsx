@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import './Rating.css';
 import chroma from 'chroma-js'; 
 import { Rate, Row } from 'antd';
@@ -49,11 +49,12 @@ const getColorAtProgress = (progress) => {
   }
 };
 
-function Rating() {
-  const [progress, setProgress] = useState(0);
-  const [riskLevel, setRiskLevel] = useState(null);
+function Rating({ pythonResult, keyword, type }) {
+  const [progress, setProgress] = React.useState(0);
+  const [riskLevel, setRiskLevel] = React.useState('中風險'); // 默认风险等级
 
-  useEffect(() => {
+  React.useEffect(() => {
+    // 模拟进度增加
     let progressStartValue = 0;
     const progressEndValue = 20;
     const speed = 15;
@@ -62,25 +63,23 @@ function Rating() {
       progressStartValue++;
       setProgress(progressStartValue);
       let newRiskLevel;
-        if (progressEndValue <= 50) {
-          newRiskLevel = '高風險';
-        } else if (progressEndValue <= 75) {
-          newRiskLevel = '中風險';
-        } else {
-          newRiskLevel = '低風險';
-        }
-        setRiskLevel(newRiskLevel);
+      if (progressEndValue <= 50) {
+        newRiskLevel = '高風險';
+      } else if (progressEndValue <= 75) {
+        newRiskLevel = '中風險';
+      } else {
+        newRiskLevel = '低風險';
+      }
+      setRiskLevel(newRiskLevel);
 
       if (progressStartValue === progressEndValue) {
         clearInterval(interval);
       }
     }, speed);
-
-    return () => clearInterval(interval);
   }, []);
 
   const sign = ['非常不滿意', '不滿意', '普通', '滿意', '非常滿意'];
-  const [value, setValue] = useState(3);
+  const [value, setValue] = React.useState(3);
 
   const popover = (
     <Popover id="popover-basic">
@@ -95,16 +94,6 @@ function Rating() {
     </Popover>
   );
 
-  const [isLoading, setIsLoading] = useState(true);
-  useEffect(() => {
-
-    const timer = setTimeout(() => {
-      setIsLoading(false); 
-    }, 1500);
-
-      return () => clearTimeout(timer);
-    }, []);
-
   const getRiskLevel = () => {
     if (progress <= 50) {
       return (
@@ -115,10 +104,10 @@ function Rating() {
       )
     } else if (progress <= 70) {
       return (
-      <ul className="rating-ul">
-        <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#FFD43B"}} /> 中風險</li>
-        <li>提醒：保持警惕、暫緩交易，並核實資訊的真實性。</li>
-      </ul>
+        <ul className="rating-ul">
+          <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#FFD43B"}} /> 中風險</li>
+          <li>提醒：保持警惕、暫緩交易，並核實資訊的真實性。</li>
+        </ul>
       )
     } else {
       return (
@@ -132,12 +121,12 @@ function Rating() {
 
   return (
     <div className="rating-container">
-      {isLoading ? (
+      {progress === 0 ? (
         <div id="loading-container">
-          <label class="loading-title">檢測中 ...</label>
-          <span class="loading-circle sp1">
-            <span class="loading-circle sp2">
-              <span class="loading-circle sp3"></span>
+          <label className="loading-title">檢測中 ...</label>
+          <span className="loading-circle sp1">
+            <span className="loading-circle sp2">
+              <span className="loading-circle sp3"></span>
             </span>
           </span>
         </div>
@@ -148,7 +137,9 @@ function Rating() {
               <span className="progress-value" style={{ color: getColorAtProgress(progress) }}>
                 {`${progress}%`}
               </span>
-              <span className="text" style={{ color: getColorAtProgress(progress) }}>{progress > 70 ? '非詐騙' : '詐騙'}</span>
+              <span className="text" style={{ color: getColorAtProgress(progress) }}>
+                {pythonResult} {/* 显示 pythonResult */}
+              </span>
             </div>
             <Row align="middle" justify="center">
               <div style={{ fontSize: '20px' }}>準確度回報：</div>
@@ -160,7 +151,7 @@ function Rating() {
               <Card.Body>
                 <Card.Title><b>風險等級：</b></Card.Title>
                 <Card.Text>
-                    { getRiskLevel() }
+                    {getRiskLevel()}
                 </Card.Text>
               </Card.Body>
             </Card>
@@ -171,11 +162,17 @@ function Rating() {
                   <Card.Body>
                     <Card.Title><b>詐騙類型：</b></Card.Title>
                     <Card.Text>
-                      <ul className="rating-ul">
-                        <li>類型：投資詐騙</li>
-                        <li>關鍵字詞：穩賺不賠</li>
-                      </ul>
+                    <ul className="rating-ul">
+                          <li>類型：{type || '無'}</li>
+                        </ul>
                     </Card.Text>
+                      <Card.Text>
+                        <ul className="rating-ul">
+                          <li>關鍵字詞：{keyword && keyword.length > 0 ? keyword.join(', ') : '無'}</li>
+                        </ul>
+                      </Card.Text>
+                    
+
                   </Card.Body>
                 </Card>
 
