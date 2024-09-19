@@ -19,6 +19,11 @@ export default defineConfig({
         target: 'http://localhost:3000', // Next.js 服务器地址
         changeOrigin: true,
       },
+      '/predict': {  // 用於 Flask API 的代理
+        target: 'http://localhost:5000', // Flask 服务器地址
+        changeOrigin: true,
+      },
     },
   },
 });
+
