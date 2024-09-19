@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
-import 'bootstrap/dist/css/bootstrap.min.css'; 
+import 'bootstrap/dist/css/bootstrap.min.css';
 import Rating from './Rating';
 import './MSGCheck.css';
 
@@ -23,9 +23,10 @@ function MSGCheckInput() {
   const [text, setText] = useState('');
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
-  const [result, setPythonResult] = useState('未知'); // Store python result
-  const [keywords, setKeywords] = useState([]); // Store the extracted keywords
-  const [type, setType] = useState('無'); // Store the type of fraud
+  const [result, setPythonResult] = useState('未知'); // 存储 Python 结果
+  const [keywords, setKeywords] = useState([]); // 存储提取的关键词
+  const [type, setType] = useState('無'); // 存储诈骗类型
+  const [FraudRate, setFraudRate] = useState(); // 存储 FraudRate
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -38,7 +39,7 @@ function MSGCheckInput() {
   const handleClose = () => {
     setShow(false);
     setIsLoading(false);
-  }
+  };
 
   const handleShow = () => {
     setShow(true);
@@ -47,6 +48,7 @@ function MSGCheckInput() {
       clearInterval(timer); 
     }, 1500);
   };
+
   const handleTextSubmit = async (event) => {
     event.preventDefault();
     if (text) {
@@ -61,29 +63,33 @@ function MSGCheckInput() {
   
         const data = await response.json();
   
-        // Debugging: Check the response data
+        // 调试：检查响应数据
         console.log('Response data:', data);
   
         if (data.pythonResult) {
           const matchedKeywords = data.pythonResult.matched_keywords || [];
           const keywordsArray = matchedKeywords.map(keywordObj => keywordObj.keyword);
           const typesArray = matchedKeywords.map(keywordObj => keywordObj.type);
-  
+
           setPythonResult(data.pythonResult.result || '未知');
           setKeywords(keywordsArray);
           setType(typesArray.join(', '));
+          const fraudRate = parseFloat(data.pythonResult.FraudRate);
+          const roundedFraudRate = Math.round(fraudRate * 100) / 100; // 保留两位小数
+          setFraudRate(roundedFraudRate);
+
         } else {
           console.log('Python Result: 未知');
           console.log('Matched Keywords: []');
           setPythonResult('未知');
           setKeywords([]);
           setType('無');
+          setFraudRate(null); // 无 FraudRate 数据
         }
       } catch (error) {
         console.error('Error:', error);
       }
       handleShow();
-
       setIsLoading(false);
     } else {
       alert('請輸入簡訊內容!');
@@ -119,7 +125,7 @@ function MSGCheckInput() {
               <Modal.Title><b>檢測結果：</b></Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Rating pythonResult={result} keyword={keywords} type={type} />
+              <Rating pythonResult={result} keyword={keywords} type={type} FraudRate={FraudRate} />
             </Modal.Body>
             {isLoading && (
               <Modal.Footer>
