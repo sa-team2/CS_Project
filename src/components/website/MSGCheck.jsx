@@ -7,12 +7,12 @@ import './MSGCheck.css';
 function MSGCheckTitle() {
   return (
     <>
-        <div className="tab-box">
-            <h1>簡訊檢測</h1>
-            <div className="function-subtitle">
-              <p className="function-subtitle-text">一鍵掃描簡訊內容，檢測潛在詐騙隱患，保護您的個資及財務。</p>
-            </div>
+      <div className="tab-box">
+        <h1>簡訊檢測</h1>
+        <div className="function-subtitle">
+          <p className="function-subtitle-text">一鍵掃描簡訊內容，檢測潛在詐騙隱患，保護您的個資及財務。</p>
         </div>
+      </div>
     </>
   );
 }
@@ -21,6 +21,11 @@ export { MSGCheckTitle };
 
 function MSGCheckInput() {
   const [text, setText] = useState('');
+  const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [result, setPythonResult] = useState('未知'); // Store python result
+  const [keywords, setKeywords] = useState([]); // Store the extracted keywords
+  const [type, setType] = useState('無'); // Store the type of fraud
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -29,9 +34,6 @@ function MSGCheckInput() {
   const clearTextarea = () => {
     setText(''); 
   };
-
-  const [show, setShow] = useState(false);
-  const [isLoading, setIsLoading] = useState(false);
 
   const handleClose = () => {
     setShow(false);
@@ -45,15 +47,57 @@ function MSGCheckInput() {
       clearInterval(timer); 
     }, 1500);
   };
+  const handleTextSubmit = async (event) => {
+    event.preventDefault();
+    if (text) {
+      try {
+        const response = await fetch('http://localhost:5000/predict', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({ text }),
+        });
+  
+        const data = await response.json();
+  
+        // Debugging: Check the response data
+        console.log('Response data:', data);
+  
+        if (data) {
+          const matchedKeywords = data.matched_keywords || [];
+          const keywordsArray = matchedKeywords.map(keywordObj => keywordObj.keyword);
+          const typesArray = matchedKeywords.map(keywordObj => keywordObj.type);
+  
+          setPythonResult(data.result || '未知');
+          setKeywords(keywordsArray);
+          setType(typesArray.join(', '));
+        } else {
+          console.log('Python Result: 未知');
+          console.log('Matched Keywords: []');
+          setPythonResult('未知');
+          setKeywords([]);
+          setType('無');
+        }
+      } catch (error) {
+        console.error('Error:', error);
+      }
+      handleShow();
 
+      setIsLoading(false);
+    } else {
+      alert('請輸入簡訊內容!');
+    }
+  };
+  
   return (
     <>
       <div className="msg-area">
         <div className="msg-input">
-          <textarea value={text} onChange={ handleChange } placeholder='請輸入或貼上簡訊內容...' />
+          <textarea value={text} onChange={handleChange} placeholder='請輸入或貼上簡訊內容...' />
         </div>
         <div>
-          <button className='msg-submit' onClick={ handleShow }>
+          <button className='msg-submit' onClick={handleTextSubmit}>
             <svg
               height="24"
               width="24"
@@ -68,25 +112,25 @@ function MSGCheckInput() {
             </svg>
             <span>檢測</span>
           </button>
-          <button className='msg-clear' onClick={ clearTextarea }>清除</button>
+          <button className='msg-clear' onClick={clearTextarea}>清除</button>
 
           <Modal className="modal-custom" show={show} onHide={handleClose} backdrop="static" centered>
-          <Modal.Header closeButton>
-            <Modal.Title><b>檢測結果：</b></Modal.Title>
-          </Modal.Header>
-          <Modal.Body>
-            <Rating />
-          </Modal.Body>
-          {isLoading && (
-            <Modal.Footer>
-              <Button variant="secondary" onClick={ handleClose }>
-                跳過
-              </Button>
-              <Button variant="primary" onClick={ handleClose }>
-                送出
-              </Button>
-            </Modal.Footer>
-          )}
+            <Modal.Header closeButton>
+              <Modal.Title><b>檢測結果：</b></Modal.Title>
+            </Modal.Header>
+            <Modal.Body>
+              <Rating pythonResult={result} keyword={keywords} type={type} />
+            </Modal.Body>
+            {isLoading && (
+              <Modal.Footer>
+                <Button variant="secondary" onClick={handleClose}>
+                  跳過
+                </Button>
+                <Button variant="primary" onClick={handleClose}>
+                  送出
+                </Button>
+              </Modal.Footer>
+            )}
           </Modal>
         </div>
       </div>
