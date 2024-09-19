@@ -24,6 +24,8 @@ function URLCheckTextArea() {
   const [pythonResult, setPythonResult] = useState('未知');
   const [keyword, setKeyword] = useState([]); // 设为数组以存储多个关键字
   const [type, setType] = useState('無');
+  const [FraudRate, setFraudRate] = useState(null); // 存储 FraudRate
+
 
   const handleClose = () => {
     setShow(false);
@@ -71,12 +73,17 @@ function URLCheckTextArea() {
           setPythonResult(data.pythonResult.result || '未知');
           setKeyword(keywords); // 存储关键字数组
           setType(types.join(', ')); // 存储所有类型的组合
+          const fraudRate = parseFloat(data.pythonResult.FraudRate);
+          const roundedFraudRate = Math.round(fraudRate * 100) / 100; // 保留两位小数
+          setFraudRate(roundedFraudRate);
+
       } else {
           console.log('Python Result: 未知');
           console.log('Matched Keywords: []');
           setPythonResult('未知');
           setKeyword([]);
           setType('無');
+          setFraudRate(null); // 无 FraudRate 数据
       }
     } catch (error) {
         console.error('Error:', error);
@@ -122,11 +129,7 @@ function URLCheckTextArea() {
             <Modal.Title><b>檢測結果：</b></Modal.Title>
           </Modal.Header>
           <Modal.Body>
-            <Rating 
-              pythonResult={pythonResult} 
-              keyword={keyword} 
-              type={type} 
-            />
+            <Rating pythonResult={pythonResult} keyword={keyword} type={type} FraudRate={FraudRate} />
           </Modal.Body>
           {isLoading && (
             <Modal.Footer>
