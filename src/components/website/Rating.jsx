@@ -49,34 +49,42 @@ const getColorAtProgress = (progress) => {
   }
 };
 
-function Rating({ pythonResult, keyword, type }) {
+function Rating({ pythonResult, keyword, type , FraudRate }) {
   const [progress, setProgress] = React.useState(0);
   const [riskLevel, setRiskLevel] = React.useState('中風險'); // 默认风险等级
+  
 
   React.useEffect(() => {
-    // 模拟进度增加
-    let progressStartValue = 0;
-    const progressEndValue = 20;
-    const speed = 15;
+  // 处理进度条增加的逻辑
+  let progressStartValue = 0;
+  const progressEndValue = FraudRate || 1;
+  
+  // 在组件卸载时清理定时器
+  const interval = setInterval(() => {
+    progressStartValue++;
+    setProgress(progressStartValue);
+    
+    let newRiskLevel;
+    if (progressEndValue <= 50) {
+      newRiskLevel = '高風險';
+    } else if (progressEndValue <= 75) {
+      newRiskLevel = '中風險';
+    } else {
+      newRiskLevel = '低風險';
+    }
+    setRiskLevel(newRiskLevel);
 
-    const interval = setInterval(() => {
-      progressStartValue++;
-      setProgress(progressStartValue);
-      let newRiskLevel;
-      if (progressEndValue <= 50) {
-        newRiskLevel = '高風險';
-      } else if (progressEndValue <= 75) {
-        newRiskLevel = '中風險';
-      } else {
-        newRiskLevel = '低風險';
-      }
-      setRiskLevel(newRiskLevel);
+    if (progressStartValue >= progressEndValue) {
+      clearInterval(interval);
+      setProgress(progressEndValue); // 确保进度条停止在目标值
+    }
+  }, 15);
 
-      if (progressStartValue === progressEndValue) {
-        clearInterval(interval);
-      }
-    }, speed);
-  }, []);
+  // 清理定时器
+  return () => clearInterval(interval);
+}, [FraudRate]);
+
+ 
 
   const sign = ['非常不滿意', '不滿意', '普通', '滿意', '非常滿意'];
   const [value, setValue] = React.useState(3);
