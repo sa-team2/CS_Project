@@ -51,10 +51,10 @@ function MSGCheckInput() {
     event.preventDefault();
     if (text) {
       try {
-        const response = await fetch('http://localhost:5000/predict', {
+        const response = await fetch('/api/fetch-content', { // 更新 API 路径
           method: 'POST',
           headers: {
-            'Content-Type': 'application/json',
+              'Content-Type': 'application/json',
           },
           body: JSON.stringify({ text }),
         });
@@ -64,12 +64,12 @@ function MSGCheckInput() {
         // Debugging: Check the response data
         console.log('Response data:', data);
   
-        if (data) {
-          const matchedKeywords = data.matched_keywords || [];
+        if (data.pythonResult) {
+          const matchedKeywords = data.pythonResult.matched_keywords || [];
           const keywordsArray = matchedKeywords.map(keywordObj => keywordObj.keyword);
           const typesArray = matchedKeywords.map(keywordObj => keywordObj.type);
   
-          setPythonResult(data.result || '未知');
+          setPythonResult(data.pythonResult.result || '未知');
           setKeywords(keywordsArray);
           setType(typesArray.join(', '));
         } else {
