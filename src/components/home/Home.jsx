@@ -3,7 +3,6 @@ import { useRef } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
-import Navbar from '../navbar/Navbar';
 import home from '../../images/home.png';
 import NewsList from './NewsList';
 
@@ -28,7 +27,6 @@ function Home() {
                     initial={{ opacity: 0 }} 
                     animate={{ opacity: '100%', transition:{ duration: 1.5 }}}
                 >
-                <Navbar />
                     <div className="box">
                         <div className="b1">
                             <h1 className="title">蹦蹦「詐」彈</h1>
