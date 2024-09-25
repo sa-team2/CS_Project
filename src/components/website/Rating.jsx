@@ -6,6 +6,7 @@ import { Card, Button, Popover, OverlayTrigger } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTriangleExclamation, faArrowPointer, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { db, doc, setDoc } from '../../config/firebase'; // 确保导入
 
 const getBackground = (progress) => {
   const degrees = progress * 3.6;
@@ -49,7 +50,7 @@ const getColorAtProgress = (progress) => {
   }
 };
 
-function Rating({ pythonResult, keyword, type , FraudRate }) {
+function Rating({ pythonResult, keyword, type , FraudRate , ID}) {
   const [progress, setProgress] = React.useState(0);
   const [riskLevel, setRiskLevel] = React.useState('中風險'); // 默认风险等级
   
@@ -88,6 +89,23 @@ function Rating({ pythonResult, keyword, type , FraudRate }) {
 
   const sign = ['非常不滿意', '不滿意', '普通', '滿意', '非常滿意'];
   const [value, setValue] = React.useState(3);
+
+  React.useEffect(() => {
+    if (ID) {
+      const updateStarsInFirestore = async () => {
+        try {
+          // 更新指定 ID 的文檔，並將 stars 值設置為當前的 value
+          await setDoc(doc(db, "Outcome", ID), { Stars: value }, { merge: true });
+          console.log(`Document with ID: ${ID} updated with stars: ${value}`);
+        } catch (error) {
+          console.error("Error updating document: ", error);
+        }
+      };
+
+      updateStarsInFirestore();
+    }
+  }, [value, ID]);  // 監聽 value 和 ID 的變化
+
 
   const popover = (
     <Popover id="popover-basic">

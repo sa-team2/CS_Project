@@ -27,6 +27,8 @@ function MSGCheckInput() {
   const [keywords, setKeywords] = useState([]); // 存储提取的关键词
   const [type, setType] = useState('無'); // 存储诈骗类型
   const [FraudRate, setFraudRate] = useState(); // 存储 FraudRate
+  const [ID, setID] = useState('');
+
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -67,6 +69,8 @@ function MSGCheckInput() {
         console.log('Response data:', data);
   
         if (data.pythonResult) {
+          setID(data.ID);
+
           const matchedKeywords = data.pythonResult.matched_keywords || [];
           const keywordsArray = matchedKeywords.map(keywordObj => keywordObj.keyword);
           const typesArray = matchedKeywords.map(keywordObj => keywordObj.type);
@@ -79,6 +83,7 @@ function MSGCheckInput() {
           setFraudRate(roundedFraudRate);
 
         } else {
+          setID('');
           console.log('Python Result: 未知');
           console.log('Matched Keywords: []');
           setPythonResult('未知');
@@ -125,7 +130,7 @@ function MSGCheckInput() {
               <Modal.Title><b>檢測結果：</b></Modal.Title>
             </Modal.Header>
             <Modal.Body>
-              <Rating pythonResult={result} keyword={keywords} type={type} FraudRate={FraudRate} />
+              <Rating pythonResult={result} keyword={keywords} type={type} FraudRate={FraudRate} ID={ID}/>
             </Modal.Body>
             {isLoading && (
               <Modal.Footer>
