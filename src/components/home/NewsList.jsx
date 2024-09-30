@@ -36,7 +36,7 @@ function NewsList() {
   }
 
   return (
-    <div>
+    <div style={{ marginTop: '150px'}}>
       <h1 className='news-topic'><FontAwesomeIcon icon={faNewspaper} /> 時事詐騙新聞</h1>
       {articles.length === 0 ? (
         <p>載入失敗</p>

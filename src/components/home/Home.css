@@ -1,27 +1,30 @@
-.bk{
-    background-color: rgba(242,237,243);
+.bk {
+    background-color: rgba(242, 237, 243);
     height: auto;
     display: flex;
-    flex-direction: column; 
+    flex-direction: column;
 }
 
 .background-img {
     position: relative;
-    width: 100%;
-    height: 100vh;
-    background-image: url('../../images/Hexagon.svg');
-    background-size: cover; 
+    min-height: 200vh; /* 确保页面有足够的高度以允许滚动 */
+    background-image: url('../../images/index.png'); /* 替换为你的背景图片 */
+    background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
+    background-attachment: scroll; /* 背景图片随着页面滚动 */
 }
 
 
 .home-container {
-    position: flex;
-    background-color: rgba(51,51,51,0.5);
+    position: relative;
     width: 100%;
-    height: 100%;
+    height: 1740px; /* 根据需要调整 */
+    min-height: 200vh; /* 确保容器至少是视口高度 */
 }
+
+
+
 
 .box{
     position: absolute;
@@ -96,17 +99,19 @@
 }
 
 .btn-container {
-    display: flex;
+    position: absolute;
+    bottom: 28vh; /* 控制按钮相对父元素底部的位置 */
+    left: 25vh;   /* 控制按钮相对父元素左侧的位置 */
 }
 
 .home-btn {
     padding: 0.1em 0.25em;
-    width: 13em;
-    height: 4.3em;
+    width: 16.6em;
+    height: 6em;
     background-color: gray;
-    border: 0.08em solid #fff;
+    border: 0.1em solid #fff;
     border-radius: 0.3em;
-    font-size: 16px;
+    font-size: 17px;
     cursor: pointer;
     display: flex;
     align-content: center;
@@ -118,14 +123,15 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 8.25em;
-    height: 2.5em;
-    bottom: 0.5em;
+    width: 10.5em;
+    height: 3.5em;
+    bottom: 0.7em;
+    left: 0.1em;
     background-color: gray;
     border-radius: 0.2em;
     font-size: 1.5em;
     color: #fff;
-    border: 0.08em solid #fff;
+    border: 0.1em solid #fff;
     box-shadow: 0 0.45em 0.1em 0.019em #fff;
     
     
@@ -155,7 +161,9 @@
 
 .website-check .home-btn,
 .website-check .home-btn span {
-    background-color: rgb(41, 36, 33);
+    background-color: goldenrod;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5),
+    -1px -1px 1px rgba(255, 255, 255, 0.3);
 }
 
 .website-check .home-btn:hover {
@@ -192,16 +200,19 @@
     display: flex;
     justify-content: center;
     cursor: pointer;
+    position:absolute;
 }
 
 .arrow-container {
     display: flex;
     justify-content: center;
     width: 100%;
-    position:absolute;
-    transform: translateY(-20px);
-    bottom: 0;
-  }
+    position: fixed; /* 固定在屏幕底部 */
+    bottom: 130px; /* 距离屏幕底部 20px，可以根据需求调整 */
+    transform: translateY(0); /* 移除之前的 translateY(-20px) */
+    margin-top: 0; /* 移除 margin-top: 2000px */
+}
+
   .arrow {
     position: absolute;
     width: 3.5rem;

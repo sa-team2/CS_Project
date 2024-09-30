@@ -24,3 +24,19 @@
     box-shadow: 1px 1px 5px gray;
     transform: scale(0.95)
 }
+
+.news-topic {
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .article {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .carousel-item {
+    max-height: 500px;
+    overflow: hidden;
+  }
+  
