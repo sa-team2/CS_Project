@@ -51,7 +51,8 @@ function Fraud() {
             <Helmet>
                 <title>常見手法</title>
             </Helmet>
-            <Navbar />
+            <Navbar/>
+            <div id="root">
             <div className='fraud-container'>
                 <div className="slider" ref={ sliderRef }>
                     <div className="list">
@@ -103,6 +104,7 @@ function Fraud() {
                         </motion.div>
 
                 </div>
+            </div>
             </div>
         </>
     );
