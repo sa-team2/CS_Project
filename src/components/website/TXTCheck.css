@@ -46,23 +46,31 @@
   
 
   
-  .file-input {
+  #file-input {
+    width: 300px;
+    max-width: 100%;
+    color: #444;
+    padding: 2px;
+    background: #fff;
+    border-radius: 10px;
+    border: 1px solid rgba(8, 8, 8, 0.288);
+  }
+  
+  #file-input::file-selector-button {
+    margin-right: 20px;
     border: none;
-    background: gray;
+    background: goldenrod;
     padding: 10px 20px;
     border-radius: 10px;
     color: #fff;
     cursor: pointer;
-    font-weight: bolder;
   }
   
-  .file-input:hover {
-    background: lightgray;
+  #file-input::file-selector-button:hover {
+    background: gold;
   }
 
-  input[type="file"] {
-    display: none; /* 隐藏默认的文件输入框 */
-  }
+
 
 
 .txt-submit {

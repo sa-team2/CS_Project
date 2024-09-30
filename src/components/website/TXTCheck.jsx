@@ -62,7 +62,6 @@ function TXTCheckUpload() {
           <span className="drop-title">拖曳檔案至此</span>
           <span className="drop-title">或</span><br></br>
           <input type="file" accept=".txt" required id="file-input"/>
-          <div className="file-input">選擇檔案</div>
         </label>
         <div>
           <div className="btn-txt-area">
