@@ -16,9 +16,10 @@
     height: 85px;
     display: flex;
     justify-content: center;
+    flex-direction: row;
     align-items: center;
     margin: 0 auto; 
-    margin-top: 50px ;
+    margin-top: 100px ;
 }
 
 .function-container > div {
@@ -26,7 +27,7 @@
     position: relative;
     display: flex;
     justify-content: center;
-    width: calc(100%/3);
+    width: calc(100%/2);
     padding: 20px 30px;
     display: flex;
     flex-direction: column;
@@ -34,8 +35,10 @@
     height: 80px;
     border-bottom: 5px solid gray;
     cursor: pointer;
-    font-size: 18px;
+    font-size: 25px;
     font-weight: bolder;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5),
+    -1px -1px 1px rgba(255, 255, 255, 0.3);
 }
 
 .function-container > div > .icon {
@@ -44,8 +47,8 @@
 }
 
 .function-container > div.active {
-    color: lightblue;
-    border-bottom: 5px solid lightblue;
+    color: gold;
+    border-bottom: 5px solid gold;
 }
 
 .tab-content {
@@ -66,8 +69,8 @@
 
 .tab-box > h1 {
     font-size: 100px;
-    margin-top: 60px;
-    margin-bottom: 20px;
+    margin-top: 100px;
+    margin-bottom:50px;
     color: white;
     text-align: center;
     font-weight: bolder;
@@ -169,3 +172,5 @@
     box-shadow: 1px 1px 5px lightgray;
     border-radius: 10px;
 }
+
+

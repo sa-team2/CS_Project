@@ -10,7 +10,7 @@ import { URLCheckTitle, URLCheckTextArea } from './URLCheck';
 import { MSGCheckTitle, MSGCheckInput } from './MSGCheck';
 
 function Website() {
-  const [activeComponent, setActiveComponent] = useState('URLCheck');
+  const [activeComponent, setActiveComponent] = useState('MSGCheck');
 
   const renderComponent = (component) => {
     console.log(`Rendering component for ${activeComponent}`);
@@ -43,11 +43,11 @@ function Website() {
 
   const title =
     activeComponent === "URLCheck"
-      ? "網頁檢測"
+      ? "網址檢測"
       : activeComponent === "MSGCheck"
-      ? "簡訊檢測"
+      ? "文字檢測"
       : activeComponent === "TXTCheck"
-      ? "對話檢測"
+      ? "檔案、圖片檢測"
       : "位址錯誤";
 
   return (
@@ -69,21 +69,21 @@ function Website() {
                 className={activeComponent === "URLCheck" ? "active" : ""}
               >
                 <FontAwesomeIcon icon={faLink} className="icon" />
-                網頁檢測
+                網址檢測
               </div>
               <div
                 onClick={() => setActiveComponent('MSGCheck')}
                 className={activeComponent === "MSGCheck" ? "active" : ""}
               >
                 <FontAwesomeIcon icon={faMessage} className="icon" />
-                簡訊檢測
+                文字檢測
               </div>
               <div
                 onClick={() => setActiveComponent('TXTCheck')}
                 className={activeComponent === "TXTCheck" ? "active" : ""}
               >
                 <FontAwesomeIcon icon={faFileLines} className="icon" />
-                對話檢測
+                檔案、圖片檢測
               </div>
             </div>
             <div className="tab-content">

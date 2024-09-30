@@ -6,7 +6,7 @@ import { Card, Button, Popover, OverlayTrigger } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faTriangleExclamation, faArrowPointer, faCheck } from '@fortawesome/free-solid-svg-icons';
-import { db, doc, setDoc } from '../../config/firebase'; // 确保导入
+import { db, doc, setDoc } from '../../firebase'; // 确保导入
 
 const getBackground = (progress) => {
   const degrees = progress * 3.6;
