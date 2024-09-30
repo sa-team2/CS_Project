@@ -139,7 +139,7 @@ export const MultipleFileUploadBasic = () => {
                       <div className='admin-txt-area' key={file.name}>
                         <div className="admin-left">
                           <button className='admin-jump' onClick={() => removeFiles([file.name])}>移除</button>
-                          <span>{file.name}</span>
+                          <span className="admin-file-name">{file.name}</span>
                           <span style={{ width: 'auto',paddingLeft:'10px' }}>({(fileSize / 1024).toFixed(2)} KB)</span>
                         </div>
                         <div className="admin-right">

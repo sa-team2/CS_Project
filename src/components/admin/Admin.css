@@ -143,6 +143,15 @@
     margin:20px;
 }
 
+.admin-file-name{
+    display: inline-block;
+    max-width: 200px;  /* 设置最大宽度 */
+    white-space: nowrap; /* 不换行 */
+    overflow: hidden;   /* 超出部分隐藏 */
+    text-overflow: ellipsis; /* 使用省略号表示超出部分 */
+    margin-left: 10px; /* 与按钮保持距离 */
+}
+
 .admin-file-input {
     margin-right: 20px;
     border: none;
@@ -171,8 +180,8 @@
     background: lightgray;
   }
 
-  input[type="file"] {
-    display: none; /* 隐藏默认的文件输入框 */
+  .admin-upload-container input[type="file"] {
+    display: none;  /*隐藏默认的文件输入框 */
   }
 
 .admin-drop-text {
