@@ -47,18 +47,37 @@ export const MultipleFileUploadBasic = () => {
   };
 
   const handleFileDrop = (event) => {
-    const files = event.target.files;
+    const files = Array.from(event.target.files); 
+    const currentFileNames = currentFiles.map(file => file.name); // 獲取當前檔案名稱
+  
+    console.log('Current file names:', currentFileNames);
+    console.log('Dropped files:', files);
+  
+    // 檢查重複檔案
+    const duplicateFiles = files.filter(file => currentFileNames.includes(file.name));
+    console.log('Duplicate files:', duplicateFiles); // 用於偵測重複檔案
+    // 如果有重複檔案，立即提示
+    if (duplicateFiles.length > 0) {
+      alert('檔案已經上傳過，請選擇其他檔案');
+      event.target.value = ''; // 清空檔案選擇
+      return;
+    }
+  
     const currentFileCount = currentFiles.length;
     const newFileCount = files.length;
-
+  
+    // 檢查總檔案數量是否超過3個
     if (currentFileCount + newFileCount > 3) {
       alert('一次最多只能上傳3個檔案');
       return;
     }
+  
 
-    updateCurrentFiles(Array.from(files));
+    updateCurrentFiles(files);
+    event.target.value = ''; 
   };
-
+  
+  
   const simulateFileRead = (file) => {
     const totalSteps = 10; // 读取过程的总步数
     let progress = 0;
@@ -139,7 +158,9 @@ export const MultipleFileUploadBasic = () => {
                       <div className='admin-txt-area' key={file.name}>
                         <div className="admin-left">
                           <button className='admin-jump' onClick={() => removeFiles([file.name])}>移除</button>
-                          <span className="admin-file-name">{file.name}</span>
+                          <span className="admin-file-name">
+                            {file.name.length > 8 ? `${file.name.slice(0, 8)}...` : file.name}
+                          </span>
                           <span style={{ width: 'auto',paddingLeft:'10px' }}>({(fileSize / 1024).toFixed(2)} KB)</span>
                         </div>
                         <div className="admin-right">
