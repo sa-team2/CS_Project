@@ -6,21 +6,25 @@ import './TXTCheck.css';
 
 function TXTCheckTitle() {
   return (
-    <>
       <div className="tab-box">
         <div className="function-subtitle">
         </div>
       </div>
-    </>
   );
 }
 
 export { TXTCheckTitle };
 
+
 function TXTCheckUpload() {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [isLoaded, setIsLoaded] = useState(false); // 添加新的状态来跟踪加载完成
+  const [pythonResult, setPythonResult] = useState('未知');
+  const [keywords, setKeywords] = useState([]); // 存储多个关键字
+  const [types, setType] = useState('無');
+  const [FraudRate, setFraudRate] = useState(null); // 存储 FraudRate
+  const [ID, setID] = useState('');
 
   const handleClose = () => {
     setShow(false);
@@ -31,41 +35,78 @@ function TXTCheckUpload() {
   const handleShow = () => {
     setShow(true);
     setIsLoading(true); // 开始显示 loading
-    const timer = setTimeout(() => {
-      setIsLoading(false); // 完成加载，隐藏 loading
-      setIsLoaded(true); // 显示 Rating 组件
+    setTimeout(() => {
+      setIsLoading(false); // 模拟加载完成
+      setIsLoaded(true);   // 加载完成后显示结果
     }, 1500);
-    return () => clearTimeout(timer);
   };
 
-  const handleFileUpload = (event) => {
+  const handleFileUpload = async (event) => {
     event.preventDefault();
     const fileInput = document.getElementById('file-input');
     const file = fileInput.files[0];
 
     if (file) {
-      const reader = new FileReader();
-      reader.onload = (e) => {
-        const content = e.target.result;
-        console.log(content); 
-      };
-      reader.readAsText(file);
+      const formData = new FormData();
+      formData.append('file', file);
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+    }
+    
+      try {
+        const response = await fetch('/api/fetch-content', { // 更新为图片上传的 API 路径
+          method: 'POST',
+          body: formData,
+        });
+
+        const data = await response.json();
+
+        // 处理后端返回的 Python 结果
+        if (data.pythonResult) {
+          setID(data.ID);
+          const matchedKeywords = data.pythonResult.Match || [];
+          console.log('Response from server:', data);
+
+          const keywords = matchedKeywords.map(keywordObj => keywordObj.MatchKeyword);
+          const types = matchedKeywords.map(keywordObj => keywordObj.MatchType);
+          
+          setPythonResult(data.pythonResult.FraudResult || '未知');
+          setKeywords(keywords);
+          setType(types.join(', ')); // 将所有类型拼接成字符串
+          const fraudRate = parseFloat(data.pythonResult.FraudRate);
+          setFraudRate(Math.round(fraudRate * 100) / 100); // 保留两位小数
+        } else {
+          setID('');
+          setPythonResult('未知');
+          setKeywords([]);
+          setType('無');
+          setFraudRate(null);        }
+      } catch (error) {
+        console.error('Error while uploading the file:', error);
+        resetResults();
+      }
     } else {
       alert("請選擇一個文件!");
     }
   };
 
+  
+  const handleCombinedClick = async (event) => {
+    await handleFileUpload(event); // 先处理文件上传并获取结果
+    handleShow(); // 然后显示模态框
+  };
+
   return (
     <>
-      <form onSubmit={handleFileUpload}>
+      <form onSubmit={handleCombinedClick}>
         <label htmlFor="file-input" className="drop-container">
           <span className="drop-title">拖曳檔案至此</span>
           <span className="drop-title">或</span><br></br>
-          <input type="file" accept=".txt" required id="file-input"/>
+          <input type="file" accept="image/*" required id="file-input"/>
         </label>
         <div>
           <div className="btn-txt-area">
-            <button className='txt-submit' onClick={ handleShow }>
+            <button type='submit' className='txt-submit'>
               <svg
                 height="24"
                 width="24"
@@ -94,14 +135,16 @@ function TXTCheckUpload() {
                 <span id="bubblingG_3"></span>
               </div>
             )}
-            {isLoaded && <Rating />}
+            {isLoaded && (
+              <Rating pythonResult={pythonResult} keywords={keywords} type={types} FraudRate={FraudRate} ID={ID}/>
+            )}
           </Modal.Body>
           {isLoaded && (
-            <Modal.Footer>
-              <Button className='txt-jump' onClick={ handleClose }>
+            <Modal.Footer>  
+              <Button className='txt-jump' onClick={handleClose}>
                 跳過
               </Button>
-              <Button className='txt-enter' onClick={ handleClose }>
+              <Button className='txt-enter' onClick={handleClose}>
                 送出
               </Button>
             </Modal.Footer>

@@ -50,7 +50,7 @@ const getColorAtProgress = (progress) => {
   }
 };
 
-function Rating({ pythonResult, keyword, type , FraudRate , ID}) {
+function Rating({ pythonResult, keywords, type , FraudRate , ID}) {
   const [progress, setProgress] = React.useState(0);
   const [riskLevel, setRiskLevel] = React.useState('中風險'); // 默认风险等级
   
@@ -194,7 +194,7 @@ function Rating({ pythonResult, keyword, type , FraudRate , ID}) {
                     </Card.Text>
                       <Card.Text>
                         <ul className="rating-ul">
-                          <li>關鍵字詞：{keyword && keyword.length > 0 ? keyword.join(', ') : '無'}</li>
+                          <li>關鍵字詞：{keywords && keywords.length > 0 ? keywords.join(', ') : '無'}</li>
                         </ul>
                       </Card.Text>
                     

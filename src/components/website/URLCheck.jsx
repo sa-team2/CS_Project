@@ -21,7 +21,7 @@ function URLCheckTextArea() {
   const [isLoading, setIsLoading] = useState(false);  // 加载状态
   const [isLoaded, setIsLoaded] = useState(false);    // 加载完成状态
   const [pythonResult, setPythonResult] = useState('未知');
-  const [keyword, setKeyword] = useState([]); // 设为数组以存储多个关键字
+  const [keywords, setKeyword] = useState([]); // 设为数组以存储多个关键字
   const [type, setType] = useState('無');
   const [FraudRate, setFraudRate] = useState(null); // 存储 FraudRate
   const [ID, setID] = useState('');
@@ -65,13 +65,13 @@ function URLCheckTextArea() {
       if (data.pythonResult) {
           setID(data.ID);
           // 提取 matched_keywords 并拆解
-          const matchedKeywords = data.pythonResult.matched_keywords || [];
+          const matchedKeywords = data.pythonResult.Match || [];
 
           // 处理 matched_keywords 数组
-          const keywords = matchedKeywords.map(keywordObj => keywordObj.keyword);
-          const types = matchedKeywords.map(keywordObj => keywordObj.type);
+          const keywords = matchedKeywords.map(keywordObj => keywordObj.MatchKeyword);
+          const types = matchedKeywords.map(keywordObj => keywordObj.MatchType);
                     
-          setPythonResult(data.pythonResult.result || '未知');
+          setPythonResult(data.pythonResult.FraudResult || '未知');
           setKeyword(keywords); // 存储关键字数组
           setType(types.join(', ')); // 存储所有类型的组合
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
@@ -141,7 +141,7 @@ function URLCheckTextArea() {
               </div>
             )}
             {isLoaded && (
-              <Rating pythonResult={pythonResult} keyword={keyword} type={type} FraudRate={FraudRate} ID={ID}/>
+              <Rating pythonResult={pythonResult} keywords={keywords} type={type} FraudRate={FraudRate} ID={ID}/>
             )}
           </Modal.Body>
           {isLoaded && (

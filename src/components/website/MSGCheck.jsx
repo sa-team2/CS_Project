@@ -68,14 +68,13 @@ function MSGCheckInput() {
 
         if (data.pythonResult) {
           setID(data.ID);
+          const matchedKeywords = data.pythonResult.Match || [];
+          const keywords = matchedKeywords.map(keywordObj => keywordObj.MatchKeyword);
+          const types = matchedKeywords.map(keywordObj => keywordObj.MatchType);
 
-          const matchedKeywords = data.pythonResult.matched_keywords || [];
-          const keywordsArray = matchedKeywords.map(keywordObj => keywordObj.keyword);
-          const typesArray = matchedKeywords.map(keywordObj => keywordObj.type);
-
-          setPythonResult(data.pythonResult.result || '未知');
-          setKeywords(keywordsArray);
-          setType(typesArray.join(', '));
+          setPythonResult(data.pythonResult.FraudResult || '未知');
+          setKeywords(keywords);
+          setType(types.join(', '));
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
           const roundedFraudRate = Math.round(fraudRate * 100) / 100; 
           setFraudRate(roundedFraudRate);
@@ -133,7 +132,7 @@ function MSGCheckInput() {
                 </div>
               )}
               {isLoaded && (
-                <Rating pythonResult={result} keyword={keywords} type={type} FraudRate={FraudRate} ID={ID}/>
+                <Rating pythonResult={result} keywords={keywords} type={type} FraudRate={FraudRate} ID={ID}/>
               )}
             </Modal.Body>
             {isLoaded && (
