@@ -5,37 +5,28 @@ import { Helmet } from 'react-helmet';
 import Navbar from '../navbar/Navbar';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faLink, faMessage, faFileLines } from '@fortawesome/free-solid-svg-icons';
-import { TXTCheckTitle, TXTCheckUpload } from './TXTCheck';
-import { URLCheckTitle, URLCheckTextArea } from './URLCheck';
-import { MSGCheckTitle, MSGCheckInput } from './MSGCheck';
+import { TXTCheckUpload } from './TXTCheck';
+import { URLCheckTextArea } from './URLCheck';
+import { MSGCheckInput } from './MSGCheck';
 
 function Website() {
   const [activeComponent, setActiveComponent] = useState('MSGCheck');
 
-  const renderComponent = (component) => {
+  const renderComponent = () => {
     console.log(`Rendering component for ${activeComponent}`);
     switch (activeComponent) {
       case 'URLCheck':
-        if (component === 'title') {
-          return <URLCheckTitle />;
-        } else if (component === 'input') {
+        {
           return <URLCheckTextArea />;
         }
-        break;
       case 'MSGCheck':
-        if (component === 'title') {
-          return <MSGCheckTitle />;
-        } else if (component === 'input') {
+        {
           return <MSGCheckInput />;
         }
-        break;
       case 'TXTCheck':
-        if (component === 'title') {
-          return <TXTCheckTitle />;
-        } else if (component === 'input') {
+        {
           return <TXTCheckUpload />;
         }
-        break;
       default:
         return null;
     }
@@ -87,8 +78,7 @@ function Website() {
               </div>
             </div>
             <div className="tab-content">
-              <div className="tab-box">{renderComponent('title')}</div>
-              {renderComponent('input')}
+              {renderComponent()}
             </div>
           </div>
         </motion.div>

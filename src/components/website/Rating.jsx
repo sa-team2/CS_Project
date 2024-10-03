@@ -147,17 +147,6 @@ function Rating({ pythonResult, keywords, type , FraudRate , ID}) {
 
   return (
     <div className="rating-container">
-      {progress === 0 ? (
-        <div id="loading-container">
-          <label className="loading-title">檢測中 ...</label>
-          <span className="loading-circle sp1">
-            <span className="loading-circle sp2">
-              <span className="loading-circle sp3"></span>
-            </span>
-          </span>
-        </div>
-      ) : (
-        <>
           <div className="container-1">
             <div className="circular-progress" style={{ background: getBackground(progress) }}>
               <span className="progress-value" style={{ color: getColorAtProgress(progress) }}>
@@ -208,8 +197,6 @@ function Rating({ pythonResult, keywords, type , FraudRate , ID}) {
               </>
             )}
           </div>
-        </>
-      )}
     </div>
   );
 }

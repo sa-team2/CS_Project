@@ -4,19 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Rating from './Rating';
 import './MSGCheck.css';
 
-function MSGCheckTitle() {
-  return (
-    <>
-      <div className="tab-box">
-        <div className="function-subtitle">
-        </div>
-      </div>
-    </>
-  );
-}
-
-export { MSGCheckTitle };
-
 function MSGCheckInput() {
   const [text, setText] = useState('');
   const [show, setShow] = useState(false);
@@ -90,13 +77,12 @@ function MSGCheckInput() {
       }
       handleShow();
     } else {
-      alert('請輸入內容!');
+      alert('請輸入內容！');
     }
   };
 
   return (
     <>
-      <div className="">
         <div className="msg-input">
           <textarea rows="5" cols="75" value={text} onChange={handleChange} placeholder='請輸入或貼上內容...' />
         </div>
@@ -147,7 +133,6 @@ function MSGCheckInput() {
             )}
           </Modal>
         </div>
-      </div>
     </>
   );
 }

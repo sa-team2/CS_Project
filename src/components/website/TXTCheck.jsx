@@ -4,18 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Rating from './Rating';
 import './TXTCheck.css';
 
-function TXTCheckTitle() {
-  return (
-      <div className="tab-box">
-        <div className="function-subtitle">
-        </div>
-      </div>
-  );
-}
-
-export { TXTCheckTitle };
-
-
 function TXTCheckUpload() {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -86,7 +74,7 @@ function TXTCheckUpload() {
         resetResults();
       }
     } else {
-      alert("請選擇一個文件!");
+      alert("請選擇一個文件！");
     }
   };
 
