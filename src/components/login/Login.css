@@ -41,9 +41,17 @@
     margin-bottom: 20px;
 }
 
+.login {
+    display: flex;               
+    flex-direction: column;     
+    align-items: center;         
+    width: auto;     
+    margin: 0;
+}
+
 .email,
 .password {
-    width: 65%;
+    width: 300px;
     height: auto;
     display: flex;
     align-items: center;
@@ -87,8 +95,19 @@
     right: 0.7rem;
 }
 
-.login {
-    width: 65%;
+
+input.login-error {
+    border-color: red;
+}
+input.login-error::placeholder ,
+.login-error-msg {
+    color: red;
+}
+
+
+/* 登入按鈕 */
+.login-btn {
+    width: 300px;
     padding: 10px;
     margin-top: 1rem;
     font-size: 25px;
@@ -104,7 +123,7 @@
     transition: all 0.2s ease-in-out;
 }
 
-.login:hover {
+.login-btn:hover {
     color: #fff;
     background-color: transparent;
 }
@@ -115,7 +134,7 @@
     letter-spacing: 4px;
 }
   
-.btn1::after {
+.login-btn::after {
     content: "";
     position: absolute;
     left: 0;
@@ -129,8 +148,8 @@
     z-index: -2;
 }
 
-.btn1:hover::after {
-visibility: visible;
-transform: scale(100) translateX(2px);
+.login-btn:hover::after {
+    visibility: visible;
+    transform: scale(100) translateX(2px);
 }
-  
+/* ---- */
