@@ -1,15 +1,15 @@
 import "@patternfly/react-core/dist/styles/base.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Admin.css';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Checkbox, Button, EmptyState, EmptyStateActions, EmptyStateHeader, EmptyStateFooter } from '@patternfly/react-core';
 import UploadIcon from '@patternfly/react-icons/dist/esm/icons/upload-icon';
 import { SignOutAltIcon } from '@patternfly/react-icons';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import Navbar from '../navbar/Navbar';
 import { CheckCircleIcon } from '@patternfly/react-icons';
+
 
 export const MultipleFileUploadBasic = () => {
   const [fileUploadShouldFail, setFileUploadShouldFail] = useState(false);
@@ -18,7 +18,19 @@ export const MultipleFileUploadBasic = () => {
   const [showStatus, setShowStatus] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
+  const alertShownRef = useRef(false);
 
+  // 檢查登入狀態
+  useEffect(() => {
+    const userAuthenticated = sessionStorage.getItem('username');
+    if (!userAuthenticated && !alertShownRef.current) {
+      alert('請先登入帳號及密碼');
+      navigate('/Login'); 
+      alertShownRef.current = true; 
+    }
+  }, []); 
+
+  //處理文件上傳狀態
   useEffect(() => {
     if (!showStatus && currentFiles.length > 0) {
       setShowStatus(true);
@@ -105,7 +117,8 @@ export const MultipleFileUploadBasic = () => {
     }, 500); // 每500毫秒更新一次进度
   };
 
-  const handleLogin = () => {
+  const handleLogout = () => {
+    sessionStorage.clear();
     navigate('/Login');
   };
 
@@ -193,7 +206,7 @@ export const MultipleFileUploadBasic = () => {
               <SignOutAltIcon style={{ fontSize: '80px', marginTop: '35px' }} />
               <h4 className='m-title'>是否要登出？</h4>
               <div className="admin-col-area">
-                <button className='admin-enter' onClick={handleLogin}>登出</button>
+                <button className='admin-enter' onClick={handleLogout}>登出</button>
                 <button className='admin-jumps' onClick={closeLogoutModal}>取消</button>
               </div>
             </div>
