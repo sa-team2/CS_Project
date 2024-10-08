@@ -32,8 +32,8 @@ function URLCheckTextArea() {
 
   const handleButtonClick = async () => {
     if (!url) {
-        alert('請輸入或貼上網址。');
-        return false;
+        alert('請輸入或貼上網址');
+        return;
     }
 
     console.log('Button clicked with URL:', url); // 確認按鈕點擊事件
@@ -82,14 +82,13 @@ function URLCheckTextArea() {
   };
 
   const handleCombinedClick = async () => {
-    const isValid = await handleButtonClick();
-    if (isValid) {
-        handleShow();
-    }
-};
+    await handleButtonClick();
+    handleShow(); // 在数据处理后显示模态框并加载
+  };
 
   return (
     <>
+      <form onSubmit={handleCombinedClick}>
         <div className="url-input">
           <input
               className="url-input"
@@ -101,7 +100,7 @@ function URLCheckTextArea() {
           />
         </div>
         <div className="btn-url-area">
-          <button className='url-submit' onClick={handleCombinedClick}>
+          <button className='url-submit' type="submit">
             <svg
               height="24"
               width="24"
@@ -145,6 +144,7 @@ function URLCheckTextArea() {
             </Modal.Footer>
           )}
         </Modal>
+        </form>
     </>
   );
 }

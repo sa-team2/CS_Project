@@ -15,13 +15,13 @@ function Website() {
   const renderComponent = () => {
     console.log(`Rendering component for ${activeComponent}`);
     switch (activeComponent) {
-      case 'URLCheck':
-        {
-          return <URLCheckTextArea />;
-        }
       case 'MSGCheck':
         {
           return <MSGCheckInput />;
+        }
+      case 'URLCheck':
+        {
+          return <URLCheckTextArea />;
         }
       case 'TXTCheck':
         {
@@ -33,10 +33,10 @@ function Website() {
   };
 
   const title =
-    activeComponent === "URLCheck"
-      ? "網址檢測"
-      : activeComponent === "MSGCheck"
+    activeComponent === "MSGCheck"
       ? "文字檢測"
+      : activeComponent === "URLCheck"
+      ? "網址檢測"
       : activeComponent === "TXTCheck"
       ? "檔案、圖片檢測"
       : "位址錯誤";
@@ -56,18 +56,18 @@ function Website() {
           <div className="website-container">
             <div className="function-container">
               <div
-                onClick={() => setActiveComponent('URLCheck')}
-                className={activeComponent === "URLCheck" ? "active" : ""}
-              >
-                <FontAwesomeIcon icon={faLink} className="icon" />
-                網址檢測
-              </div>
-              <div
                 onClick={() => setActiveComponent('MSGCheck')}
                 className={activeComponent === "MSGCheck" ? "active" : ""}
               >
                 <FontAwesomeIcon icon={faMessage} className="icon" />
                 文字檢測
+              </div>
+              <div
+                onClick={() => setActiveComponent('URLCheck')}
+                className={activeComponent === "URLCheck" ? "active" : ""}
+              >
+                <FontAwesomeIcon icon={faLink} className="icon" />
+                網址檢測
               </div>
               <div
                 onClick={() => setActiveComponent('TXTCheck')}
