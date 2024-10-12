@@ -1,15 +1,15 @@
 import "@patternfly/react-core/dist/styles/base.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import './Admin.css';
-import { useState, useEffect, useRef } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Checkbox, Button, EmptyState, EmptyStateActions, EmptyStateHeader, EmptyStateFooter } from '@patternfly/react-core';
 import UploadIcon from '@patternfly/react-icons/dist/esm/icons/upload-icon';
 import { SignOutAltIcon } from '@patternfly/react-icons';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import Navbar from '../navbar/Navbar';
 import { CheckCircleIcon } from '@patternfly/react-icons';
-
 
 export const MultipleFileUploadBasic = () => {
   const [fileUploadShouldFail, setFileUploadShouldFail] = useState(false);
@@ -18,19 +18,7 @@ export const MultipleFileUploadBasic = () => {
   const [showStatus, setShowStatus] = useState(false);
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const navigate = useNavigate();
-  const alertShownRef = useRef(false);
 
-  // 檢查登入狀態
-  useEffect(() => {
-    const userAuthenticated = sessionStorage.getItem('username');
-    if (!userAuthenticated && !alertShownRef.current) {
-      alert('請先登入帳號及密碼');
-      navigate('/Login'); 
-      alertShownRef.current = true; 
-    }
-  }, []); 
-
-  //處理文件上傳狀態
   useEffect(() => {
     if (!showStatus && currentFiles.length > 0) {
       setShowStatus(true);
@@ -59,37 +47,18 @@ export const MultipleFileUploadBasic = () => {
   };
 
   const handleFileDrop = (event) => {
-    const files = Array.from(event.target.files); 
-    const currentFileNames = currentFiles.map(file => file.name); // 獲取當前檔案名稱
-  
-    console.log('Current file names:', currentFileNames);
-    console.log('Dropped files:', files);
-  
-    // 檢查重複檔案
-    const duplicateFiles = files.filter(file => currentFileNames.includes(file.name));
-    console.log('Duplicate files:', duplicateFiles); // 用於偵測重複檔案
-    // 如果有重複檔案，立即提示
-    if (duplicateFiles.length > 0) {
-      alert('檔案已經上傳過，請選擇其他檔案');
-      event.target.value = ''; // 清空檔案選擇
-      return;
-    }
-  
+    const files = event.target.files;
     const currentFileCount = currentFiles.length;
     const newFileCount = files.length;
-  
-    // 檢查總檔案數量是否超過3個
+
     if (currentFileCount + newFileCount > 3) {
       alert('一次最多只能上傳3個檔案');
       return;
     }
-  
 
-    updateCurrentFiles(files);
-    event.target.value = ''; 
+    updateCurrentFiles(Array.from(files));
   };
-  
-  
+
   const simulateFileRead = (file) => {
     const totalSteps = 10; // 读取过程的总步数
     let progress = 0;
@@ -117,8 +86,7 @@ export const MultipleFileUploadBasic = () => {
     }, 500); // 每500毫秒更新一次进度
   };
 
-  const handleLogout = () => {
-    sessionStorage.clear();
+  const handleLogin = () => {
     navigate('/Login');
   };
 
@@ -129,6 +97,44 @@ export const MultipleFileUploadBasic = () => {
   const closeLogoutModal = () => {
     setIsLogoutModalOpen(false);
   };
+
+
+
+  const handleFileUpload = async () => {
+    try {
+        // 创建一个 FormData 实例来上传文件
+        const formData = new FormData();
+
+        // 添加文件到 FormData
+        currentFiles.forEach((file) => {
+            formData.append('file', file); // 将每个文件添加到 FormData 中
+        });
+
+        // 发送 POST 请求到后端的文件上传端点
+        const response = await fetch('/api/fetch-content', {
+            method: 'POST',
+            body: formData
+        });
+
+        if (!response.ok) {
+            throw new Error('文件上传失败');
+        }
+
+        // 获取文件上传成功后的响应
+        const result = await response.json();
+        console.log('上传结果:', result);
+
+        // 这里可以选择直接处理结果，或者做进一步的操作
+        alert('文件上传成功，返回消息: ' + result.message);
+
+    } catch (error) {
+        console.error('上传文件时出错:', error);
+        alert('上传文件时出错: ' + error.message);
+    }
+};
+
+
+  
 
   const successfullyReadFileCount = readFileData.filter(fileData => fileData.loadResult === 'success').length;
 
@@ -157,7 +163,7 @@ export const MultipleFileUploadBasic = () => {
                 onChange={handleFileDrop}
               />
               <div className="admin-upload-button">選擇檔案</div>
-              <span style={{ fontSize: '16px',marginTop:'20px' }}>檔案類型：JPEG, DOC, PDF, PNG, XLS, XLSX"</span>
+              <span style={{ fontSize: '16px',marginTop:'20px' }}>檔案類型：JPEG, DOC, PDF, PNG, XLS, XLSX</span>
             </label>
             <div>
               {showStatus && currentFiles.length > 0 && (
@@ -171,9 +177,7 @@ export const MultipleFileUploadBasic = () => {
                       <div className='admin-txt-area' key={file.name}>
                         <div className="admin-left">
                           <button className='admin-jump' onClick={() => removeFiles([file.name])}>移除</button>
-                          <span className="admin-file-name">
-                            {file.name.length > 8 ? `${file.name.slice(0, 8)}...` : file.name}
-                          </span>
+                          <span className="admin-file-name">{file.name}</span>
                           <span style={{ width: 'auto',paddingLeft:'10px' }}>({(fileSize / 1024).toFixed(2)} KB)</span>
                         </div>
                         <div className="admin-right">
@@ -196,7 +200,7 @@ export const MultipleFileUploadBasic = () => {
               )}
             </div>
             <div className="admin-submit">
-              <button className="admin-enter" onClick={() => console.log("送出文件:", currentFiles)}>更新</button>
+            <button className="admin-enter" onClick={handleFileUpload}>更新</button>
             </div>
           </div>
 
@@ -206,7 +210,7 @@ export const MultipleFileUploadBasic = () => {
               <SignOutAltIcon style={{ fontSize: '80px', marginTop: '35px' }} />
               <h4 className='m-title'>是否要登出？</h4>
               <div className="admin-col-area">
-                <button className='admin-enter' onClick={handleLogout}>登出</button>
+                <button className='admin-enter' onClick={handleLogin}>登出</button>
                 <button className='admin-jumps' onClick={closeLogoutModal}>取消</button>
               </div>
             </div>
