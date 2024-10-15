@@ -4,19 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Rating from './Rating';
 import './MSGCheck.css';
 
-function MSGCheckTitle() {
-  return (
-    <>
-      <div className="tab-box">
-        <div className="function-subtitle">
-        </div>
-      </div>
-    </>
-  );
-}
-
-export { MSGCheckTitle };
-
 function MSGCheckInput() {
   const [text, setText] = useState('');
   const [show, setShow] = useState(false);
@@ -42,15 +29,6 @@ function MSGCheckInput() {
     setShow(false);
     setIsLoading(false);
     setIsLoaded(false); // 重置加载状态
-  };
-
-  const handleShow = () => {
-    setShow(true);
-    setIsLoading(true); // 开始显示 loading
-    setTimeout(() => {
-      setIsLoading(false); // 模拟加载完成
-      setIsLoaded(true);   // 加载完成后显示结果
-    }, 1500); // 设置 1.5 秒的加载时间
   };
 
   const handleTextSubmit = async (event) => {
@@ -84,6 +62,7 @@ function MSGCheckInput() {
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
           const roundedFraudRate = Math.round(fraudRate * 100) / 100; 
           setFraudRate(roundedFraudRate);
+          return true;
         } else {
           setID('');
           setPythonResult('未知');
@@ -92,13 +71,30 @@ function MSGCheckInput() {
           setReminds('無');
           setPrevent('無');
           setFraudRate(null); 
+          return false;
         }
       } catch (error) {
         console.error('Error:', error);
+        return false;
       }
-      handleShow();
+    } 
+  };
+
+  const handleCombinedClick = async (event) => {
+    if (text) {
+      setShow(true);   
+      setIsLoading(true);  
+      const isValid = await handleTextSubmit(event); 
+      if (isValid) {
+        setIsLoading(false);
+        setIsLoaded(true);
+      } else {
+        setIsLoading(false);
+        setShow(false);
+        alert("檢測失敗。");
+      }
     } else {
-      alert('請輸入內容!');
+      alert('請輸入或貼上網址。');
     }
   };
 
@@ -110,7 +106,7 @@ function MSGCheckInput() {
         </div>
         <div>
           <div className="btn-area">
-            <button className='msg-submit' onClick={handleTextSubmit}>
+            <button className='msg-submit' onClick={handleCombinedClick}>
               <svg
                 height="24"
                 width="24"
