@@ -34,21 +34,8 @@ function URLCheckTextArea() {
     setIsLoaded(false); // 重置加载状态
   };
 
-  const handleShow = () => {
-    setShow(true);
-    setIsLoading(true); // 开始显示 loading
-    setTimeout(() => {
-      setIsLoading(false); // 模拟加载完成
-      setIsLoaded(true);   // 加载完成后显示结果
-    }, 1500); // 设置 1.5 秒的加载时间
-  };
 
   const handleButtonClick = async () => {
-    if (!url) {
-        alert('請輸入或貼上網址');
-        return false;
-    }
-
     console.log('Button clicked with URL:', url); // 確認按鈕點擊事件
 
     try {
@@ -84,7 +71,7 @@ function URLCheckTextArea() {
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
           const roundedFraudRate = Math.round(fraudRate * 100) / 100; // 保留两位小数
           setFraudRate(roundedFraudRate);
-
+          return true;
       } else {
           setID('');
           console.log('Python Result: 未知');
@@ -95,10 +82,8 @@ function URLCheckTextArea() {
           setReminds('無');
           setPrevent('無');
           setFraudRate(null); // 无 FraudRate 数据
+          return false;
       }
-
-      return true;
-
     } catch (error) {
         console.error('Error:', error);
         return false;
@@ -106,9 +91,20 @@ function URLCheckTextArea() {
   };
 
   const handleCombinedClick = async () => {
-    const isValid = await handleButtonClick(); 
-    if (isValid) {
-        handleShow();
+    if (url) {
+      setShow(true);   
+      setIsLoading(true);  
+      const isValid = await handleButtonClick(); 
+      if (isValid) {
+        setIsLoading(false);
+        setIsLoaded(true);
+      } else {
+        setIsLoading(false);
+        setShow(false);
+        alert("檢測失敗。");
+      }
+    } else {
+      alert('請輸入或貼上網址。');
     }
   };
 
