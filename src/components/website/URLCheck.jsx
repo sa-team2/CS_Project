@@ -4,17 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Rating from './Rating';
 import './URLCheck.css';
 
-function URLCheckTitle() {
-    return (
-        <div className="tab-box">
-            <div className="function-subtitle">
-            </div>
-        </div>
-    );
-}
-
-export { URLCheckTitle };
-
 function URLCheckTextArea() {
   const [url, setUrl] = useState('');
   const [show, setShow] = useState(false);
