@@ -22,15 +22,6 @@ function TXTCheckUpload() {
     setIsLoaded(false);
   }
 
-  const handleShow = () => {
-    setShow(true);
-    setIsLoading(true); // 开始显示 loading
-    setTimeout(() => {
-      setIsLoading(false); // 模拟加载完成
-      setIsLoaded(true);   // 加载完成后显示结果
-    }, 1500);
-  };
-
   const handleFileUpload = async (event) => {
     event.preventDefault();
     const fileInput = document.getElementById('file-input');
@@ -41,7 +32,7 @@ function TXTCheckUpload() {
       formData.append('file', file);
       for (let [key, value] of formData.entries()) {
         console.log(key, value);
-    }
+    } 
     
       try {
         const response = await fetch('/api/fetch-content', { // 更新为图片上传的 API 路径
@@ -57,7 +48,6 @@ function TXTCheckUpload() {
           const matchedKeywords = data.pythonResult.Match || [];
           console.log('Response from server:', data);
 
-          const types = matchedKeywords.map(keywordObj => keywordObj.MatchType);
           const keywords = matchedKeywords.map(keywordObj => keywordObj.MatchKeyword);
           const remind = matchedKeywords.map(keywordObj => keywordObj.Remind);
           const prevent = matchedKeywords.map(keywordObj => keywordObj.Prevent);
@@ -69,6 +59,7 @@ function TXTCheckUpload() {
           setPrevent(prevent.join(', '));
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
           setFraudRate(Math.round(fraudRate * 100) / 100); // 保留两位小数
+          return true;
         } else {
           setID('');
           setPythonResult('未知');
@@ -76,28 +67,34 @@ function TXTCheckUpload() {
           setType('無');
           setReminds('無');
           setPrevent('無');
-          setFraudRate(null);        
+          setFraudRate(null); 
+          return false;      
         }
-
-        return true;
-
       } catch (error) {
         console.error('Error while uploading the file:', error);
-        resetResults();
         return false;
       }
-    } else {
-      alert("請選擇一個文件。");
-      return false;
     }
   };
 
   
   const handleCombinedClick = async (event) => {
-    const isValid = await handleFileUpload(event); 
-    if (isValid) {
-      handleShow();
-    } 
+    const fileInput = document.getElementById('file-input');
+    if (fileInput.files.length > 0) {
+      setShow(true);
+      setIsLoading(true); 
+      const isValid = await handleFileUpload(event);
+      if (isValid) {
+        setIsLoading(false);
+        setIsLoaded(true);
+      } else {
+        setIsLoading(false);
+        setShow(false);
+        alert("檢測失敗。");
+      }
+    } else {
+      alert("請選擇一個文件。");
+    }
   };
 
   return (
