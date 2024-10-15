@@ -46,7 +46,7 @@ function URLCheckTextArea() {
   const handleButtonClick = async () => {
     if (!url) {
         alert('請輸入或貼上網址');
-        return;
+        return false;
     }
 
     console.log('Button clicked with URL:', url); // 確認按鈕點擊事件
@@ -102,8 +102,10 @@ function URLCheckTextArea() {
   };
 
   const handleCombinedClick = async () => {
-    await handleButtonClick();
-    handleShow(); // 在数据处理后显示模态框并加载
+    const isValid = await handleButtonClick(); 
+    if (isValid) {
+        handleShow();
+    }
   };
 
   return (
