@@ -4,6 +4,18 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Rating from './Rating';
 import './TXTCheck.css';
 
+function TXTCheckTitle() {
+  return (
+      <div className="tab-box">
+        <div className="function-subtitle">
+        </div>
+      </div>
+  );
+}
+
+export { TXTCheckTitle };
+
+
 function TXTCheckUpload() {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -11,6 +23,8 @@ function TXTCheckUpload() {
   const [pythonResult, setPythonResult] = useState('未知');
   const [keywords, setKeywords] = useState([]); // 存储多个关键字
   const [types, setType] = useState('無');
+  const [reminds, setReminds] = useState('無');
+  const [prevents, setPrevent] = useState('無');
   const [FraudRate, setFraudRate] = useState(null); // 存储 FraudRate
   const [ID, setID] = useState('');
 
@@ -56,11 +70,14 @@ function TXTCheckUpload() {
           console.log('Response from server:', data);
 
           const keywords = matchedKeywords.map(keywordObj => keywordObj.MatchKeyword);
-          const types = matchedKeywords.map(keywordObj => keywordObj.MatchType);
+          const remind = matchedKeywords.map(keywordObj => keywordObj.Remind);
+          const prevent = matchedKeywords.map(keywordObj => keywordObj.Prevent);
           
           setPythonResult(data.pythonResult.FraudResult || '未知');
           setKeywords(keywords);
           setType(types.join(', ')); // 将所有类型拼接成字符串
+          setReminds(remind.join(', '));
+          setPrevent(prevent.join(', '));
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
           setFraudRate(Math.round(fraudRate * 100) / 100); // 保留两位小数
         } else {
@@ -68,13 +85,15 @@ function TXTCheckUpload() {
           setPythonResult('未知');
           setKeywords([]);
           setType('無');
+          setReminds('無');
+          setPrevent('無');
           setFraudRate(null);        }
       } catch (error) {
         console.error('Error while uploading the file:', error);
         resetResults();
       }
     } else {
-      alert("請選擇一個文件！");
+      alert("請選擇一個文件!");
     }
   };
 
@@ -124,7 +143,7 @@ function TXTCheckUpload() {
               </div>
             )}
             {isLoaded && (
-              <Rating pythonResult={pythonResult} keywords={keywords} type={types} FraudRate={FraudRate} ID={ID}/>
+  <Rating pythonResult={pythonResult} keywords={keywords} types={types} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} />
             )}
           </Modal.Body>
           {isLoaded && (

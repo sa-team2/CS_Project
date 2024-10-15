@@ -4,6 +4,17 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Rating from './Rating';
 import './URLCheck.css';
 
+function URLCheckTitle() {
+    return (
+        <div className="tab-box">
+            <div className="function-subtitle">
+            </div>
+        </div>
+    );
+}
+
+export { URLCheckTitle };
+
 function URLCheckTextArea() {
   const [url, setUrl] = useState('');
   const [show, setShow] = useState(false);
@@ -12,6 +23,8 @@ function URLCheckTextArea() {
   const [pythonResult, setPythonResult] = useState('未知');
   const [keywords, setKeyword] = useState([]); // 设为数组以存储多个关键字
   const [type, setType] = useState('無');
+  const [reminds, setReminds] = useState('無');
+  const [prevents, setPrevent] = useState('無');
   const [FraudRate, setFraudRate] = useState(null); // 存储 FraudRate
   const [ID, setID] = useState('');
 
@@ -59,10 +72,15 @@ function URLCheckTextArea() {
           // 处理 matched_keywords 数组
           const keywords = matchedKeywords.map(keywordObj => keywordObj.MatchKeyword);
           const types = matchedKeywords.map(keywordObj => keywordObj.MatchType);
+          const remind = matchedKeywords.map(keywordObj => keywordObj.Remind);
+          const prevent = matchedKeywords.map(keywordObj => keywordObj.Prevent);
                     
           setPythonResult(data.pythonResult.FraudResult || '未知');
           setKeyword(keywords); // 存储关键字数组
           setType(types.join(', ')); // 存储所有类型的组合
+          setReminds(remind.join(', '));
+          setPrevent(prevent.join(', '));
+          
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
           const roundedFraudRate = Math.round(fraudRate * 100) / 100; // 保留两位小数
           setFraudRate(roundedFraudRate);
@@ -74,6 +92,8 @@ function URLCheckTextArea() {
           setPythonResult('未知');
           setKeyword([]);
           setType('無');
+          setReminds('無');
+          setPrevent('無');
           setFraudRate(null); // 无 FraudRate 数据
       }
     } catch (error) {
@@ -88,7 +108,7 @@ function URLCheckTextArea() {
 
   return (
     <>
-      <form onSubmit={handleCombinedClick}>
+      <div className="">
         <div className="url-input">
           <input
               className="url-input"
@@ -100,7 +120,7 @@ function URLCheckTextArea() {
           />
         </div>
         <div className="btn-url-area">
-          <button className='url-submit' type="submit">
+          <button className='url-submit' onClick={handleCombinedClick}>
             <svg
               height="24"
               width="24"
@@ -130,7 +150,7 @@ function URLCheckTextArea() {
               </div>
             )}
             {isLoaded && (
-              <Rating pythonResult={pythonResult} keywords={keywords} type={type} FraudRate={FraudRate} ID={ID}/>
+              <Rating pythonResult={pythonResult} keywords={keywords} types={type} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents}/>
             )}
           </Modal.Body>
           {isLoaded && (
@@ -144,7 +164,7 @@ function URLCheckTextArea() {
             </Modal.Footer>
           )}
         </Modal>
-        </form>
+      </div>
     </>
   );
 }

@@ -50,7 +50,7 @@ const getColorAtProgress = (progress) => {
   }
 };
 
-function Rating({ pythonResult, keywords, type , FraudRate , ID}) {
+function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,reminds}) {
   const [progress, setProgress] = React.useState(0);
   const [riskLevel, setRiskLevel] = React.useState('中風險'); // 默认风险等级
   
@@ -111,11 +111,7 @@ function Rating({ pythonResult, keywords, type , FraudRate , ID}) {
     <Popover id="popover-basic">
       <Popover.Header as="h3">如何防範</Popover.Header>
       <Popover.Body>
-        <ul>
-          <li>投資皆有風險，不要相信「穩賺不賠」等用詞。</li>
-          <li>檢查投資公司的背景和合法性。</li>
-          <li>警惕來自不明來源的投資資訊。</li>
-        </ul>
+        {prevents}
       </Popover.Body>
     </Popover>
   );
@@ -125,21 +121,21 @@ function Rating({ pythonResult, keywords, type , FraudRate , ID}) {
       return (
         <ul className="rating-ul">
           <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#ff0000"}} /> 高風險</li>
-          <li>提醒：立即停止操作且避免提供任何個人資訊。</li>
+          <li>提醒：{reminds}</li>
         </ul>
       )
     } else if (progress <= 70) {
       return (
         <ul className="rating-ul">
           <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#FFD43B"}} /> 中風險</li>
-          <li>提醒：保持警惕、暫緩交易，並核實資訊的真實性。</li>
+          <li>提醒：{reminds}</li>
         </ul>
       )
     } else {
       return (
         <ul className="rating-ul">
           <li>等級：<FontAwesomeIcon icon={faCheck} style={{color: "#0ec48d"}} /> 低風險</li>
-          <li>提醒：辯識結果為安全內容，仍須留意潛在的詐騙行為。</li>
+          <li>提醒：{reminds}</li>
         </ul>
       )
     }
@@ -147,6 +143,17 @@ function Rating({ pythonResult, keywords, type , FraudRate , ID}) {
 
   return (
     <div className="rating-container">
+      {progress === 0 ? (
+        <div id="loading-container">
+          <label className="loading-title">檢測中 ...</label>
+          <span className="loading-circle sp1">
+            <span className="loading-circle sp2">
+              <span className="loading-circle sp3"></span>
+            </span>
+          </span>
+        </div>
+      ) : (
+        <>
           <div className="container-1">
             <div className="circular-progress" style={{ background: getBackground(progress) }}>
               <span className="progress-value" style={{ color: getColorAtProgress(progress) }}>
@@ -178,7 +185,7 @@ function Rating({ pythonResult, keywords, type , FraudRate , ID}) {
                     <Card.Title><b>詐騙類型：</b></Card.Title>
                     <Card.Text>
                     <ul className="rating-ul">
-                          <li>類型：{type || '無'}</li>
+                          <li>類型：{types || '無'}</li>
                         </ul>
                     </Card.Text>
                       <Card.Text>
@@ -197,6 +204,8 @@ function Rating({ pythonResult, keywords, type , FraudRate , ID}) {
               </>
             )}
           </div>
+        </>
+      )}
     </div>
   );
 }

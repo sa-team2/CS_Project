@@ -4,6 +4,19 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Rating from './Rating';
 import './MSGCheck.css';
 
+function MSGCheckTitle() {
+  return (
+    <>
+      <div className="tab-box">
+        <div className="function-subtitle">
+        </div>
+      </div>
+    </>
+  );
+}
+
+export { MSGCheckTitle };
+
 function MSGCheckInput() {
   const [text, setText] = useState('');
   const [show, setShow] = useState(false);
@@ -12,6 +25,8 @@ function MSGCheckInput() {
   const [result, setPythonResult] = useState('未知'); 
   const [keywords, setKeywords] = useState([]); 
   const [type, setType] = useState('無'); 
+  const [reminds, setReminds] = useState('無');
+  const [prevents, setPrevent] = useState('無');
   const [FraudRate, setFraudRate] = useState(); 
   const [ID, setID] = useState('');
 
@@ -41,7 +56,7 @@ function MSGCheckInput() {
   const handleTextSubmit = async (event) => {
     event.preventDefault();
     if (text) {
-      try {
+      try { 
         const response = await fetch('/api/fetch-content', {
           method: 'POST',
           headers: {
@@ -58,10 +73,14 @@ function MSGCheckInput() {
           const matchedKeywords = data.pythonResult.Match || [];
           const keywords = matchedKeywords.map(keywordObj => keywordObj.MatchKeyword);
           const types = matchedKeywords.map(keywordObj => keywordObj.MatchType);
+          const remind = matchedKeywords.map(keywordObj => keywordObj.Remind);
+          const prevent = matchedKeywords.map(keywordObj => keywordObj.Prevent);
 
           setPythonResult(data.pythonResult.FraudResult || '未知');
           setKeywords(keywords);
           setType(types.join(', '));
+          setReminds(remind.join(', '));
+          setPrevent(prevent.join(', '));
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
           const roundedFraudRate = Math.round(fraudRate * 100) / 100; 
           setFraudRate(roundedFraudRate);
@@ -70,6 +89,8 @@ function MSGCheckInput() {
           setPythonResult('未知');
           setKeywords([]);
           setType('無');
+          setReminds('無');
+          setPrevent('無');
           setFraudRate(null); 
         }
       } catch (error) {
@@ -77,12 +98,13 @@ function MSGCheckInput() {
       }
       handleShow();
     } else {
-      alert('請輸入內容！');
+      alert('請輸入內容!');
     }
   };
 
   return (
     <>
+      <div className="">
         <div className="msg-input">
           <textarea rows="5" cols="75" value={text} onChange={handleChange} placeholder='請輸入或貼上內容...' />
         </div>
@@ -118,7 +140,7 @@ function MSGCheckInput() {
                 </div>
               )}
               {isLoaded && (
-                <Rating pythonResult={result} keywords={keywords} type={type} FraudRate={FraudRate} ID={ID}/>
+                <Rating pythonResult={result} keywords={keywords} types={type} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents}/>
               )}
             </Modal.Body>
             {isLoaded && (
@@ -133,6 +155,7 @@ function MSGCheckInput() {
             )}
           </Modal>
         </div>
+      </div>
     </>
   );
 }
