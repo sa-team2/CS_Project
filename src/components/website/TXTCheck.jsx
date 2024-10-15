@@ -47,7 +47,7 @@ function TXTCheckUpload() {
           setID(data.ID);
           const matchedKeywords = data.pythonResult.Match || [];
           console.log('Response from server:', data);
-
+          const types = matchedKeywords.map(keywordObj => keywordObj.MatchType);
           const keywords = matchedKeywords.map(keywordObj => keywordObj.MatchKeyword);
           const remind = matchedKeywords.map(keywordObj => keywordObj.Remind);
           const prevent = matchedKeywords.map(keywordObj => keywordObj.Prevent);
