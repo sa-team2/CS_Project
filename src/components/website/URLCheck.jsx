@@ -96,8 +96,12 @@ function URLCheckTextArea() {
           setPrevent('無');
           setFraudRate(null); // 无 FraudRate 数据
       }
+
+      return true;
+
     } catch (error) {
         console.error('Error:', error);
+        return false;
     }
   };
 

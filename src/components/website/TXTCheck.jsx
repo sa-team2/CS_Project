@@ -4,18 +4,6 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Rating from './Rating';
 import './TXTCheck.css';
 
-function TXTCheckTitle() {
-  return (
-      <div className="tab-box">
-        <div className="function-subtitle">
-        </div>
-      </div>
-  );
-}
-
-export { TXTCheckTitle };
-
-
 function TXTCheckUpload() {
   const [show, setShow] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
@@ -87,25 +75,32 @@ function TXTCheckUpload() {
           setType('無');
           setReminds('無');
           setPrevent('無');
-          setFraudRate(null);        }
+          setFraudRate(null);        
+        }
+
+        return true;
+
       } catch (error) {
         console.error('Error while uploading the file:', error);
         resetResults();
+        return false;
       }
     } else {
-      alert("請選擇一個文件!");
+      alert("請選擇一個文件。");
+      return false;
     }
   };
 
   
   const handleCombinedClick = async (event) => {
-    await handleFileUpload(event); // 先处理文件上传并获取结果
-    handleShow(); // 然后显示模态框
+    const isValid = await handleFileUpload(event); 
+    if (isValid) {
+      handleShow();
+    } 
   };
 
   return (
     <>
-      <form onSubmit={handleCombinedClick}>
         <label htmlFor="file-input" className="drop-container">
           <span className="drop-title">拖曳檔案至此</span>
           <span className="drop-title">或</span><br></br>
@@ -113,7 +108,7 @@ function TXTCheckUpload() {
         </label>
         <div>
           <div className="btn-txt-area">
-            <button type='submit' className='txt-submit'>
+            <button type='submit' className='txt-submit' onClick={handleCombinedClick}>
               <svg
                 height="24"
                 width="24"
@@ -158,7 +153,6 @@ function TXTCheckUpload() {
           )}
           </Modal>
         </div>
-      </form>
     </>
   );
 }
