@@ -1,0 +1,59 @@
+.MuiBox-root.css-8atqhb {
+    margin-top: 200px;
+    width: 900px;
+}
+
+.MuiPaper-root.MuiPaper-elevation.MuiPaper-rounded.MuiPaper-elevation1.css-av90ce-MuiPaper-root {
+    background-color: rgba(29,29,29,0.9);
+    color: white;
+}
+
+.MuiButtonBase-root.MuiTableSortLabel-root.MuiTableSortLabel-directionAsc.css-7x9vt0-MuiButtonBase-root-MuiTableSortLabel-root,
+.MuiTableCell-root.MuiTableCell-body.MuiTableCell-paddingNone.MuiTableCell-sizeMedium.css-g42i7m-MuiTableCell-root,
+.MuiTableCell-root.MuiTableCell-body.MuiTableCell-alignRight.MuiTableCell-sizeMedium.css-3ssuu9-MuiTableCell-root,
+.MuiTablePagination-displayedRows.css-11cfq65-MuiTablePagination-displayedRows,
+.MuiTablePagination-selectLabel.css-s09cke-MuiTablePagination-selectLabel,
+.MuiSelect-select.MuiTablePagination-select.MuiSelect-standard.MuiInputBase-input.css-mmygx2-MuiSelect-select-MuiInputBase-input,
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiSelect-icon.MuiTablePagination-selectIcon.MuiSelect-iconStandard.css-1gpuzre-MuiSvgIcon-root-MuiSelect-icon,
+.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-colorInherit.MuiIconButton-sizeMedium.css-17ixm6u-MuiButtonBase-root-MuiIconButton-root,
+.MuiButtonBase-root.MuiIconButton-root.MuiIconButton-sizeMedium.css-lzk69h-MuiButtonBase-root-MuiIconButton-root,
+.MuiButtonBase-root.MuiCheckbox-root.MuiCheckbox-colorPrimary.MuiCheckbox-sizeMedium.PrivateSwitchBase-root.MuiCheckbox-root.MuiCheckbox-colorPrimary.MuiCheckbox-sizeMedium.MuiCheckbox-root.MuiCheckbox-colorPrimary.MuiCheckbox-sizeMedium.css-imrjgg-MuiButtonBase-root-MuiCheckbox-root,
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiTableSortLabel-icon.MuiTableSortLabel-iconDirectionAsc.css-7ojauk-MuiSvgIcon-root-MuiTableSortLabel-icon,
+.MuiButtonBase-root.MuiTableSortLabel-root.Mui-active.MuiTableSortLabel-directionDesc.css-7x9vt0-MuiButtonBase-root-MuiTableSortLabel-root,
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiTableSortLabel-icon.MuiTableSortLabel-iconDirectionDesc.css-asweb8-MuiSvgIcon-root-MuiTableSortLabel-icon,
+.MuiSvgIcon-root.MuiSvgIcon-fontSizeMedium.MuiTableSortLabel-icon.MuiTableSortLabel-iconDirectionDesc.css-7ojauk-MuiSvgIcon-root-MuiTableSortLabel-icon {
+    color: white;
+}
+
+.MuiTablePagination-selectLabel.css-s09cke-MuiTablePagination-selectLabel,
+.MuiTablePagination-displayedRows.css-11cfq65-MuiTablePagination-displayedRows {
+    margin: 0;
+}
+
+.MuiButtonBase-root.Mui-disabled.MuiIconButton-root.Mui-disabled.MuiIconButton-colorInherit.MuiIconButton-sizeMedium.css-17ixm6u-MuiButtonBase-root-MuiIconButton-root {
+    color: rgb(122, 121, 121);
+}
+
+
+.adminupdate-text {
+    margin-left: 5px;
+    font-size: 20px;
+}
+
+.adminpreview-updatecheck {
+    font-size: 20px;
+    margin-bottom: 0;
+    border-bottom: 1px solid rgb(222, 226, 230);
+}
+
+.adminpreview-updatecheck.updatecheck-mt {
+    margin-top: 20px;
+}
+
+.adminpreview-updatecheck-confirm {
+    color: rgba(29, 29, 29, 0.9) !important;
+}
+.adminpreview-updatecheck-confirm:hover {
+    background: rgba(29, 29, 29, 0.9);
+    color: white !important;
+}

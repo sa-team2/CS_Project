@@ -1,5 +1,5 @@
 .admin-root {
-    height: 120vh;
+    height: 100vh;
     display: flex;
     flex-direction: column;
     justify-items: center;
@@ -7,74 +7,8 @@
     background-image: url('../../images/WaveLine.png');
     background-size: cover;
     background-position: center;
+    overflow-y: auto; /* 允许纵向滚动 */
     background-repeat: no-repeat;
-}
-
-
-.nav-tabs {
-    width: 800px;
-}
-
-.nav-link {
-    color: black !important;
-}
-
-.tab-content {
-    top: 30px;
-    bottom: 0; 
-}
-
-.pf-v5-c-multiple-file-upload__main {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 815px; /* 设置宽度 */
-    height: 200px; /* 设置固定高度 */
-    resize: none;
-    font-size: 20px;
-    border: none;
-    padding: 20px 20px;
-    border-radius: 15px;
-    background-color: transparent;
-    color: #f0f0f0;
-    backdrop-filter: blur(15px);
-    border: 1px solid white;
-    display: flex;
-    box-shadow: 0px 0px 5px rgb(145, 145, 145);
-    justify-content: center;
-    margin-top: 130px;
-    margin-bottom: 50px;
-}
-
-.pf-v5-c-multiple-file-upload__status-list {
-    padding: 0;
-}
-
-.pf-v5-c-multiple-file-upload__status-item {
-    width: 500px;
-}
-
-.pf-v5-c-popover__content {
-    padding-top: 0.5rem !important; 
-    padding-bottom: 0.5rem !important; 
-}
-
-#uncontrolled-tab-example-tabpane-2.fade.tab-pane.active.show {
-    border: solid 1px rgb(222, 226, 230);
-    width: 500px;
-    border-radius: 30px;
-    box-shadow: 5px 5px 5px lightgray;
-}
-
-.pf-v5-c-button.pf-m-warning {
-    color: white !important;
-    border-radius: 30px;
-    width: 80px;
-}
-
-.pf-v5-c-button.pf-m-warning:hover {
-    background-color: #da9c00 !important;
 }
 
 .m-overlay {
@@ -91,7 +25,7 @@
     z-index: 1000; /* 確保在其他內容上方 */
   }
   
-  .m-content {
+.m-content {
     background: white;
     width: 600px;
     height: 400px;
@@ -99,105 +33,21 @@
     border-radius: 15px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
     text-align: center;
-  }
-  
-
-
-  /* admin.css */
-
-
-
-.admin-drop-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 815px;
-    height: 300px;
-    resize: none;
-    font-size: 20px;
-    border: none;
-    border-radius: 15px;
-    background-color: transparent;
-    color: #f0f0f0;
-    backdrop-filter: blur(15px);
-    border: 1px solid white;
-    box-shadow: 0px 0px 5px rgb(145, 145, 145);
-    justify-content: center;
-    margin-top: 200px;
-    margin-bottom: 50px;
 }
 
-.admin-drop-container:hover {
-    background: hwb(0 73% 27% / 0.165);
-}
-
-.admin-drop-title {
-    color: #f0f0f0;
-    font-size: 20px;
-    font-weight: bold;
-    text-align: center;
-    transition: color .2s ease-in-out;
-    display: flex;
-    flex-direction: column;
-    margin:20px;
-}
-
-.admin-file-name{
-    display: inline-block;
-    max-width: 200px;  /* 设置最大宽度 */
-    white-space: nowrap; /* 不换行 */
-    overflow: hidden;   /* 超出部分隐藏 */
-    text-overflow: ellipsis; /* 使用省略号表示超出部分 */
-    margin-left: 10px; /* 与按钮保持距离 */
-}
-
-.admin-file-input {
-    margin-right: 20px;
-    border: none;
-    background: gray;
-    padding: 10px 20px;
-    border-radius: 10px;
-    color: #fff;
-    cursor: pointer;
-}
-
-.admin-file-input:hover {
-    background: lightgrey;
-}
-
-.admin-upload-button {
-    border: none;
-    background: gray;
-    padding: 10px 20px;
-    border-radius: 10px;
-    color: #fff;
-    cursor: pointer;
+.m-title{
+    font-size: 30px;
     font-weight: bolder;
-  }
-  
-  .admin-upload-button:hover {
-    background: lightgray;
-  }
-
-  .admin-upload-container input[type="file"] {
-    display: none;  /*隐藏默认的文件输入框 */
-  }
-
-.admin-drop-text {
-    color: #f0f0f0;
-    font-size: 20px;
-    font-weight: bold;
-    transition: color .2s ease-in-out;
-    width: 100%;
+    margin:50px;
 }
 
-.admin-txt-area{
-    display: grid;
-    grid-template-columns: 1fr 1fr;
+.admin-col-area{
+    display: flex;
+    flex-direction: row;
     align-items: center;
     margin-bottom: 20px;
-  }
+    justify-content: center;
+}
 
 .admin-enter {
     display: flex;
@@ -221,37 +71,7 @@
     background: gold;
 }
 
-.admin-jump {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-family: inherit;
-    cursor: pointer;
-    font-weight: 500;
-    font-size: 18px;
-    color: white;
-    background: gray;
-    font-weight: bolder;
-    border: none;
-    letter-spacing: 0.05em;
-    border-radius: 10px;
-    width: 80px;
-    height: 50px;
-    margin-right: 10px;
-}
-
-.admin-jump:hover {
-    background: lightgray;
-}
-
-.admin-submit{
-    margin-top: 50px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-.admin-jumps {
+  .admin-jumps {
     display: flex;
     justify-content: center;
     align-items: center;
@@ -272,47 +92,4 @@
 
 .admin-jumps:hover {
     background: lightgray;
-}
-
-.m-title{
-    font-size: 30px;
-    font-weight: bolder;
-    margin:50px;
-}
-
-.admin-col-area{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    margin-bottom: 20px;
-    justify-content: center;
-  }
-
-
-
-  .progress-bar {
-    width: 100%;
-    height: 10px; /* 设置高度 */
-    background-color: #e0e0e0; /* 背景色 */
-    border-radius: 5px; /* 圆角 */
-    margin: 5px 0; /* 上下间距 */
-    justify-content: right;
-  }
-  
-  .progress {
-    height: 100%; /* 高度和父元素一致 */
-    background-color: goldenrod; /* 进度条颜色 */
-    border-radius: 5px; /* 圆角 */
-    transition: width 0.5s ease; /* 动画效果 */
-  }
-
-.admin-left{
-    display: flex;
-    align-items: center;
-}
-
-.admin-right{
-    display: flex;
-    align-items: center;
-    justify-content: right;
 }
