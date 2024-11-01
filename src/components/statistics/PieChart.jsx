@@ -53,34 +53,34 @@ function PieChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'Statistics'));
-
-        const labels = [];
-        const datasetData = [];
+        const querySnapshot = await getDocs(collection(db, 'Outcome'));
+        const matchTypeCount = {}; 
 
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          labels.push(data.Type); 
-          datasetData.push(data.Frequency); 
+          const matches = data.PythonResult?.Match; 
+
+          if (matches) {
+            matches.forEach(match => {
+              const matchType = match.MatchType;
+              if (matchTypeCount[matchType]) {
+                matchTypeCount[matchType] += 1; 
+              } else {
+                matchTypeCount[matchType] = 1; 
+              }
+            });
+          }
         });
 
-        const combinedData = labels.map((label, index) => ({
-          label,
-          frequency: datasetData[index],
-        })).sort((a, b) => b.frequency - a.frequency);
-
-        const topFive = combinedData.slice(0, 5);
-        const other = combinedData.slice(5); // 其余类型
-
-        const otherFrequency = other.reduce((sum, item) => sum + item.frequency, 0);
-
-        const topFiveLabels = topFive.map(item => item.label);
-        const topFiveData = topFive.map(item => item.frequency);
-
-
+        const sortedMatchTypes = Object.entries(matchTypeCount)
+          .sort((a, b) => b[1] - a[1]); 
+        const topFive = sortedMatchTypes.slice(0, 5);
+        const other = sortedMatchTypes.slice(5); 
+        const otherFrequency = other.reduce((sum, item) => sum + item[1], 0);
+        const topFiveLabels = topFive.map(item => item[0]);
+        const topFiveData = topFive.map(item => item[1]);
         const total = [...topFiveData, otherFrequency].reduce((sum, value) => sum + value, 0);
         const percentages = [...topFiveData, otherFrequency].map(value => ((value / total) * 100).toFixed(2));
-
         const newData = {
           labels: [...topFiveLabels, '其他'], 
           datasets: [{

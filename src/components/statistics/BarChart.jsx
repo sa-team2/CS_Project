@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { db } from '../../firebase';  // 确保路径与实际路径匹配
+import { db } from '../../firebase';  
 import { collection, getDocs } from 'firebase/firestore';
 
 ChartJS.register(
@@ -57,21 +57,31 @@ function BarChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'Statistics'));
-        const dataArray = [];
+        const querySnapshot = await getDocs(collection(db, 'Outcome'));
+        const matchTypeCount = {}; 
 
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          dataArray.push({ type: data.Type, frequency: data.Frequency });
+          const matches = data.PythonResult?.Match; 
+
+          if (matches) {
+            matches.forEach(match => {
+              const matchType = match.MatchType;
+              if (matchTypeCount[matchType]) {
+                matchTypeCount[matchType] += 1; 
+              } else {
+                matchTypeCount[matchType] = 1; 
+              }
+            });
+          }
         });
 
-        // Sort data by frequency in descending order and take the top 5
-        dataArray.sort((a, b) => b.frequency - a.frequency);
-        const topFiveData = dataArray.slice(0, 5); //超奇怪
+        const sortedMatchTypes = Object.entries(matchTypeCount)
+          .sort((a, b) => b[1] - a[1]); 
 
-        const labels = topFiveData.map(item => item.type);
-        const datasetData = topFiveData.map(item => item.frequency);
-
+        const topFive = sortedMatchTypes.slice(0, 5); 
+        const labels = topFive.map(item => item[0]);
+        const datasetData = topFive.map(item => item[1]);
 
         const newData = {
           labels,
