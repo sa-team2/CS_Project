@@ -66,12 +66,12 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
     setProgress(progressStartValue);
     
     let newRiskLevel;
-    if (progressEndValue <= 50) {
-      newRiskLevel = '高風險';
-    } else if (progressEndValue <= 75) {
+    if (progressEndValue <= 40) {
+      newRiskLevel = '低風險';
+    } else if (progressEndValue <= 60) {
       newRiskLevel = '中風險';
     } else {
-      newRiskLevel = '低風險';
+      newRiskLevel = '高風險';
     }
     setRiskLevel(newRiskLevel);
 
@@ -117,14 +117,14 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
   );
 
   const getRiskLevel = () => {
-    if (progress <= 50) {
+    if (progress <= 40) {
       return (
         <ul className="rating-ul">
-          <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#ff0000"}} /> 高風險</li>
+          <li>等級：<FontAwesomeIcon icon={faCheck} style={{color: "#0ec48d"}} /> 低風險</li>
           <li>提醒：{reminds}</li>
         </ul>
       )
-    } else if (progress <= 70) {
+    } else if (progress <= 60) {
       return (
         <ul className="rating-ul">
           <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#FFD43B"}} /> 中風險</li>
@@ -134,7 +134,7 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
     } else {
       return (
         <ul className="rating-ul">
-          <li>等級：<FontAwesomeIcon icon={faCheck} style={{color: "#0ec48d"}} /> 低風險</li>
+          <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#ff0000"}} /> 高風險</li>
           <li>提醒：{reminds}</li>
         </ul>
       )
@@ -178,7 +178,7 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
               </Card.Body>
             </Card>
 
-            {(riskLevel === "高風險" || riskLevel === "中風險") && (
+            {(riskLevel === "高風險" || riskLevel === "中風險"|| riskLevel === "低風險") && (
               <>
                 <Card className="card-rating">
                   <Card.Body>
