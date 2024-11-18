@@ -24,7 +24,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { db } from "../../firebase";
-import { collection, getDocs, addDoc, deleteDoc, updateDoc, doc, query, where } from "firebase/firestore"; // Firebase Firestore
+import { collection, getDocs, addDoc, deleteDoc, updateDoc, doc, query, where,getDoc } from "firebase/firestore"; // Firebase Firestore
 import "./AdminPreview.css";
 import { Modal } from "react-bootstrap";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -351,8 +351,169 @@ export default function AdminPreview() {
     [order, orderBy, page, rowsPerPage, rows] // Ensure rows is included in dependencies
   );
 
+
+      /*更新finalStatistics，總筆數和最終的準確度
+      但因為可能一次判斷成兩種類型，在總筆數我只算一次，
+      但類型反而兩者都加，所以類型的總次數加起來不等於TotalDataCount*/
+
+  const updateStatistics = async () => {
+    try {
+      // 1. 讀取 Outcome 集合，計算總筆數
+      const outcomeCollection = await getDocs(collection(db, 'Outcome'));
+      const newTotalDataCount = outcomeCollection.size; // Outcome 集合的總筆數
+  
+      // 2. 讀取 Statistics 表中的 finalStatistics 文檔
+      const statisticsRef = doc(db, 'Statistics', 'finalStatistics');
+      const docSnapshot = await getDoc(statisticsRef);
+  
+      // 3. 獲取現有的 totalDataCount 和 finalAccuracy
+      let currentTotalDataCount = 0;
+      let currentFinalAccuracy = 0;
+      if (docSnapshot.exists()) {
+        currentTotalDataCount = docSnapshot.data().totalDataCount || 0; // 預設為 0 如果該欄位為 undefined，初始化
+        currentFinalAccuracy = docSnapshot.data().finalAccuracy || 0; // 預設為 0 如果該欄位為 undefined，初始化
+      }
+  
+      // 4. 計算總準確度
+      let totalCalculatedAccuracy = 0;
+      let recordCount = 0;
+  
+      // 查看 Outcome 集合中的每一筆資料
+      outcomeCollection.forEach((doc) => {
+        const data = doc.data();
+        const stars = data.Stars;
+        const fraudRate = data.PythonResult?.FraudRate;
+  
+        // 計算辨識準確度
+        if (stars !== undefined && fraudRate !== undefined) {
+          let adjustedFraudRate;
+          if ((fraudRate >= 50 && fraudRate <= 75) || (fraudRate >= 0 && fraudRate <= 25)) {
+            adjustedFraudRate = 100 - fraudRate; // 計算調整後的 fraudRate
+          } else {
+            adjustedFraudRate = fraudRate;
+          }
+  
+          const starsScore = stars * 20;
+          const weightedAccuracy = (starsScore * 0.3) + (adjustedFraudRate * 0.7); // 計算加權準確度
+          totalCalculatedAccuracy += weightedAccuracy;
+          recordCount++;
+  
+          // 調試輸出每筆資料的計算過程
+          console.log(`Doc ID: ${doc.id}, Stars: ${stars}, FraudRate: ${fraudRate}`);
+          console.log(`Adjusted FraudRate: ${adjustedFraudRate}, StarsScore: ${starsScore}`);
+          console.log(`Weighted Accuracy for this doc: ${weightedAccuracy}`);
+        }
+      });
+  
+      // 5. 更新 totalDataCount，將舊的值和新的值加起來
+      const updatedTotalDataCount = currentTotalDataCount + newTotalDataCount;
+  
+      // 計算新的 finalAccuracy (加權總準確度)
+      const newFinalAccuracy = (currentFinalAccuracy * currentTotalDataCount + totalCalculatedAccuracy) / updatedTotalDataCount;
+  
+      // 6. 更新 Statistics 表中的 finalStatistics 文檔
+      await updateDoc(statisticsRef, {
+        totalDataCount: updatedTotalDataCount,
+        finalAccuracy: newFinalAccuracy
+      });
+  
+      // 調試輸出最終結果，檢查可視情況刪除
+      console.log("當前 totalDataCount:", currentTotalDataCount);
+      console.log("新的 totalDataCount:", newTotalDataCount);
+      console.log("更新後 totalDataCount:", updatedTotalDataCount);
+      console.log("當前 finalAccuracy:", currentFinalAccuracy);
+      console.log("計算的總準確度:", totalCalculatedAccuracy);
+      console.log("新的 finalAccuracy:", newFinalAccuracy);
+  
+    } catch (error) {
+      console.error('統計未更新: ', error);
+    }    
+  };
+      
+      /* 統計各類型出現次數，和最熱門詐騙類型*/
+  const updatetopType = async () => {
+    try {
+      // 1. 讀取 Outcome 集合並初始化 MatchType 計數
+      const outcomeCollection = await getDocs(collection(db, "Outcome"));
+      let matchTypeCount = {};
+  
+      // 2. 遍歷 Outcome 集合，提取 MatchType 並計算頻率
+      outcomeCollection.forEach((doc) => {
+        const data = doc.data();
+        const matches = data.PythonResult?.Match || []; // 獲取 Match 陣列
+  
+        matches.forEach((match) => {
+          const matchType = match.MatchType?.trim(); // 確保去除多餘空格
+          if (matchType) {
+            matchTypeCount[matchType] = (matchTypeCount[matchType] || 0) + 1;
+          }
+        });
+      });
+  
+      console.log(`MatchType 計數結果: ${JSON.stringify(matchTypeCount)}`);
+  
+      // 3. 讀取 Statistics 集合
+      const statisticsCollection = await getDocs(collection(db, "Statistics"));
+  
+      // 儲存最高頻率及對應類型
+      let maxFrequency = 0;
+      let maxFrequencyTypes = []; // 儲存所有最大頻率類型
+  
+      // 4. 更新 Statistics 中的 Frequency 並找到最大值
+      for (const statDoc of statisticsCollection.docs) {
+        const data = statDoc.data();
+        const type = data.Type?.trim(); // 確保去除多餘空格
+  
+        console.log(`檢查文檔 ${statDoc.id} 的 Type 值: ${type}`);
+  
+        if (matchTypeCount[type]) {
+          console.log(`找到匹配的 Type: ${type}`);
+  
+          // 累計更新 Frequency 值
+          const updatedFrequency = (data.Frequency || 0) + matchTypeCount[type];
+  
+          const statisticsRef = doc(db, "Statistics", statDoc.id); // 獲取文檔引用
+          await updateDoc(statisticsRef, { Frequency: updatedFrequency }); // 更新 Frequency
+  
+          console.log(`更新文檔 ${statDoc.id} 的 Frequency 成功，新的值為: ${updatedFrequency}`);
+  
+          // 更新最大頻率類型列表
+          if (updatedFrequency > maxFrequency) {
+            maxFrequency = updatedFrequency;
+            maxFrequencyTypes = [type]; // 重置為新最大值的類型
+          } else if (updatedFrequency === maxFrequency) {
+            maxFrequencyTypes.push(type); // 添加到最大值類型列表
+          }
+        } else {
+          console.warn(`Type: ${type} 未在 MatchType 中找到對應項`);
+        }
+      }
+  
+      console.log("統計類型頻率更新完成！");
+  
+      // 5. 返回所有最大頻率的類型
+      if (maxFrequencyTypes.length > 0) {
+        console.log(`最大頻率類型為: ${maxFrequencyTypes.join(", ")}, 頻率為: ${maxFrequency}`);
+        return maxFrequencyTypes; // 返回最大頻率類型的陣列
+      } else {
+        console.warn("未找到任何匹配的類型！");
+        return [];
+      }
+    } catch (error) {
+      console.error("更新統計類型失敗: ", error);
+      return [];
+    }    
+  };
+  
+
+
+
   const handleUpdate = async () => {
     try {
+      // Step 0: 更新 Statistics 
+      await updateStatistics(); 
+      await updatetopType(); 
+      
       // Step 1: 從 FraudDefine collection 中抓取資料
       const fraudDefineSnapshot = await getDocs(collection(db, "FraudDefine"));
       const fraudDefineKeywords = fraudDefineSnapshot.docs.map(
@@ -430,6 +591,9 @@ export default function AdminPreview() {
 
   const handleDelete = async () => {
     try {
+      await updateStatistics(); 
+      await updatetopType(); 
+
       await Promise.all(
         selected.map(async (id) => {
           await deleteDoc(doc(db, "Outcome", id));
