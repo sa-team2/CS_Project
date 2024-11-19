@@ -305,6 +305,7 @@ export default function AdminPreview() {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
+      setOpenFiter(false);
       return;
     }
     setSelected([]);
