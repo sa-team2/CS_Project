@@ -177,7 +177,7 @@ function EnhancedTableToolbar(props) {
               theme.palette.action.activatedOpacity
             ),
         },
-      ]}
+      ]} className="toolbar"
     >
       {numSelected > 0 ? (
         <Typography
@@ -195,25 +195,24 @@ function EnhancedTableToolbar(props) {
           id="tableTitle"
           component="div"
         >
-          預覽畫面
         </Typography>
       )}
       {numSelected > 0 ? (
         <>
           <Tooltip title="更新 Update">
-            <IconButton onClick={openUpdateModal}>
+            <IconButton onClick={openUpdateModal} style={{color:'white'}}>
               <CloudUploadIcon />
             </IconButton>
           </Tooltip>
           <Tooltip title="刪除 Delete">
-            <IconButton onClick={openDeleteModal}>
+            <IconButton onClick={openDeleteModal} style={{color:'white'}}>
               <DeleteIcon />
             </IconButton>
           </Tooltip>
         </>
       ) : (
         <Tooltip title="篩選 Filter">
-          <IconButton onClick={handleOpenFilter}>
+          <IconButton onClick={handleOpenFilter} style={{color:'white'}}>
             <FilterListIcon />
           </IconButton>
         </Tooltip>
@@ -305,7 +304,7 @@ export default function AdminPreview() {
     if (event.target.checked) {
       const newSelected = rows.map((n) => n.id);
       setSelected(newSelected);
-      setOpenFiter(false);
+      setOpenFiter(false)
       return;
     }
     setSelected([]);
@@ -629,13 +628,13 @@ export default function AdminPreview() {
   return (
     <>
       <Box sx={{ width: "100%" }}>
-        <Paper sx={{ width: "100%", mb: 2 }}>
+        <Paper sx={{ width: "100%", mb: 2 }} className="none">
           <div style={{position:'relative'}}>
           <EnhancedTableToolbar
             numSelected={selected.length}
             openUpdateModal={openUpdateModal}
             openDeleteModal={openDeleteModal}
-            handleOpenFilter={handleOpenFilter}
+            handleOpenFilter={handleOpenFilter} 
           />
           {openFilter && (
             <div style={{position:'absolute', right:'40px', top:'13px'}}>
@@ -647,12 +646,14 @@ export default function AdminPreview() {
                       checked={selectedStar.includes(value)}
                       onChange={handleChange}
                       value={value}
-                      icon={<RadioButtonUncheckedIcon sx={{ color: "gray", fontSize: "20px" }}/>}
+                      icon={<RadioButtonUncheckedIcon sx={{ color: "white", fontSize: "20px" }}/>}
                       checkedIcon={<RadioButtonCheckedIcon sx={{ color: "white", fontSize: "20px" }}/>}
                     />
                   }
                   label={
-                    <Typography sx={{ color: selectedStar.includes(value) ? "white" : "gray" }}>
+                    <Typography 
+                      sx={{ color: selectedStar.includes(value) ? "white" : "white" }}
+                      style={{fontSize:'16px', fontWeight:'bolder'}}>
                       {value}
                     </Typography>
                   }
