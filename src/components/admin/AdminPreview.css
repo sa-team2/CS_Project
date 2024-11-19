@@ -62,14 +62,13 @@
 
 
 .adminupdate-text {
-    margin-left: 5px;
     font-size: 20px;
 }
 
 .adminpreview-updatecheck {
-    font-size: 20px;
+    font-size: 25px;
+    font-weight: bolder;
     margin-bottom: 0;
-    border-bottom: 1px solid rgb(222, 226, 230);
 }
 
 .adminpreview-updatecheck.updatecheck-mt {
@@ -100,3 +99,4 @@
 .css-5hj5np-MuiToolbar-root{
     background-color: goldenrod !important;
 }
+

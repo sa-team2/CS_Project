@@ -739,13 +739,15 @@ export default function AdminPreview() {
       <Modal show={show} onHide={handleClose} backdrop="static" centered>
         <Modal.Header closeButton>
           <Modal.Title>
-            <b>更新結果：</b>
+            <p style={{fontSize:'30px',fontWeight:'bolder', lineHeight:'45px',marginTop:'20px',marginLeft:'10px'}}>
+              更新結果
+            </p>
           </Modal.Title>
         </Modal.Header>
-        <Modal.Body>
+        <Modal.Body style={{marginLeft:'10px'}}>
           <div>
             <p className="adminpreview-updatecheck">重複：</p>
-            <div>
+            <div className="adminupdate-text">
               {matchedData.length > 0 ? (
                 matchedData
                   .map((item) =>
@@ -753,13 +755,13 @@ export default function AdminPreview() {
                   )
                   .join(", ")
               ) : (
-                <p>無關鍵字重複</p>
+                <p className="adminupdate-text">無關鍵字重複</p>
               )}
             </div>
           </div>
           <div>
             <p className="adminpreview-updatecheck updatecheck-mt">更新：</p>
-            <div>
+            <div className="adminupdate-text">
               {unmatchedData.length > 0 ? (
                 unmatchedData
                   .map((item) =>
@@ -767,18 +769,18 @@ export default function AdminPreview() {
                   )
                   .join(", ")
               ) : (
-                <p>無關鍵字被更新</p>
+                <p className="adminupdate-text">無關鍵字被更新</p>
               )}
             </div>
           </div>
         </Modal.Body>
-        <Modal.Footer>
-          <Button
-            className="adminpreview-updatecheck-confirm"
+        <Modal.Footer style={{display:'flex',justifyContent:'center'}}>
+          <button
+            className="admin-enter"
             onClick={handleClose}
           >
             確認
-          </Button>
+          </button>
         </Modal.Footer>
       </Modal>
       {(isUpdateModalOpen || isDeleteModalOpen) && ( 
