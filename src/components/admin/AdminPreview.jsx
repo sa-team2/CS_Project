@@ -356,101 +356,129 @@ export default function AdminPreview() {
       但因為可能一次判斷成兩種類型，在總筆數我只算一次，
       但類型反而兩者都加，所以類型的總次數加起來不等於TotalDataCount*/
 
-  const updateStatistics = async () => {
-    try {
-      // 1. 讀取 Outcome 集合，計算總筆數
-      const outcomeCollection = await getDocs(collection(db, 'Outcome'));
-      const newTotalDataCount = outcomeCollection.size; // Outcome 集合的總筆數
-  
-      // 2. 讀取 Statistics 表中的 finalStatistics 文檔
-      const statisticsRef = doc(db, 'Statistics', 'finalStatistics');
-      const docSnapshot = await getDoc(statisticsRef);
-  
-      // 3. 獲取現有的 totalDataCount 和 finalAccuracy
-      let currentTotalDataCount = 0;
-      let currentFinalAccuracy = 0;
-      if (docSnapshot.exists()) {
-        currentTotalDataCount = docSnapshot.data().totalDataCount || 0; // 預設為 0 如果該欄位為 undefined，初始化
-        currentFinalAccuracy = docSnapshot.data().finalAccuracy || 0; // 預設為 0 如果該欄位為 undefined，初始化
-      }
-  
-      // 4. 計算總準確度
-      let totalCalculatedAccuracy = 0;
-      let recordCount = 0;
-  
-      // 查看 Outcome 集合中的每一筆資料
-      outcomeCollection.forEach((doc) => {
-        const data = doc.data();
-        const stars = data.Stars;
-        const fraudRate = data.PythonResult?.FraudRate;
-  
-        // 計算辨識準確度
-        if (stars !== undefined && fraudRate !== undefined) {
-          let adjustedFraudRate;
-          if ((fraudRate >= 50 && fraudRate <= 75) || (fraudRate >= 0 && fraudRate <= 25)) {
-            adjustedFraudRate = 100 - fraudRate; // 計算調整後的 fraudRate
-          } else {
-            adjustedFraudRate = fraudRate;
+      const updateStatistics = async () => {
+        const selectedIds = rows.filter((row) => selected.includes(row.id));
+        console.log("選擇的行", selectedIds);
+        const ids = selectedIds.map(item => item.id);
+
+                try {
+          // 確認是否有選擇的 ID
+          if (!selectedIds || selectedIds.length === 0) {
+            console.error("未選擇任何資料");
+            return;
           }
-  
-          const starsScore = stars * 20;
-          const weightedAccuracy = (starsScore * 0.3) + (adjustedFraudRate * 0.7); // 計算加權準確度
-          totalCalculatedAccuracy += weightedAccuracy;
-          recordCount++;
-  
-          // 調試輸出每筆資料的計算過程
-          console.log(`Doc ID: ${doc.id}, Stars: ${stars}, FraudRate: ${fraudRate}`);
-          console.log(`Adjusted FraudRate: ${adjustedFraudRate}, StarsScore: ${starsScore}`);
-          console.log(`Weighted Accuracy for this doc: ${weightedAccuracy}`);
+          
+          const ids = selectedIds.map(item => item.id);
+          // 1. 讀取 Outcome 集合中符合 selectedIds 的文檔
+          const outcomeCollectionRef = collection(db, 'Outcome');
+          const selectedDocs = await Promise.all(
+            ids.map(async (id) => {
+              console.log(id)
+              console.log("当前处理的 ID:", id, "类型:", typeof id);
+
+              const docRef = doc(outcomeCollectionRef, id);
+              const docSnapshot = await getDoc(docRef);
+              return docSnapshot.exists() ? docSnapshot : null;
+            })
+          );
+      
+          // 篩選有效的文檔
+          const validDocs = selectedDocs.filter((doc) => doc !== null);
+          const newTotalDataCount = validDocs.length; // 只計算選中的有效文檔
+      
+          // 2. 讀取 Statistics 表中的 finalStatistics 文檔
+          const statisticsRef = doc(db, 'Statistics', 'finalStatistics');
+          const docSnapshot = await getDoc(statisticsRef);
+      
+          // 3. 獲取現有的 totalDataCount 和 finalAccuracy
+          let currentTotalDataCount = 0;
+          let currentFinalAccuracy = 0;
+          if (docSnapshot.exists()) {
+            currentTotalDataCount = docSnapshot.data().totalDataCount || 0; // 預設為 0
+            currentFinalAccuracy = docSnapshot.data().finalAccuracy || 0; // 預設為 0
+          }
+      
+          // 4. 計算選中文檔的總準確度
+          let totalCalculatedAccuracy = 0;
+          let recordCount = 0;
+      
+          validDocs.forEach((doc) => {
+            const data = doc.data();
+            const stars = data.Stars;
+            const fraudRate = data.PythonResult?.FraudRate;
+      
+            if (stars !== undefined && fraudRate !== undefined) {
+              let adjustedFraudRate;
+              if ((fraudRate >= 50 && fraudRate <= 75) || (fraudRate >= 0 && fraudRate <= 25)) {
+                adjustedFraudRate = 100 - fraudRate; // 調整後的 fraudRate
+              } else {
+                adjustedFraudRate = fraudRate;
+              }
+      
+              const starsScore = stars * 20;
+              const weightedAccuracy = (starsScore * 0.3) + (adjustedFraudRate * 0.7); // 加權準確度
+              totalCalculatedAccuracy += weightedAccuracy;
+              recordCount++;
+      
+              // 調試輸出每筆資料的計算過程
+              console.log(`Doc ID: ${doc.id}, Stars: ${stars}, FraudRate: ${fraudRate}`);
+              console.log(`Adjusted FraudRate: ${adjustedFraudRate}, StarsScore: ${starsScore}`);
+              console.log(`Weighted Accuracy for this doc: ${weightedAccuracy}`);
+            }
+          });
+      
+          // 5. 更新 totalDataCount，將舊的值和新的值加起來
+          const updatedTotalDataCount = currentTotalDataCount + newTotalDataCount;
+      
+          // 計算新的 finalAccuracy (加權總準確度)
+          const newFinalAccuracy = (currentFinalAccuracy * currentTotalDataCount + totalCalculatedAccuracy) / updatedTotalDataCount;
+      
+          // 6. 更新 Statistics 表中的 finalStatistics 文檔
+          await updateDoc(statisticsRef, {
+            totalDataCount: updatedTotalDataCount,
+            finalAccuracy: newFinalAccuracy,
+          });
+      
+          // 調試輸出最終結果
+          console.log("當前 totalDataCount:", currentTotalDataCount);
+          console.log("新的 totalDataCount:", newTotalDataCount);
+          console.log("更新後 totalDataCount:", updatedTotalDataCount);
+          console.log("當前 finalAccuracy:", currentFinalAccuracy);
+          console.log("計算的總準確度:", totalCalculatedAccuracy);
+          console.log("新的 finalAccuracy:", newFinalAccuracy);
+        } catch (error) {
+          console.error("統計未更新: ", error);
         }
-      });
-  
-      // 5. 更新 totalDataCount，將舊的值和新的值加起來
-      const updatedTotalDataCount = currentTotalDataCount + newTotalDataCount;
-  
-      // 計算新的 finalAccuracy (加權總準確度)
-      const newFinalAccuracy = (currentFinalAccuracy * currentTotalDataCount + totalCalculatedAccuracy) / updatedTotalDataCount;
-  
-      // 6. 更新 Statistics 表中的 finalStatistics 文檔
-      await updateDoc(statisticsRef, {
-        totalDataCount: updatedTotalDataCount,
-        finalAccuracy: newFinalAccuracy
-      });
-  
-      // 調試輸出最終結果，檢查可視情況刪除
-      console.log("當前 totalDataCount:", currentTotalDataCount);
-      console.log("新的 totalDataCount:", newTotalDataCount);
-      console.log("更新後 totalDataCount:", updatedTotalDataCount);
-      console.log("當前 finalAccuracy:", currentFinalAccuracy);
-      console.log("計算的總準確度:", totalCalculatedAccuracy);
-      console.log("新的 finalAccuracy:", newFinalAccuracy);
-  
-    } catch (error) {
-      console.error('統計未更新: ', error);
-    }    
-  };
+      };
       
       /* 統計各類型出現次數，和最熱門詐騙類型*/
   const updatetopType = async () => {
+    const selectedIds = rows.filter((row) => selected.includes(row.id));
+    console.log("選擇的行", selectedIds);
+    const matchTypeCount = selectedIds.flatMap(row =>
+      row.Match.map(matchItem => matchItem.MatchType)
+    );
+    
+    console.log("提取的 MatchType:", matchTypeCount);
     try {
       // 1. 讀取 Outcome 集合並初始化 MatchType 計數
       const outcomeCollection = await getDocs(collection(db, "Outcome"));
-      let matchTypeCount = {};
   
-      // 2. 遍歷 Outcome 集合，提取 MatchType 並計算頻率
-      outcomeCollection.forEach((doc) => {
-        const data = doc.data();
-        const matches = data.PythonResult?.Match || []; // 獲取 Match 陣列
+      // // 2. 遍歷 Outcome 集合，提取 MatchType 並計算頻率
+      // outcomeCollection.forEach((doc) => {
+      //   const data = doc.data();
   
-        matches.forEach((match) => {
-          const matchType = match.MatchType?.trim(); // 確保去除多餘空格
-          if (matchType) {
-            matchTypeCount[matchType] = (matchTypeCount[matchType] || 0) + 1;
-          }
-        });
-      });
+      //   matches.forEach((match) => {
+      //     const matchType = match.MatchType?.trim(); // 確保去除多餘空格
+      //     if (matchType) {
+      //       matchTypeCount[matchType] = (matchTypeCount[matchType] || 0) + 1;
+      //     }
+      //     console.log(matchType);
+
+      //   });
+      // });
   
-      console.log(`MatchType 計數結果: ${JSON.stringify(matchTypeCount)}`);
+      //console.log(`MatchType 計數結果: ${JSON.stringify(matchTypeCount)}`);
   
       // 3. 讀取 Statistics 集合
       const statisticsCollection = await getDocs(collection(db, "Statistics"));
@@ -681,8 +709,9 @@ export default function AdminPreview() {
                   const matchKeywords = row.Match.map(
                     (matchItem) => matchItem.MatchKeyword
                   ).join(", ");
-                  const matchTypes = row.Match.length > 0 ? "可疑" : "";
-
+                  const matchTypes = row.Match.map(
+                    (matchItem) => matchItem.MatchType
+                  ).join(", ");
                   return (
                     <TableRow
                       hover
@@ -705,9 +734,7 @@ export default function AdminPreview() {
                       <TableCell align="right">{row.FraudResult}</TableCell>
                       <TableCell align="right">{matchKeywords}</TableCell>
                       <TableCell align="right">{matchTypes}</TableCell>
-                      <TableCell align="right">
-                        {row.FraudResult !== "詐騙" ? "" : row.FraudRate}
-                      </TableCell>
+                      <TableCell align="right">{row.FraudRate}</TableCell>
                       <TableCell align="right">{row.Stars}</TableCell>
                     </TableRow>
                   );
