@@ -113,3 +113,8 @@ function BarChart() {
   return (
     <>
       {data ? <Bar data={data} options={options} plugins={[ChartDataLabels]}/> : <p>載入資料中...</p>}
+    </>
+  );
+}
+
+export default BarChart;
