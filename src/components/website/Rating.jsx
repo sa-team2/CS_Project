@@ -50,7 +50,7 @@ const getColorAtProgress = (progress) => {
   }
 };
 
-function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,reminds}) {
+function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,reminds, data,file}) {
   const [progress, setProgress] = React.useState(0);
   const [riskLevel, setRiskLevel] = React.useState('中風險'); // 默认风险等级
   
@@ -66,12 +66,12 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
     setProgress(progressStartValue);
     
     let newRiskLevel;
-    if (progressEndValue <= 40) {
-      newRiskLevel = '低風險';
-    } else if (progressEndValue <= 60) {
+    if (progressEndValue <= 50) {
+      newRiskLevel = '高風險';
+    } else if (progressEndValue <= 75) {
       newRiskLevel = '中風險';
     } else {
-      newRiskLevel = '高風險';
+      newRiskLevel = '低風險';
     }
     setRiskLevel(newRiskLevel);
 
@@ -117,14 +117,14 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
   );
 
   const getRiskLevel = () => {
-    if (progress <= 40) {
+    if (progress <= 50) {
       return (
         <ul className="rating-ul">
-          <li>等級：<FontAwesomeIcon icon={faCheck} style={{color: "#0ec48d"}} /> 低風險</li>
+          <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#ff0000"}} /> 高風險</li>
           <li>提醒：{reminds}</li>
         </ul>
       )
-    } else if (progress <= 60) {
+    } else if (progress <= 70) {
       return (
         <ul className="rating-ul">
           <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#FFD43B"}} /> 中風險</li>
@@ -134,7 +134,7 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
     } else {
       return (
         <ul className="rating-ul">
-          <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#ff0000"}} /> 高風險</li>
+          <li>等級：<FontAwesomeIcon icon={faCheck} style={{color: "#0ec48d"}} /> 低風險</li>
           <li>提醒：{reminds}</li>
         </ul>
       )
@@ -168,6 +168,7 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
               <Rate tooltips={sign} onChange={setValue} value={value} />
             </Row>
           </div>
+          
           <div className="container-2">
             <Card className="card-rating">
               <Card.Body>
@@ -178,23 +179,19 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
               </Card.Body>
             </Card>
 
-            {(riskLevel === "高風險" || riskLevel === "中風險"|| riskLevel === "低風險") && (
+            {(riskLevel === "高風險" || riskLevel === "中風險") && (
               <>
                 <Card className="card-rating">
                   <Card.Body>
                     <Card.Title><b>詐騙類型：</b></Card.Title>
-                    
                       <Card.Text>
+                        <ul className="rating-ul">
+                            <li>類型：{types || '無'}</li>
+                        </ul>
                         <ul className="rating-ul">
                           <li>關鍵字詞：{keywords && keywords.length > 0 ? keywords.join(', ') : '無'}</li>
                         </ul>
                       </Card.Text>
-                      <Card.Text>
-                    <ul className="rating-ul">
-                          <li>類型：{types || '無'}</li>
-                        </ul>
-                    </Card.Text>
-
                   </Card.Body>
                 </Card>
 
@@ -204,8 +201,43 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
               </>
             )}
           </div>
+
+          {data && data.startsWith('http') ? (
+            // 預覽網頁
+            <div className='container-3'>
+              <div className='container-3-title-url'>
+                <div className='container-3-title'><b>預覽網頁：</b></div>
+                <a href={data} target='_blank' rel='noopener noreferrer'>{data}</a>
+              </div>
+              <iframe src={data} style={{ width: "100%", height: "400px" }}></iframe>
+            </div>
+          ) : file && file.type.startsWith('image/') ? (
+            // 預覽圖片
+            <div className='container-3'>
+              <div className='container-3-image-title'><b>預覽圖片：</b></div>
+              <img src={URL.createObjectURL(file)} alt="預覽圖片" style={{ width: "100%", maxWidth: "100%", height: "auto", maxHeight: "400px" }} />
+            </div>
+          ) : null}
+
+        
         </>
       )}
+
+      {/* ***當檢測的是圖片***
+      <div className='container-3'>
+        <div className='container-3-image-title'><b>預覽圖片：</b></div>
+        <img src="https://mir-s3-cdn-cf.behance.net/project_modules/max_3840/2d0d73149404331.62e757877ca8b.jpg" width="100%"></img>
+      </div> }
+
+      {/* ***當檢測的是網址***
+      <div className='container-3'>
+        <div className='container-3-title-url'>
+          <div className='container-3-title'><b>預覽網頁：</b></div>
+          <a href='https://zh.wikipedia.org/zh-tw/LE_SSERAFIM' target='blank'>https://zh.wikipedia.org/zh-tw/LE_SSERAFIM</a>
+        </div>
+        <iframe src='https://zh.wikipedia.org/?title=%E9%9B%85%E8%99%8E' style={{ width: "100%", height: "400px" }}></iframe>
+      </div> */}
+
     </div>
   );
 }
