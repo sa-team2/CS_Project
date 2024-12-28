@@ -136,11 +136,12 @@ function MSGCheckInput() {
                 </div>
               )}
               {isLoaded && (
-                <Rating pythonResult={result} keywords={keywords} types={type} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents}/>
+                <Rating pythonResult={result} keywords={keywords} types={type} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} data={""}/>
               )}
             </Modal.Body>
             {isLoaded && (
               <Modal.Footer>
+                
                 <Button className='msg-jump' onClick={handleClose}>
                   跳過
                 </Button>
