@@ -141,7 +141,7 @@ function URLCheckTextArea() {
               </div>
             )}
             {isLoaded && (
-              <Rating pythonResult={pythonResult} keywords={keywords} types={type} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents}/>
+              <Rating pythonResult={pythonResult} keywords={keywords} types={type} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} data={url}/>
             )}
           </Modal.Body>
           {isLoaded && (
