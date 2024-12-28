@@ -15,6 +15,8 @@ function TXTCheckUpload() {
   const [prevents, setPrevent] = useState('無');
   const [FraudRate, setFraudRate] = useState(null); // 存储 FraudRate
   const [ID, setID] = useState('');
+  const [file, setFile] = useState(null); // 添加一個狀態來存儲上傳的文件
+
 
   const handleClose = () => {
     setShow(false);
@@ -26,8 +28,10 @@ function TXTCheckUpload() {
     event.preventDefault();
     const fileInput = document.getElementById('file-input');
     const file = fileInput.files[0];
+    setFile(file);  // 保存文件到状态
 
     if (file) {
+      
       const formData = new FormData();
       formData.append('file', file);
       for (let [key, value] of formData.entries()) {
@@ -123,7 +127,7 @@ function TXTCheckUpload() {
             </button>
           </div>
 
-          <Modal className="modal-custom" show={show} onHide={handleClose} backdrop="static" centered>
+          <Modal className="modal-custom" dialogClassName="modal-auto-width" show={show} onHide={handleClose} backdrop="static" centered>
           <Modal.Header closeButton>
             <Modal.Title><b>檢測結果：</b></Modal.Title>
           </Modal.Header>
@@ -136,11 +140,11 @@ function TXTCheckUpload() {
               </div>
             )}
             {isLoaded && (
-  <Rating pythonResult={pythonResult} keywords={keywords} types={types} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} />
+              <Rating pythonResult={pythonResult} keywords={keywords} types={types} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} file={file}/>
             )}
           </Modal.Body>
           {isLoaded && (
-            <Modal.Footer>  
+            <Modal.Footer> 
               <Button className='txt-jump' onClick={handleClose}>
                 跳過
               </Button>
