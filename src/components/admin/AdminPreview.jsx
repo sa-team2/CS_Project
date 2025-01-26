@@ -464,21 +464,18 @@ export default function AdminPreview() {
       // 1. 讀取 Outcome 集合並初始化 MatchType 計數
       const outcomeCollection = await getDocs(collection(db, "Outcome"));
   
-      // // 2. 遍歷 Outcome 集合，提取 MatchType 並計算頻率
-      // outcomeCollection.forEach((doc) => {
-      //   const data = doc.data();
-  
-      //   matches.forEach((match) => {
-      //     const matchType = match.MatchType?.trim(); // 確保去除多餘空格
-      //     if (matchType) {
-      //       matchTypeCount[matchType] = (matchTypeCount[matchType] || 0) + 1;
-      //     }
-      //     console.log(matchType);
-
-      //   });
-      // });
-  
-      //console.log(`MatchType 計數結果: ${JSON.stringify(matchTypeCount)}`);
+      // 2. 遍歷 Outcome 集合，提取 MatchType 並計算頻率
+        outcomeCollection.forEach((doc) => {
+          const data = doc.data();
+          const matches = data.PythonResult?.Match || []; // 獲取 Match 陣列
+    
+          matches.forEach((match) => {
+            const matchType = match.MatchType?.trim(); // 確保去除多餘空格
+            if (matchType) {
+              matchTypeCount[matchType] = (matchTypeCount[matchType] || 0) + 1;
+            }
+          });
+        });
   
       // 3. 讀取 Statistics 集合
       const statisticsCollection = await getDocs(collection(db, "Statistics"));
