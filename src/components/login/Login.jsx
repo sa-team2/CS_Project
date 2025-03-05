@@ -33,7 +33,7 @@ function Login() {
         if (userData.Password === password) {
           console.log("登入成功:", userData);
           sessionStorage.setItem('username', username); 
-          navigate('/Admin'); 
+          navigate('/admin'); 
         } else {
           setError(prev => ({ ...prev, passwordError: '密碼錯誤' })); 
         }
