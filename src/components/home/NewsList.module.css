@@ -1,0 +1,89 @@
+.newsTitle {
+  text-align: center;
+  font-weight: 700;
+  color: white;
+  font-size: 3rem;
+}
+
+.newsSubTitle {
+  text-align: center;
+  font-weight: 700;
+  color: rgba(211, 211, 211, 0.75);
+  font-size: 1.25rem;
+}
+
+.articlesContainer {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* 每張卡片至少250px，平均分配 */
+  gap: 20px;
+  width: 100%;
+}
+
+.article {
+    height: 100%;
+    /* box-shadow: 5px 5px 5px lightgray; */
+    transition: transform 0.75s ease;
+}
+
+.article:hover {
+    /* box-shadow: 1px 1px 5px gray; */
+    transform: scale(0.95)
+}
+
+  
+  .article {
+    display: flex;
+    justify-content: center;
+  }
+
+  .newsCarousel {
+    display: flex;
+    align-items: center;
+    background-color: #141313;
+    border: 1px solid #393939;
+    border-radius: 1rem;
+    padding: 40px 0;
+    margin-top: 5rem;
+  }
+
+  .carouselButtonLeft, .carouselButtonRight {
+    background: none;  
+    border: none;  
+    outline: none; 
+    color: white;
+    padding: 0;
+  }
+
+  .customCard {
+    width: 450px; 
+    height: 100%;
+    overflow: hidden; 
+    border: 1px solid #393939;
+  }
+
+  .customCardImg {
+    height: 250px; 
+    object-fit: cover;
+  }
+
+  .ellipsisTitle {
+    white-space: nowrap;      
+    overflow: hidden;         
+    text-overflow: ellipsis;  
+    max-width: 100%;   
+    font-weight: 700;       
+  }
+
+  .seeMore {
+    display: flex;
+    justify-content: flex-end;
+  }
+
+
+  /* .ellipsisText {
+    white-space: wrap;      
+    overflow: hidden;         
+    text-overflow: ellipsis;  
+    max-height: 50%;          
+  } */
+
