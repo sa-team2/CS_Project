@@ -3,6 +3,7 @@ import { BrowserRouter } from 'react-router-dom';
 import AnimationRoute from './components/animationroute/AnimationRoute';
 import { useEffect } from 'react';
 import { getAuth, signInAnonymously } from 'firebase/auth';
+import { QuizProvider } from './components/quiz/QuizContext';
 
 function App() {
   useEffect(() => {
@@ -18,7 +19,9 @@ function App() {
 
   return (
     <BrowserRouter>
-      <AnimationRoute />
+      <QuizProvider>
+        <AnimationRoute />
+      </QuizProvider>
     </BrowserRouter>
   );
 }
