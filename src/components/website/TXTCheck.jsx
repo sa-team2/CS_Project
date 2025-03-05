@@ -3,6 +3,7 @@ import { Button, Modal } from 'react-bootstrap';  // 移除 Spinner 引用
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import Rating from './Rating';
 import './TXTCheck.css';
+import UploadFileIcon from '@mui/icons-material/UploadFile';
 
 function TXTCheckUpload() {
   const [show, setShow] = useState(false);
@@ -31,7 +32,6 @@ function TXTCheckUpload() {
     setFile(file);  // 保存文件到状态
 
     if (file) {
-      
       const formData = new FormData();
       formData.append('file', file);
       for (let [key, value] of formData.entries()) {
@@ -103,12 +103,18 @@ function TXTCheckUpload() {
 
   return (
     <>
-        <label htmlFor="file-input" className="drop-container">
-          <span className="drop-title">拖曳檔案至此</span>
-          <span className="drop-title">或</span><br></br>
-          <input type="file" accept="image/*" required id="file-input"/>
-        </label>
-        <div>
+        <div className='fileInputContainer'>
+
+          <label htmlFor="file-input" className="drop-container">
+            <span className="dropTitle">
+              <UploadFileIcon fontSize='large'/>拖曳檔案至此
+            </span>
+            <span className="dropTitleOr">或</span>
+            <input type="file" accept="image/*" required id="file-input"/>
+          </label>
+
+          <div>
+            
           <div className="btn-txt-area">
             <button type='submit' className='txt-submit' onClick={handleCombinedClick}>
               <svg
@@ -126,6 +132,8 @@ function TXTCheckUpload() {
               <span>檢測</span>
             </button>
           </div>
+        </div>
+        
 
           <Modal className="modal-custom" dialogClassName="modal-auto-width" show={show} onHide={handleClose} backdrop="static" centered>
           <Modal.Header closeButton>
@@ -144,7 +152,7 @@ function TXTCheckUpload() {
             )}
           </Modal.Body>
           {isLoaded && (
-            <Modal.Footer> 
+            <Modal.Footer>  
               <Button className='txt-jump' onClick={handleClose}>
                 跳過
               </Button>

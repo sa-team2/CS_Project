@@ -2,7 +2,8 @@ import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css'; 
 import Rating from './Rating';
-import './URLCheck.css';
+import styles from './URLCheck.module.css';
+import ClearIcon from '@mui/icons-material/Clear';
 
 function URLCheckTextArea() {
   const [url, setUrl] = useState('');
@@ -99,19 +100,25 @@ function URLCheckTextArea() {
 
   return (
     <>
-      <div className="">
-        <div className="url-input">
+      <div className={styles.urlInputContainer}>
+        <div className={styles.inputWrapper}>
           <input
-              className="url-input"
-              type='text'
-              placeholder='請輸入或貼上網址...'
+              className={styles.urlInput}
+              type="text"
+              placeholder="請輸入或貼上網址..."
               value={url}
               onChange={(e) => setUrl(e.target.value)}
               required
           />
+          <button
+              className={styles.clearBtn}
+              onClick={() => setUrl('')} // 清除輸入框內容
+          >
+              <ClearIcon />
+          </button>
         </div>
-        <div className="btn-url-area">
-          <button className='url-submit' onClick={handleCombinedClick}>
+        <div className={styles.btnUrlArea}>
+          <button className={styles.urlSubmit} onClick={handleCombinedClick}>
             <svg
               height="24"
               width="24"
@@ -127,8 +134,10 @@ function URLCheckTextArea() {
             <span>檢測</span>
           </button>
         </div>
+      </div>
 
-        <Modal className="modal-custom" show={show} onHide={handleClose} backdrop="static" centered>
+
+        <Modal className={styles.modalCustom} show={show} onHide={handleClose} backdrop="static" centered>
           <Modal.Header closeButton>
             <Modal.Title><b>檢測結果：</b></Modal.Title>
           </Modal.Header>
@@ -146,16 +155,15 @@ function URLCheckTextArea() {
           </Modal.Body>
           {isLoaded && (
             <Modal.Footer>
-              <Button className='url-jump' onClick={handleClose}>
+              <Button className={styles.urlSkip} onClick={handleClose}>
                 跳過
               </Button>
-              <Button className='url-enter' onClick={handleClose}>
+              <Button className={styles.urlEnter} onClick={handleClose}>
                 送出
               </Button>
             </Modal.Footer>
           )}
         </Modal>
-      </div>
     </>
   );
 }

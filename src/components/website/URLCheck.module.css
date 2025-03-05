@@ -1,183 +1,175 @@
-.txt-form {
-    width: 800px;
-    padding: 10px;
-    background-color: white;
-    border-radius: 10px;
+.urlInputContainer {
     display: flex;
-    height: 150px;
-    margin: 24px 0;
-  }
+    align-items: center;
+    background-color: black;
+    border-radius: 75px;
+    height: 120px;
+    border: 1px solid #353535;
+    box-shadow: 0px 0px 5px rgba(145, 145, 145, 0.5);
+    overflow: hidden;
+}
 
-  .fileInputContainer {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    border-radius: 25px;
+.inputWrapper {
+    position: relative;
+    width: 100%;
+    margin: 20px;
+}
+
+.urlInput {
+    width: 100%;
+    height: 80px;
+    outline: none;
+    font-size: 20px;
+    padding: 20px 50px 20px 20px;
+    border-radius: 75px;
     border: 1px solid #353535;
     box-shadow: 0px 0px 5px rgb(145, 145, 145);
-    padding: 20px;
-    gap: 20px;
-  }
-  
-  .drop-container {
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    align-items: center;
-    width: 100%;
-    height: 25vh;
-    border-radius: 15px;
-    border: 1px solid #353535; 
-    box-shadow: 0px 0px 5px rgb(145, 145, 145);
-    gap: 20px;
     background-color: #1f1f1f;
-    transition: background-color 0.3s ease-in-out;
-  }
-  
-  .drop-container:hover {
+    color: #f0f0f0;
+    transition: border-color 0.3s ease-in-out;
+}
+
+.urlInput::placeholder {
+    color: rgba(211, 211, 211, 0.75);
+}
+
+.urlInput:focus {
+    border-color: lightgray; 
+}
+
+.clearBtn {
+    position: absolute;
+    background-color: #353535;
+    height: 35px;
+    width: 35px;
+    border-radius: 50%;
+    right: 9px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: #f0f0f0;
+    border: none;
     cursor: pointer;
-    background-color: #2e2e2e;
-  }
-  
-  .dropTitle {
+    padding: 0;
+    transition: color 0.25s linear;
+}
+
+.clearBtn:hover {
+    color: goldenrod;
+}
+
+.btnUrlArea {
+    background-color: #1f1f1f;
+    height: inherit;
+    padding: 20px;
     display: flex;
     align-items: center;
-    gap: 20px;
-    color: #f0f0f0;
-    font-size: 20px;
+}
+
+.urlSubmit {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: inherit;
     font-weight: 700;
-    transition: color .2s ease-in-out;
-  }
-  
-  .dropTitleOr {
-    color: #f0f0f0;
     font-size: 20px;
-    text-align: center;
-    transition: color .2s ease-in-out;
-  }
-  
-
-  
-  #file-input {
-    width: 30%;
-    color: #444;
-    padding: 2px;
-    background-color: #fff;
-    border-radius: 10px;
-    border: 1px solid rgba(8, 8, 8, 0.288);
-  }
-  
-  #file-input::file-selector-button {
-    margin-right: 20px;
+    padding: 15px;
+    color: black;
+    background-color: rgb(240, 240, 240, 0.9);
     border: 1px solid gray;
-    background-color: black;
-    padding: 10px 20px;
-    border-radius: 10px;
-    color: #fff;
-    cursor: pointer;
-  }
-  
-  #file-input::file-selector-button:hover {
-    background: gold;
-  }
-
-
-
-
-.txt-submit {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: inherit;
-  font-weight: 700;
-  font-size: 20px;
-  padding: 15px;
-  color: black;
-  background-color: rgb(240, 240, 240, 0.9);
-  border: 1px solid gray;
-  letter-spacing: 0.05em;
-  border-radius: 15px;
-  width: 150px;
-  height: 50px;
-  transition: background-color 0.25s linear;
+    letter-spacing: 0.05em;
+    border-radius: 75px;
+    width: 150px;
+    height: 50px;
+    transition: background-color 0.25s linear;
 }
 
-.txt-submit:hover{
-  background-color: white;
+.urlSubmit:hover{
+    background-color: white;
 }
 
-.txt-submit > svg {
+.urlSubmit > svg {
     margin-left: 5px;
     transform: rotate(30deg);
     transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-.txt-submit > span {
+.urlSubmit > span {
     margin-left: 10px;
     transition: transform 0.5s cubic-bezier(0.76, 0, 0.24, 1);
 }
 
-.txt-submit:hover > svg {
+.urlSubmit:hover > svg {
     transform: translateX(5px) rotate(90deg);
 }
 
-.btn-txt-area{
-  display: flex;
-  justify-content: center;
-  align-items: center;
+.level {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    width: min-content;
+    margin-top: 20px;
+    background-color: rgba(255,255,255,0.5);
+    border-radius: 10px;
+    box-shadow: 5px 5px 5px 5px black;
 }
 
-.txt-enter {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: inherit;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 18px;
-  color: white;
-  background: goldenrod;
-  font-weight: bolder;
-  border: none;
-  letter-spacing: 0.05em;
-  border-radius: 10px;
-  width: 80px;
-  height: 50px;
-}
-
-.txt-enter:hover {
-  background: gold;
-}
-
-.txt-jump {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: inherit;
-  cursor: pointer;
-  font-weight: 500;
-  font-size: 18px;
-  color: white;
-  background: gray;
-  font-weight: bolder;
-  border: none;
-  letter-spacing: 0.05em;
-  border-radius: 10px;
-  width: 80px;
-  height: 50px;
-}
-
-.txt-jump:hover {
-  background: lightgray;
-}
-
-.modal-auto-width {
-  width: auto !important;
+.modalCustom .modalDialog {
+    max-width: 50%;
+    width: 840px; 
+    max-height: 80vh; 
+    height: auto; 
 }
 
 
 
-.bubblingG {
+  .urlEnter {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 18px;
+    color: white;
+    background: goldenrod;
+    font-weight: bolder;
+    border: none;
+    letter-spacing: 0.05em;
+    border-radius: 10px;
+    width: 80px;
+    height: 50px;
+}
+
+.urlEnter:hover {
+    background: gold;
+}
+
+.urlSkip {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-family: inherit;
+    cursor: pointer;
+    font-weight: 500;
+    font-size: 18px;
+    color: white;
+    background: gray;
+    font-weight: bolder;
+    border: none;
+    letter-spacing: 0.05em;
+    border-radius: 10px;
+    width: 80px;
+    height: 50px;
+}
+
+.urlSkip:hover {
+    background: lightgray;
+}
+
+
+
+
+
+  .bubblingG {
 	text-align: center;
 	width:110px;
 	height:69px;

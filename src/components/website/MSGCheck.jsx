@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Button, Modal } from 'react-bootstrap';  // 移除 Spinner 引用
 import 'bootstrap/dist/css/bootstrap.min.css';
 import Rating from './Rating';
-import './MSGCheck.css';
+import styles from './MSGCheck.module.css';
 
 function MSGCheckInput() {
   const [text, setText] = useState('');
@@ -82,7 +82,7 @@ function MSGCheckInput() {
 
   const handleCombinedClick = async (event) => {
     if (text) {
-      setShow(true);   
+      setShow(true);  
       setIsLoading(true);  
       const isValid = await handleTextSubmit(event); 
       if (isValid) {
@@ -100,13 +100,11 @@ function MSGCheckInput() {
 
   return (
     <>
-      <div className="">
-        <div className="msg-input">
+      <div>
+        <div className={styles.msgInput}>
           <textarea rows="5" cols="75" value={text} onChange={handleChange} placeholder='請輸入或貼上內容...' />
-        </div>
-        <div>
-          <div className="btn-area">
-            <button className='msg-submit' onClick={handleCombinedClick}>
+          <div className={styles.btnArea}>
+            <button className={styles.msgSubmit} onClick={handleCombinedClick} >
               <svg
                 height="24"
                 width="24"
@@ -121,9 +119,11 @@ function MSGCheckInput() {
               </svg>
               <span>檢測</span>
             </button>
-            <button className='msg-clear' onClick={clearTextarea}>清除</button>
+            <button className={styles.msgClear} onClick={clearTextarea}>清除</button>
           </div>
-          <Modal className="modal-custom" show={show} onHide={handleClose} backdrop="static" centered>
+        </div>
+        <div>
+          <Modal className={styles.modalCustom} show={show} onHide={handleClose} backdrop="static" centered>
             <Modal.Header closeButton>
               <Modal.Title><b>檢測結果：</b></Modal.Title>
             </Modal.Header>
@@ -141,11 +141,10 @@ function MSGCheckInput() {
             </Modal.Body>
             {isLoaded && (
               <Modal.Footer>
-                
-                <Button className='msg-jump' onClick={handleClose}>
+                <Button className={styles.msgSkip} onClick={handleClose}>
                   跳過
                 </Button>
-                <Button className='msg-enter' onClick={handleClose}>
+                <Button className={styles.msgEnter} onClick={handleClose}>
                   送出
                 </Button>
               </Modal.Footer>
