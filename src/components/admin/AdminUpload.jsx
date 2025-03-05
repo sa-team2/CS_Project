@@ -1,6 +1,6 @@
 import "@patternfly/react-core/dist/styles/base.css";
 import 'bootstrap/dist/css/bootstrap.min.css';
-import './AdminUpload.css';
+import styles from './AdminUpload.module.css';
 import { useState, useEffect, useRef } from 'react';
 import UploadIcon from '@patternfly/react-icons/dist/esm/icons/upload-icon';
 import { CheckCircleIcon } from '@patternfly/react-icons';
@@ -115,41 +115,41 @@ const AdminUpload = () => {
 
   return (
     <>
-        <div className="admin-upload-container">
-            <label className="admin-drop-container">
+        <div className={styles.adminUploadContainer}>
+            <label className={styles.adminDropContainer}>
             <UploadIcon style={{ fontSize: '50px' }} />
-            <div className="admin-drop-title">
-                <span className="">拖曳檔案至此</span>
-                <span className="">或</span>
+            <div className={styles.adminDropTitle}>
+                <span>拖曳檔案至此</span>
+                <span>或</span>
             </div>
                 <input
                 type="file"
                 multiple
                 onChange={handleFileDrop}
                 />
-                <div className="admin-upload-button">選擇檔案</div>
+                <div className={styles.adminUploadButton}>選擇檔案</div>
                 <span style={{ fontSize: '16px',marginTop:'20px' }}>檔案類型：JPEG, DOC, PDF, PNG, XLS, XLSX</span>
             </label>
             <div>
                 {showStatus && currentFiles.length > 0 && (
-                <div className='admin-drop-text'>
+                <div className={styles.adminDropText}>
                     <p>{`${successfullyReadFileCount} / ${currentFiles.length} 檔案讀取成功`}</p>
                     {currentFiles.map(file => {
                     const fileData = readFileData.find(readFile => readFile.fileName === file.name);
                     const fileSize = fileData ? fileData.fileSize : 0; // 获取文件大小
 
                     return (
-                        <div className='admin-txt-area' key={file.name}>
-                        <div className="admin-left">
-                            <button className='admin-jump' onClick={() => removeFiles([file.name])}>移除</button>
-                            <span className="admin-file-name">{file.name.length > 8 ? file.name.slice(0, 8) + '...' : file.name}</span>
+                        <div className={styles.adminTxtArea} key={file.name}>
+                        <div className={styles.adminLeft}>
+                            <button className={styles.adminSkip} onClick={() => removeFiles([file.name])}>移除</button>
+                            <span className={styles.adminFileName}>{file.name.length > 8 ? file.name.slice(0, 8) + '...' : file.name}</span>
                             <span style={{ width: 'auto',paddingLeft:'10px' }}>({(fileSize / 1024).toFixed(2)} KB)</span>
                         </div>
-                        <div className="admin-right">
+                        <div className={styles.adminRight}>
                             {fileData && (
                             <>
-                            <div className="progress-bar">
-                                <div className="progress" style={{ width: `${fileData.progress}%` }} />
+                            <div className={styles.progressBar}>
+                                <div className={styles.progress} style={{ width: `${fileData.progress}%` }} />
                             </div>
                             {fileData.loadResult === 'success' && (
                                 <CheckCircleIcon style={{ color: "goldenrod", marginLeft: '10px' ,fontSize:'30px'}} />
@@ -163,8 +163,8 @@ const AdminUpload = () => {
                 </div>
                 )}
             </div>
-            <div className="admin-submit">
-                <button className="admin-enter" onClick={handleFileUpload}>更新</button>
+            <div className={styles.adminSubmit}>
+                <button className={styles.adminEnter} onClick={handleFileUpload}>更新</button>
             </div>
         </div>
     </>
