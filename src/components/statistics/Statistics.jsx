@@ -1,32 +1,29 @@
 import React from 'react'
-import Navbar from '../navbar/Navbar';
 import Cards from './Cards';
 import BarChart from './BarChart'
 import PieChart from './PieChart';
-import { Helmet } from 'react-helmet';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faChartColumn } from '@fortawesome/free-solid-svg-icons';
-import './Statistics.css';
+import styles from './Statistics.module.css';
 
 const Statistics = () => {
   return (
     <>
-      <Helmet>
-          <title>統計圖表</title>
-      </Helmet>
-      <Navbar />
-      <div className='statistics-container'>
-        <h3 className="statistics-page-title">
-          <FontAwesomeIcon icon={ faChartColumn } /> 統計圖表
-        </h3>
-        <div className="cards-container">
+      <div className={styles.statisticsContainer}>
+        <div className={styles.statisticsMain}>
+          <h3 className={styles.statisticsPageTitle}>
+            <FontAwesomeIcon icon={ faChartColumn } /> 統計圖表
+          </h3>
+          <p className={styles.statisticsSubTitle}>透過檢測後的資料，統計了資料數量、熱門詐騙類型、及詐騙類型占比，讓您快速掌握詐騙趨勢，提高防範意識。</p>
+        </div>
+        <div className={styles.cardsContainer}>
           <Cards />
         </div>
-        <div className="charts-container">
-          <div className="bar-chart">
+        <div className={styles.chartsContainer}>
+          <div className={styles.barChart}>
             <BarChart />
           </div>
-          <div className="pie-chart">
+          <div className={styles.pieChart}>
             <PieChart />
           </div>
         </div>

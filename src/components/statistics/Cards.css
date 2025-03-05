@@ -1,8 +1,8 @@
 .card-custom {
-    width: 450px !important;
+    flex: 1 1 250px;
     border: 0 !important;
     color: white !important;
-    margin: 15px;
+    border-radius: 25px;
 }
 
 .cardbody-custom {

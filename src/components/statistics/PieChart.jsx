@@ -3,14 +3,13 @@ import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { collection, getDocs } from 'firebase/firestore';
-import { db } from '../../firebase';
+import { db } from '../../firebase'; 
 
 ChartJS.register(
     ArcElement,
     Tooltip,
     Legend,
-    Title,
-    ChartDataLabels // 確保註冊 ChartDataLabels 插件
+    Title
 );
 
 function PieChart() {
@@ -54,36 +53,36 @@ function PieChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'Statistics'));
-  
-        const labels = [];
-        const datasetData = [];
-  
+        const querySnapshot = await getDocs(collection(db, 'Outcome'));
+        const matchTypeCount = {}; 
+
         querySnapshot.forEach((doc) => {
-          if (doc.id !== 'finalStatistics') { // 忽略 finalStatistics
-            const data = doc.data();
-            labels.push(data.Type);
-            datasetData.push(data.Frequency);
+          const data = doc.data();
+          const matches = data.PythonResult?.Match; 
+
+          if (matches) {
+            matches.forEach(match => {
+              const matchType = match.MatchType;
+              if (matchTypeCount[matchType]) {
+                matchTypeCount[matchType] += 1; 
+              } else {
+                matchTypeCount[matchType] = 1; 
+              }
+            });
           }
         });
-  
-        const combinedData = labels.map((label, index) => ({
-          label,
-          frequency: datasetData[index],
-        })).sort((a, b) => b.frequency - a.frequency);
-  
-        const topFive = combinedData.slice(0, 5);
-        const other = combinedData.slice(5);
-  
-        const otherFrequency = other.reduce((sum, item) => sum + item.frequency, 0);
-        const topFiveLabels = topFive.map(item => item.label);
-        const topFiveData = topFive.map(item => item.frequency);
-  
+
+        const sortedMatchTypes = Object.entries(matchTypeCount)
+          .sort((a, b) => b[1] - a[1]); 
+        const topFive = sortedMatchTypes.slice(0, 5);
+        const other = sortedMatchTypes.slice(5); 
+        const otherFrequency = other.reduce((sum, item) => sum + item[1], 0);
+        const topFiveLabels = topFive.map(item => item[0]);
+        const topFiveData = topFive.map(item => item[1]);
         const total = [...topFiveData, otherFrequency].reduce((sum, value) => sum + value, 0);
         const percentages = [...topFiveData, otherFrequency].map(value => ((value / total) * 100).toFixed(2));
-  
         const newData = {
-          labels: [...topFiveLabels, '其他'],
+          labels: [...topFiveLabels, '其他'], 
           datasets: [{
             label: '資料占比',
             data: percentages,
@@ -93,7 +92,7 @@ function PieChart() {
               'rgba(255, 206, 86, 0.2)',
               'rgba(75, 192, 192, 0.2)',
               'rgba(153, 102, 255, 0.2)',
-              'rgba(128, 128, 128, 0.2)'
+              'rgba(128, 128, 128, 0.2)' 
             ],
             borderColor: [
               'rgba(255,99,132,1)',
@@ -101,24 +100,23 @@ function PieChart() {
               'rgba(255, 206, 86, 1)',
               'rgba(75, 192, 192, 1)',
               'rgba(153, 102, 255, 1)',
-              'rgba(128, 128, 128, 1)'
+              'rgba(128, 128, 128, 1)' 
             ],
           }]
         };
-  
+
         setData(newData);
       } catch (error) {
         console.error("Error fetching data from Firestore:", error);
       }
     };
-  
+
     fetchData();
   }, []);
-  
 
   return (
     <>
-      {data ? <Pie data={data} options={options} /> : <p>載入資料中...</p>}
+      {data ? <Pie data={data} options={options} plugins={[ChartDataLabels]}/> : <p>載入資料中...</p>}
     </>
   );
 }
