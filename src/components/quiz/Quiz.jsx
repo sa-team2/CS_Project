@@ -1,15 +1,22 @@
 import styles from './Quiz.module.css'
 import { motion } from "framer-motion";
 import { useState, useEffect } from "react";
+import { useNavigate } from "react-router-dom";
 import QuizTypeSelection from './QuizTypeSelection';
 import CharacterNickname from './CharacterNickname';
 import { useQuizContext } from "./QuizContext";
-
+import UndoIcon from '@mui/icons-material/Undo';
 
 function Quiz() {
   const [isLoading, setIsLoading] = useState(true);
-  const { isFirstRender, svgColor, characterInformation } = useQuizContext();
+  const [returnIsDisable, setReturnIsDisable] = useState(true);
+  const { isFirstRender, setIsFirstRender, svgColor, setSvgColor, characterInformation } = useQuizContext();
   const [dimensions, setDimensions] = useState({width: 0, height: 0})
+  const navigate = useNavigate();
+
+  if (sessionStorage.getItem("hasRefreshed")) {
+    sessionStorage.removeItem("hasRefreshed");  
+  }
 
   useEffect (() => {
     const resize = () => {
@@ -44,17 +51,29 @@ function Quiz() {
           initial={{ scale: 1, width: "25%", y: 0 }} 
           animate={{ scale: 0.5, width: "50%", y: "-40vh" }}
           transition={{ delay: 1, duration: 1 }} 
+          onAnimationComplete={() => {
+            setSvgColor('#000000');
+            setReturnIsDisable(false)
+          }}
         >
         詐 騙 測 驗
       </motion.div>
-      
+
+      {!returnIsDisable && (
+      <div className={styles.returnButton}>
+          <button onClick={() => {navigate("/");}}><UndoIcon /> 返回</button>
+        </div>
+      )}
 
       <motion.div 
         className={styles.quizContent}
         initial={{ backgroundColor: "rgba(0, 0, 0, 0)", borderColor: "rgba(0, 0, 0, 0)"}}
         animate={{ backgroundColor: "rgba(0, 0, 0, 0.25)", borderColor: "rgba(0, 0, 0, 0.25)" }}
         transition={{ delay: 2, duration: 1 }} 
-        onAnimationComplete={() => setIsLoading(false)}
+        onAnimationComplete={() => {
+          setIsLoading(false);
+          setIsFirstRender(true);
+        }}
       >
         
         {!isLoading && (
@@ -79,7 +98,7 @@ function Quiz() {
                 transition={{ duration: 1 }}  
                 style={{ pointerEvents: characterInformation.confirmNickname ? "none" : "auto" }} 
               />
-              <QuizTypeSelection />
+              <QuizTypeSelection setReturnIsDisable={setReturnIsDisable}/>
             </motion.div>
           </>
         )}

@@ -292,6 +292,30 @@
   display: flex;
   justify-content: flex-start;
 }
+
+/* Return Button */
+.returnButton {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  z-index: 100;
+}
+
+.returnButton button {
+  display: flex;
+  align-items: center;
+  background-color: rgba(255, 255, 255, 0.7);
+  border: none;
+  padding: 5px 10px;
+  font-size: 16px;
+  cursor: pointer;
+  border-radius: 3px;
+  transition: 0.3s;
+}
+
+.returnButton button:hover {
+  background-color: rgba(255, 255, 255, 0.9);
+}
 /* .rose {
   background-color: rgb(255, 154, 184);
 }

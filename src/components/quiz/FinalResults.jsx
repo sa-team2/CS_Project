@@ -1,13 +1,17 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import styles from './FinalResults.module.css';
 import { motion } from 'framer-motion'; 
+import { useNavigate } from "react-router-dom";
 import CircularScore from './CircularScore';
 import { useQuizContext } from "./QuizContext";
+import UndoIcon from '@mui/icons-material/Undo';
 
 const FinalResults = () => {
     const [isLoading, setIsLoading] = useState(true);
     const [isFlipped, setIsFlipped] = useState([false, false, false]);
+    const [returnIsDisable, setReturnIsDisable] = useState(true);
     const { svgColor, typeName, allScripts, fraudType, correctAnswer, errorCount, scores } = useQuizContext();
+    const navigate = useNavigate();
 
     // 控制卡片翻轉
     const handleFlip = (index) => {
@@ -19,7 +23,6 @@ const FinalResults = () => {
 
     const colorMap = {
         "#ffe4e6": "rose",
-        "#9bc0fc": "blue",
         "#e6b976": "amber",
         "#d1fae5": "emerald",
         "#c0a4f5": "purple"
@@ -47,9 +50,18 @@ const FinalResults = () => {
                 initial={{ scale: 1, width: "25%", y: 0 }} 
                 animate={{ scale: 0.5, width: "50%", y: "-40vh" }}
                 transition={{ delay: 1, duration: 1 }} 
+                onAnimationComplete={() => setReturnIsDisable(false)}
             >
                 測 驗 結 果
             </motion.div>
+
+            {!returnIsDisable && (
+                <div className={styles.returnButton} id="returnButton">
+                    <button onClick={() => navigate("/")}>
+                        <UndoIcon /> 回首頁
+                    </button>
+                </div>
+            )}
 
             <motion.div 
                 className={styles.finalContent}
@@ -73,7 +85,7 @@ const FinalResults = () => {
                             {[0, 1, 2].map((index) => (
                                 <motion.div 
                                     key={index}
-                                    className={`${styles.card} ${isFlipped[index] && styles.rotate}`}
+                                    className={`${styles.card} ${isFlipped[index] ? styles.rotate : null}`}
                                     initial={{ opacity: 0 }}  
                                     animate={{ opacity: 1 }}  
                                     transition={{ opacity: { delay: index === 0 ? 0.5 : 0.5 + index * 0.5, duration: 0.5 } }} 

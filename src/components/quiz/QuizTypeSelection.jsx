@@ -1,11 +1,11 @@
 import React from 'react';
-import { CreditCard, CircleDollarSign, UserX, ShoppingBag, MessageCircleHeart, ChevronRight, MousePointerClick } from 'lucide-react';
+import { CircleDollarSign, UserX, ShoppingBag, MessageCircleHeart, ChevronRight, MousePointerClick } from 'lucide-react';
 import styles from './QuizTypeSelection.module.css';
-import { useNavigate } from 'react-router-dom'; // 引入 useNavigate
+import { useNavigate } from 'react-router-dom'; 
 import { useQuizContext } from './QuizContext';
 
-const QuizTypeSelection = () => {
-  const navigate = useNavigate(); // 初始化 useNavigate
+const QuizTypeSelection = ({setReturnIsDisable}) => {
+  const navigate = useNavigate(); 
   const { setIsFirstRender, setSvgColor, characterInformation, setTypeName, setFraudType } = useQuizContext()
   const fraudTypes = [
     {
@@ -14,18 +14,10 @@ const QuizTypeSelection = () => {
       icon: MessageCircleHeart,
       color: 'rose',
       description: '預防虛假感情的陷阱',
-      type: 'romanceFraud'
+      type: 'romanceFraud',
     },
     {
       id: 2,
-      name: '信用卡詐騙',
-      icon: CreditCard,
-      color: 'blue',
-      description: '保護你的金融安全',
-      type: '#'
-    },
-    {
-      id: 3,
       name: '冒名詐騙',
       icon: UserX,
       color: 'amber',
@@ -33,15 +25,15 @@ const QuizTypeSelection = () => {
       type: '#'
     },
     {
-      id: 4,
+      id: 3,
       name: '購物詐騙',
       icon: ShoppingBag,
       color: 'emerald',
       description: '安全網購交易須知',
-      type: 'shoppingFraud'
+      type: 'shoppingFraud',
     },
     {
-			id: 5,
+			id: 4,
 			name: '投資詐騙',
 			icon: CircleDollarSign,
 			color: 'purple',
@@ -55,12 +47,12 @@ const QuizTypeSelection = () => {
     setTypeName(name)
     setSvgColor(colorMap[color]);
     setFraudType(type);
+    setReturnIsDisable(true);
     navigate('/quiz/fraudquiz');
   };
 
   const colorMap = {
     rose: "#ffe4e6",
-    blue: "#dbeafe",
     amber: "#fef3c7",
     emerald: "#d1fae5",
     purple: "#EDE9FE" 
@@ -90,11 +82,10 @@ const QuizTypeSelection = () => {
                 <div className={styles.buttonTitle}>{type.name}</div>
                 <div className={styles.description}>{type.description}</div>
               </div>
-              
-              <ChevronRight
+            </div>
+            <ChevronRight
                 className={`${styles.arrow} ${styles[`icon${type.color.charAt(0).toUpperCase() + type.color.slice(1)}`]}`}
               />
-            </div>
           </button>
         ))}
       </div>

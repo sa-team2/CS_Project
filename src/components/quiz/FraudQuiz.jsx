@@ -277,12 +277,6 @@ function FraudQuiz() {
       setTimeout(() => handleNextStage(), 1000); 
     }
   }, [clickedText])
-
-  // const clearSession = () => {
-  //   sessionStorage.removeItem("isFirstRender");
-  //   sessionStorage.removeItem("svgColor");
-  //   sessionStorage.removeItem("characterInformation");
-  // };
   
   const stages = [
     { title: "測 驗 一", stage: "Stage 1" },
@@ -292,7 +286,6 @@ function FraudQuiz() {
 
   const colorMap = {
     "#ffe4e6": "rgb(255, 154, 184)",
-    "#dbeafe": "rgb(155, 192, 252)",
     "#fef3c7": "rgb(255, 204, 128)",
     "#d1fae5": "rgb(79, 218, 169)",
     "#EDE9FE": "rgb(201, 172, 255)"
@@ -302,7 +295,13 @@ function FraudQuiz() {
     return colorMap[svgColor] || "white"; 
     };
 
-    console.log(svgColor)
+  const getFraudBackgroundClass = (fraudType) => {
+    if (fraudType === 'shoppingFraud') return styles.shoppingFraud;
+    if (fraudType === 'romanceFraud') return styles.romanceFraud;
+    if (fraudType === 'investmentFraud') return styles.investmentFraud;
+    return '';
+  };
+    
   return (
     <div className={styles.gameContainer} id="gameContainer">
       
@@ -351,7 +350,7 @@ function FraudQuiz() {
         )}
       </div>
 
-      <div className={styles.background}></div>
+      <div className={`${styles.background} ${getFraudBackgroundClass(fraudType)}`}></div>
 
       { showBackStory && (
         <div className={styles.backStory}>
@@ -410,7 +409,7 @@ function FraudQuiz() {
       <div className={styles.content}>
         {!hiddenDuringTransition && (
           <div className={styles.characterLeft}>
-              <img src="/badguy.png" alt="Character 1" className={`${styles.characterLeftImage} ${allScripts[fraudType][currentConversation].script[currentIndex]?.character === "character1" && styles.myturn }`} />
+              <img src="/badguy.png" alt="Character 1" className={`${styles.characterLeftImage} ${allScripts[fraudType][currentConversation].script[currentIndex]?.character === "character1" ? styles.myturn : null}`} />
           </div>
         )}
         <div className={styles.records} id="records" style={{ visibility: showRecords ? 'visible' : 'hidden' }}>
@@ -493,7 +492,7 @@ function FraudQuiz() {
         
         {!hiddenDuringTransition && (
           <div className={styles.characterRight}>
-              <img src={`/${characterInformation.selectedRole}.png`}   alt="Character 2" className={`${styles.characterRightImage} ${allScripts[fraudType][currentConversation].script[currentIndex]?.character === "character2" ? styles.myturn : ""}`} />
+              <img src={`/${characterInformation.selectedRole}.png`}   alt="Character 2" className={`${styles.characterRightImage} ${allScripts[fraudType][currentConversation].script[currentIndex]?.character === "character2" ? styles.myturn : null}`} />
           </div>
         )}
       </div>

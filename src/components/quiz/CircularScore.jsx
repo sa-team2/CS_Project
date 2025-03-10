@@ -7,7 +7,6 @@ function CircularScore({progress}) {
   const { svgColor } = useQuizContext();
   const colorMap = {
     "#ffe4e6": "rgb(255, 154, 184)",
-    "#dbeafe": "rgb(155, 192, 252)",
     "#fef3c7": "rgb(255, 204, 128)",
     "#d1fae5": "rgb(79, 218, 169)",
     "#EDE9FE": "rgb(201, 172, 255)"
