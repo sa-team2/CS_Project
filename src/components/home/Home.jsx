@@ -13,6 +13,12 @@ function Home() {
     const commonFraudRef = useRef(null);
     const location = useLocation();
 
+    if (!sessionStorage.getItem("hasRefreshed")) {
+        sessionStorage.clear();  
+        sessionStorage.setItem("hasRefreshed", "true");  
+        window.location.reload();  
+    }
+
     // 滾動到 statisticsBox
     const scrollToCommonFraudBox = () => {
         if (commonFraudRef.current) {
@@ -138,6 +144,12 @@ function Home() {
         }
     ];
 
+    const slogans = [
+        "簡訊來電多詐騙，防詐意識要上線！",
+        "不明連結別亂點，個資錢財不淪陷！",
+      ];
+    const duration = 10;
+
     return (
         <>
             
@@ -166,12 +178,10 @@ function Home() {
                             </button>
                         </Link>
                     </div>
-                    <div className={styles.displaySkills}>
-                        <div className={styles.logo}>React</div>
-                        <div className={styles.logo}>Next</div>
-                        <div className={styles.logo}>Cheerio</div>
-                        <div className={styles.logo}>PaddleOCR</div>
-                        <div className={styles.logo}>BERT</div>
+                    <div className={styles.displaySlogan} style={{ "--duration": `${duration}s` }}>
+                        {slogans.map((text, index) => (
+                            <p key={index}><b>{text}</b></p>
+                        ))}
                     </div>
                 </div>
             </div> 
