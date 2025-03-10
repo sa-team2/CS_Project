@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { useLocation } from "react-router-dom";
 import styles from './Website.module.css';
 import Navbar from '../navbar/Navbar';
@@ -141,7 +141,7 @@ useEffect(() => {
                       <div className={styles.inner} style={{ height: `${progressHeight}%` }}></div>
                     </div>
 
-                    <li ref={stepRefs[0]} data-index="1" className={progressHeight > 0 && styles.active}>
+                    <li ref={stepRefs[0]} data-index="1" className={progressHeight > 0 ? styles.active : null}>
                       <h4>Search your favourite topic</h4>
                       <p>LE SSERAFIM （韓語：르세라핌；日語：ルセラフィム）是韓國SOURCE MUSIC於2022年推出的女子音樂組合，成員是金采源、許允眞、洪恩採、宮脇咲良和中村一葉，由金采源擔任隊長，於2022年5月2日以迷你專輯《FEARLESS》出道。 </p>
 
@@ -149,7 +149,7 @@ useEffect(() => {
                           <span className={styles.stepsNumber}>1</span>
                       </div>
                     </li>
-                    <li ref={stepRefs[1]} data-index="2" className={progressHeight >= 50 && styles.active}>
+                    <li ref={stepRefs[1]} data-index="2" className={progressHeight >= 50 ? styles.active : null}>
                       <h4 >Bookmark &amp; Keep it for yourself</h4>
                       <p >LE SSERAFIM （韓語：르세라핌；日語：ルセラフィム）是韓國SOURCE MUSIC於2022年推出的女子音樂組合，成員是金采源、許允眞、洪恩採、宮脇咲良和中村一葉，由金采源擔任隊長，於2022年5月2日以迷你專輯《FEARLESS》出道。</p>
 
@@ -157,7 +157,7 @@ useEffect(() => {
                           <span className={styles.stepsNumber}>2</span>
                       </div>
                     </li>
-                    <li ref={stepRefs[2]} data-index="3" className={progressHeight >= 90 && styles.active }>
+                    <li ref={stepRefs[2]} data-index="3" className={progressHeight >= 90 ? styles.active : null}>
                       <h4 >Read &amp; Enjoy</h4>
                       <p >LE SSERAFIM （韓語：르세라핌；日語：ルセラフィム）是韓國SOURCE MUSIC於2022年推出的女子音樂組合，成員是金采源、許允眞、洪恩採、宮脇咲良和中村一葉，由金采源擔任隊長，於2022年5月2日以迷你專輯《FEARLESS》出道。</p>
 

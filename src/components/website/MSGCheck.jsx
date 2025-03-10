@@ -123,7 +123,7 @@ function MSGCheckInput() {
           </div>
         </div>
         <div>
-          <Modal className={styles.modalCustom} show={show} onHide={handleClose} backdrop="static" centered>
+          <Modal show={show} onHide={handleClose} backdrop="static" centered size="lg">
             <Modal.Header closeButton>
               <Modal.Title><b>檢測結果：</b></Modal.Title>
             </Modal.Header>

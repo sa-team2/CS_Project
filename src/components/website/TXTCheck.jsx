@@ -135,7 +135,7 @@ function TXTCheckUpload() {
         </div>
         
 
-          <Modal className="modal-custom" dialogClassName="modal-auto-width" show={show} onHide={handleClose} backdrop="static" centered>
+          <Modal dialogClassName="modal-auto-width" show={show} onHide={handleClose} backdrop="static" centered size="lg">
           <Modal.Header closeButton>
             <Modal.Title><b>檢測結果：</b></Modal.Title>
           </Modal.Header>

@@ -173,9 +173,9 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
             <Card className="card-rating">
               <Card.Body>
                 <Card.Title><b>風險等級：</b></Card.Title>
-                <Card.Text>
+                <div>
                     {getRiskLevel()}
-                </Card.Text>
+                </div>
               </Card.Body>
             </Card>
 
@@ -184,14 +184,14 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
                 <Card className="card-rating">
                   <Card.Body>
                     <Card.Title><b>詐騙類型：</b></Card.Title>
-                      <Card.Text>
+                      <div>
                         <ul className="rating-ul">
                             <li>類型：{types || '無'}</li>
                         </ul>
                         <ul className="rating-ul">
                           <li>關鍵字詞：{keywords && keywords.length > 0 ? keywords.join(', ') : '無'}</li>
                         </ul>
-                      </Card.Text>
+                      </div>
                   </Card.Body>
                 </Card>
 
