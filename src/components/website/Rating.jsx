@@ -12,11 +12,11 @@ const getBackground = (progress) => {
   const degrees = progress * 3.6;
   return `
     conic-gradient(
-      rgb(255, 68, 51) 0deg, 
-      orange ${Math.min(degrees, 90)}deg, 
+      green 0deg, 
+      rgb(154, 205, 50) ${Math.min(degrees, 90)}deg, 
       yellow ${Math.min(degrees, 180)}deg, 
-      rgb(154, 205, 50) ${Math.min(degrees, 270)}deg, 
-      green ${Math.min(degrees, 360)}deg,
+      orange ${Math.min(degrees, 270)}deg, 
+      rgb(255, 68, 51)${Math.min(degrees, 360)}deg,
       gainsboro ${Math.min(degrees, 360)}deg
     )
   `;
@@ -26,11 +26,11 @@ const getColorAtProgress = (progress) => {
   const degrees = progress * 3.6;
 
   const colorStops = [
-    { color: 'rgb(255, 68, 51)', stop: 0 },
-    { color: 'orange', stop: 90 },
+    { color: 'green', stop: 0 },
+    { color: 'rgb(154, 205, 50)', stop: 90 },
     { color: 'yellow', stop: 180 },
-    { color: 'rgb(154, 205, 50)', stop: 270 },
-    { color: 'green', stop: 360 },
+    { color: 'orange', stop: 270 },
+    { color: 'rgb(255, 68, 51)', stop: 360 },
   ];
 
   let color1, color2;
@@ -50,7 +50,7 @@ const getColorAtProgress = (progress) => {
   }
 };
 
-function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,reminds, data, file}) {
+function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,reminds, data,file}) {
   const [progress, setProgress] = React.useState(0);
   const [riskLevel, setRiskLevel] = React.useState('中風險'); // 默认风险等级
   
@@ -66,12 +66,12 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
     setProgress(progressStartValue);
     
     let newRiskLevel;
-    if (progressEndValue <= 50) {
-      newRiskLevel = '高風險';
-    } else if (progressEndValue <= 75) {
+    if (progressEndValue <= 40) {
+      newRiskLevel = '低風險';
+    } else if (progressEndValue <= 60) {
       newRiskLevel = '中風險';
     } else {
-      newRiskLevel = '低風險';
+      newRiskLevel = '高風險';
     }
     setRiskLevel(newRiskLevel);
 
@@ -117,14 +117,14 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
   );
 
   const getRiskLevel = () => {
-    if (progress <= 50) {
+    if (progress <= 40) {
       return (
         <ul className="rating-ul">
-          <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#ff0000"}} /> 高風險</li>
+          <li>等級：<FontAwesomeIcon icon={faCheck} style={{color: "#0ec48d"}} /> 低風險</li>
           <li>提醒：{reminds}</li>
         </ul>
       )
-    } else if (progress <= 70) {
+    } else if (progress <= 60) {
       return (
         <ul className="rating-ul">
           <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#FFD43B"}} /> 中風險</li>
@@ -134,7 +134,7 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
     } else {
       return (
         <ul className="rating-ul">
-          <li>等級：<FontAwesomeIcon icon={faCheck} style={{color: "#0ec48d"}} /> 低風險</li>
+          <li>等級：<FontAwesomeIcon icon={faTriangleExclamation} style={{color: "#ff0000"}} /> 高風險</li>
           <li>提醒：{reminds}</li>
         </ul>
       )
@@ -168,6 +168,7 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
               <Rate tooltips={sign} onChange={setValue} value={value} />
             </Row>
           </div>
+          
           <div className="container-2">
             <Card className="card-rating">
               <Card.Body>
@@ -178,7 +179,7 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
               </Card.Body>
             </Card>
 
-            {(riskLevel === "高風險" || riskLevel === "中風險") && (
+            {(riskLevel === "高風險" || riskLevel === "中風險" || riskLevel === "低風險") && (
               <>
                 <Card className="card-rating">
                   <Card.Body>
@@ -217,6 +218,8 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
               <img src={URL.createObjectURL(file)} alt="預覽圖片" style={{ width: "100%", maxWidth: "100%", height: "auto", maxHeight: "400px" }} />
             </div>
           ) : null}
+
+        
         </>
       )}
 
@@ -224,9 +227,10 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
       <div className='container-3'>
         <div className='container-3-image-title'><b>預覽圖片：</b></div>
         <img src="https://mir-s3-cdn-cf.behance.net/project_modules/max_3840/2d0d73149404331.62e757877ca8b.jpg" width="100%"></img>
-      </div> */}
+      </div> }
 
-      {/* <div className='container-3'>
+      {/* ***當檢測的是網址***
+      <div className='container-3'>
         <div className='container-3-title-url'>
           <div className='container-3-title'><b>預覽網頁：</b></div>
           <a href='https://zh.wikipedia.org/zh-tw/LE_SSERAFIM' target='blank'>https://zh.wikipedia.org/zh-tw/LE_SSERAFIM</a>
