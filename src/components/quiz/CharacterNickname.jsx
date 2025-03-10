@@ -61,11 +61,11 @@ function CharacterNickname() {
         <div className={styles.nicknameContainer}>
             <div className={styles.waveGroup}>
                 <div className={styles.inputContainer}>
-                    <User className={`${styles.userIcon} ${nickname && styles.userIconBlack }`}  />
+                    <User className={`${styles.userIcon} ${nickname ? styles.userIconBlack : null}`}  />
                     <input 
                         required 
                         type="text" 
-                        className={`${styles.input} ${nickname && styles.inputBorderBottom }`}
+                        className={`${styles.input} ${nickname ? styles.inputBorderBottom : null }`}
                         value={nickname}
                         onChange={(e) => setNickname(e.target.value)}
                         maxLength={10}
@@ -88,7 +88,7 @@ function CharacterNickname() {
                 </div>
                 <div className={styles.confirmButtonContianer}>
                     <button 
-                        className={`${styles.confirmButton} ${nickname && styles.confirmButtonBlack}`} 
+                        className={`${styles.confirmButton} ${nickname ? styles.confirmButtonBlack : null}`} 
                         disabled={!nickname}  
                         onClick={() => {
                             setCharacterInformation({
@@ -102,15 +102,6 @@ function CharacterNickname() {
                 </div>
             </div>
         </div>
-            {/* <div className={styles.avatar}>
-            <div className={styles.card}>
-                <div className={styles.wrapper}>
-                <img className={styles.coverImage} src="/dark_rider-cover.jpg"></img>
-                </div>
-                <img className={styles.title} src="/dark_rider-title.png"></img>
-                <img className={styles.character} src="/dark_rider-character.webp"></img>
-            </div>
-            </div> */}
         </>
     )
 }
