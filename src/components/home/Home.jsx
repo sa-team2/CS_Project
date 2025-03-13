@@ -156,13 +156,18 @@ function Home() {
             <div className={styles.homeContainer}>
                 <Navbar scrollToCommonFraudBox={scrollToCommonFraudBox}></Navbar>
                 <div className={styles.homeBox}>
-                    <div className={styles.homeMain}>
+                    {/* <div className={styles.homeMain}>
                         <div className={styles.homeTitle}>
                             騙局雷達 
                         </div>
                         <div className={styles.homeSubtitle}>
                             Fraud Radar
                         </div>
+                    </div> */}
+                    <div className={styles.displaySlogan} style={{ "--duration": `${duration}s` }}>
+                        {slogans.map((text, index) => (
+                            <p key={index}><b>{text}</b></p>
+                        ))}
                     </div>
                     <div className={styles.buttonBox}>
                         <Link to='./website'>
@@ -178,11 +183,7 @@ function Home() {
                             </button>
                         </Link>
                     </div>
-                    <div className={styles.displaySlogan} style={{ "--duration": `${duration}s` }}>
-                        {slogans.map((text, index) => (
-                            <p key={index}><b>{text}</b></p>
-                        ))}
-                    </div>
+                    
                 </div>
             </div> 
 
@@ -199,7 +200,7 @@ function Home() {
                             transition: "width 0.5s linear, height 0.3s linear, marginTop 0.2s linear, transform 0.3s linear", 
                         }}
                     >
-                        <img src='/eren.png' alt="Eren" />
+                        <img src='/homeleft.png' alt="Eren" />
                     </div>
                     <div
                         className={styles.imageCenter}
@@ -221,7 +222,7 @@ function Home() {
                             transition: "width 0.5s linear, height 0.3s linear, marginTop 0.2s linear, transform 0.3s linear"
                         }}
                     >
-                        <img src='/eren.png' alt="Eren" />
+                        <img src='/homeright.png' alt="Eren" />
                     </div>
                 </div>
             </div>
