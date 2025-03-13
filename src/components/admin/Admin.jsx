@@ -21,9 +21,9 @@ export const MultipleFileUploadBasic = () => {
   const getTabStyle = () => {
     switch (activeTab) {
         case "file":
-            return { width: "175px", left: "0" };
+            return { width: "180px", left: "0" };
         case "report":
-            return { width: "175px", left: "175px" };
+            return { width: "180px", left: "170px" };
         default:
             return { width: "175px", left: "0" };
     }
@@ -79,19 +79,19 @@ export const MultipleFileUploadBasic = () => {
           transition={{ duration: 2 }}
         >
         <div className={styles.adminMain}>
-          {/* 類似Tab的感覺 */}
+            <div className={styles.adminTopic}>
+              <div className={styles.adminTitle}>
+                資料集更新 Dataset Update
+              </div>
+              {/* <div className={styles.adminSubtitle}>
+                Dataset Update
+              </div> */}
+            </div>
+            {/* 類似Tab的感覺 */}
             <div className={styles.tabs}>
               <a  onClick={() => setActiveTab("file")}>上傳檔案</a>
               <a  onClick={() => setActiveTab("report")}>檢測回報</a>
               <div className={styles.tabsTransition} style={getTabStyle()}></div>
-            </div>
-            <div className={styles.adminTopic}>
-              <div className={styles.adminTitle}>
-                資料集更新
-              </div>
-              <div className={styles.adminSubtitle}>
-                Dataset Update
-              </div>
             </div>
         </div>
         <div>
