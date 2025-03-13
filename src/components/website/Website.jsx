@@ -34,11 +34,11 @@ function Website() {
   const getTabStyle = () => {
     switch (activeTab) {
         case "text":
-            return { width: "100px", left: "0" };
+            return { width: "200px", left: "0" };
         case "url":
-            return { width: "100px", left: "98px" };
+            return { width: "200px", left: "195px" };
         case "file":
-            return { width: "150px", left: "198px" };
+            return { width: "200px", left: "400px" };
         default:
             return { width: "100px", left: "0" };
     }
@@ -104,15 +104,15 @@ useEffect(() => {
                   </div>
                   <div className={styles.testTopic}>
                     <div className={styles.testTitle}>
-                      {activeTab === "text" && "文字檢測"}
-                      {activeTab === "url" && "網址檢測"}
-                      {activeTab === "file" && "檔案、圖片檢測"} 
+                      {activeTab === "text" && "文字檢測 Text Scan"}
+                      {activeTab === "url" && "網址檢測 URL Scan"}
+                      {activeTab === "file" && "檔案、圖片檢測 File & Image Scan"} 
                     </div>
-                    <div className={styles.testSubtitle}>
-                      {activeTab === "text" && "Text Scan"}
-                      {activeTab === "url" && "URL Scan"}
-                      {activeTab === "file" && "File & Image Scan"} 
-                    </div>
+                    {/* <div className={styles.testSubtitle}>
+                      {activeTab === "text" && ""}
+                      {activeTab === "url" && ""}
+                      {activeTab === "file" && ""} 
+                    </div> */}
                   </div>
               </div>
 
@@ -127,7 +127,7 @@ useEffect(() => {
       </div> 
       
       <div className={styles.stepsBox}>
-        <video src="/demotest.mp4" autoPlay loop muted playsInline></video>
+        <video src="/faurdtest.mp4" autoPlay loop muted playsInline></video>
         <div className={styles.stepsOverlay}></div>
         <div className={styles.stepsMain}>
           <div className={styles.stepsContent}>
@@ -142,27 +142,42 @@ useEffect(() => {
                     </div>
 
                     <li ref={stepRefs[0]} data-index="1" className={progressHeight > 0 ? styles.active : null}>
-                      <h4>Search your favourite topic</h4>
-                      <p>LE SSERAFIM （韓語：르세라핌；日語：ルセラフィム）是韓國SOURCE MUSIC於2022年推出的女子音樂組合，成員是金采源、許允眞、洪恩採、宮脇咲良和中村一葉，由金采源擔任隊長，於2022年5月2日以迷你專輯《FEARLESS》出道。 </p>
+                      <p style={{ fontSize: '30px' }}><b>選取檢測型態</b></p>
+                      <p>若為文字類型、或是文字夾雜網址，選擇「文字檢測」；
+                          單純為網址，選擇「網址檢測」；
+                          對話紀錄截圖、或是檔案型態，選擇「檔案、圖片檢測」。</p>
 
                       <div className={styles.iconHolder}>
                           <span className={styles.stepsNumber}>1</span>
                       </div>
                     </li>
                     <li ref={stepRefs[1]} data-index="2" className={progressHeight >= 50 ? styles.active : null}>
-                      <h4 >Bookmark &amp; Keep it for yourself</h4>
-                      <p >LE SSERAFIM （韓語：르세라핌；日語：ルセラフィム）是韓國SOURCE MUSIC於2022年推出的女子音樂組合，成員是金采源、許允眞、洪恩採、宮脇咲良和中村一葉，由金采源擔任隊長，於2022年5月2日以迷你專輯《FEARLESS》出道。</p>
+                      <p style={{ fontSize: '30px' }}><b>輸入內容</b></p>
+                      <p>可藉由複製將文字及網址貼上，也可直接在文字框進行輸入；
+                          圖片及檔案可按中間區域的「選擇檔案」上傳。</p>
 
                       <div className={styles.iconHolder}>
                           <span className={styles.stepsNumber}>2</span>
                       </div>
                     </li>
                     <li ref={stepRefs[2]} data-index="3" className={progressHeight >= 90 ? styles.active : null}>
-                      <h4 >Read &amp; Enjoy</h4>
-                      <p >LE SSERAFIM （韓語：르세라핌；日語：ルセラフィム）是韓國SOURCE MUSIC於2022年推出的女子音樂組合，成員是金采源、許允眞、洪恩採、宮脇咲良和中村一葉，由金采源擔任隊長，於2022年5月2日以迷你專輯《FEARLESS》出道。</p>
+                      <p style={{ fontSize: '30px' }}><b>按下檢測等待結果</b></p>
+                      <p>按下方或右側的「檢測」後，會藉由系統訓練的模型進行相似度辨識，
+                          若資料內容及圖片過多，可能需要等待一下。</p>
 
                       <div className={styles.iconHolder}>
                           <span className={styles.stepsNumber}>3</span>
+                      </div>
+                    </li>
+                    <li ref={stepRefs[2]} data-index="3" className={progressHeight >= 90 ? styles.active : null}>
+                      <p style={{ fontSize: '30px' }}><b>檢測結果及回報</b></p>
+                      <p>檢測報告左側的百分比為「與詐騙的相似度」，可以藉由百分比高低判斷是否要繼續交易或操作；
+                          右側也會提供可能的「詐騙類型」及「關鍵字依據」，並提供提醒及如何防範。
+                          若想對於檢測結果進行「準確度回報」，可按左下方的⭐。
+                      </p>
+
+                      <div className={styles.iconHolder}>
+                          <span className={styles.stepsNumber}>4</span>
                       </div>
                     </li>
                   </ul>
