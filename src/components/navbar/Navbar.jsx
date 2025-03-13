@@ -39,7 +39,7 @@ function Navbar({setIsLogoutModalOpen}) {
       <div className={styles.navbarBox}>
         <div className={styles.navbarIcon}>
           <div>
-            <img src="/icon.png" alt="logo" width={125} onClick={() => navigate("/")} />
+            <img src="/icon2.PNG" alt="logo" width={200} onClick={() => navigate("/")} />
           </div>
         </div>
         <div className={styles.navbarList}>
