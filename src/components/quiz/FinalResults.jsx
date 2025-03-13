@@ -48,7 +48,7 @@ const FinalResults = () => {
             <motion.div
                 className={styles.finalResultsTitle}
                 initial={{ scale: 1, width: "25%", y: 0 }} 
-                animate={{ scale: 0.5, width: "50%", y: "-40vh" }}
+                animate={{ scale: 0.5, width: "45%", height: "15%", y: "-41vh" }}
                 transition={{ delay: 1, duration: 1 }} 
                 onAnimationComplete={() => setReturnIsDisable(false)}
             >
@@ -91,7 +91,7 @@ const FinalResults = () => {
                                     transition={{ opacity: { delay: index === 0 ? 0.5 : 0.5 + index * 0.5, duration: 0.5 } }} 
                                 >
                                     <div className={styles.front}>
-                                        <h2 className={styles.levelTitle}>測驗 {index + 1}</h2>
+                                        <p className={styles.levelTitle}>測驗 {index + 1}</p>
                                         <CircularScore progress={scores[index] || 0} />
                                         <div>
                                             <div>

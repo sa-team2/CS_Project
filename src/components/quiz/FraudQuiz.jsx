@@ -26,14 +26,15 @@ function FraudQuiz() {
     {
       target: "#gameContainer",
       placement: "center",
-      content: <h3>是否要觀看教學引導？</h3>,
+      content: <p style={{fontSize: '30px'}}><b>是否要觀看教學引導？</b></p>,
     },
     {
       target: "#returnButton",
       placement: "bottom",
       content: (
         <>
-          <h5>返回按鈕：回到測驗類型的選擇。</h5>
+          <h5></h5>
+          <p style={{fontSize: '20px'}}><b>返回按鈕：回到測驗類型的選擇。</b></p>
           <h6><span style={{ color: "red" }}>*完成或跳過教學引導後將無法返回*</span></h6> 
         </>
       ),
@@ -41,24 +42,24 @@ function FraudQuiz() {
     {
       target: "#autoPlay",
       placement: "bottom",
-      content: <h5>自動播放：點擊後將自動播放對話，再次點擊即可關閉。</h5>,
+      content: <p style={{fontSize: '20px'}}><b>自動播放：點擊後將自動播放對話，再次點擊即可關閉。</b></p>
     },
     {
       target: "#skipClick",
       placement: "bottom",
-      content: <h5>跳過對話：點擊後可跳過所有對話。</h5>,
+      content: <p style={{fontSize: '20px'}}><b>跳過對話：點擊後可跳過所有對話。</b></p>
     },
     {
       target: "#dialogueBox",
       placement: "top",
-      content: <h5>對話框：點擊以進行對話。</h5>,
+      content: <p style={{fontSize: '20px'}}><b>對話框：點擊以進行對話。</b></p>
     },
     {
       target: "#records",
       placement: "right",
       content: (
         <>
-          <h5>紀錄框：顯示當前的對話紀錄。</h5>
+          <p style={{fontSize: '20px'}}><b>紀錄框：顯示當前的對話紀錄。</b></p>
           <hr></hr>
           <h6>對話結束時，當點選的句子呈現：</h6>
           <h5><span style={{ color: "green" }}>綠色</span> ➜ "<span style={{ color: "green" }}>回答正確</span>"</h5>
@@ -354,8 +355,8 @@ function FraudQuiz() {
 
       { showBackStory && (
         <div className={styles.backStory}>
-          <h2><b>【情境 - {currentConversation + 1}】</b></h2>
-          <h5><b>{allScripts[fraudType][currentConversation].background}</b></h5>
+          <p style={{ fontSize: '50px' }}><b>【情境 - {currentConversation + 1}】</b></p>
+          <p style={{ fontSize: '30px' }}><b>{allScripts[fraudType][currentConversation].background}</b></p>
           <div className={styles.kickOff}>
             <button onClick={() => {
               setHiddenDuringTransition(false);
@@ -409,14 +410,14 @@ function FraudQuiz() {
       <div className={styles.content}>
         {!hiddenDuringTransition && (
           <div className={styles.characterLeft}>
-              <img src="/badguy.png" alt="Character 1" className={`${styles.characterLeftImage} ${allScripts[fraudType][currentConversation].script[currentIndex]?.character === "character1" ? styles.myturn : null}`} />
+              <img src="/faurd.PNG" alt="Character 1" className={`${styles.characterLeftImage} ${allScripts[fraudType][currentConversation].script[currentIndex]?.character === "character1" ? styles.myturn : null}`} />
           </div>
         )}
         <div className={styles.records} id="records" style={{ visibility: showRecords ? 'visible' : 'hidden' }}>
           <div className={styles.recordsHeader}>
             <AccountCircleIcon sx={{ fontSize: 42 }} />
             <div className={styles.state}>
-              <p>賣家</p>
+            <p style={{fontSize: '20px'}}><b>賣家</b></p>
               <p>🟢上線中</p>
             </div>
             <div className={styles.function}>
@@ -492,7 +493,7 @@ function FraudQuiz() {
         
         {!hiddenDuringTransition && (
           <div className={styles.characterRight}>
-              <img src={`/${characterInformation.selectedRole}.png`}   alt="Character 2" className={`${styles.characterRightImage} ${allScripts[fraudType][currentConversation].script[currentIndex]?.character === "character2" ? styles.myturn : null}`} />
+              <img src={`/${characterInformation.selectedRole}.PNG`}   alt="Character 2" className={`${styles.characterRightImage} ${allScripts[fraudType][currentConversation].script[currentIndex]?.character === "character2" ? styles.myturn : null}`} />
           </div>
         )}
       </div>

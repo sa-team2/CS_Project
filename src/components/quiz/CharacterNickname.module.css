@@ -39,7 +39,9 @@
   align-items: center;
   background-color: rgba(0, 0, 0, 0.2);
   border-radius: 10px;
-  gap: 20px
+  /* gap: 20px; */
+  overflow: hidden;
+
 }
 
 .characterImgContainer {
@@ -96,6 +98,16 @@
 
 .pos2 {
   transform: translateX(-100%) scale(0.7);
+  filter: brightness(50%);
+}
+
+.pos3 {
+  transform: translateX(-200%) scale(0.7);
+  filter: brightness(50%);
+}
+
+.pos4 {
+  transform: translateX(200%) scale(0.7);
   filter: brightness(50%);
 }
   

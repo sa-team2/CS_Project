@@ -6,7 +6,7 @@ import { useQuizContext } from "./QuizContext";
 function CharacterNickname() {
     const [nickname, setNickname] = useState("");
     const { characterInformation, setCharacterInformation } = useQuizContext();
-    const characters = ["male", "female", "kid"];
+    const characters = ["c1", "c2", "c3", "c4", "c5"];
     const [currentIndex, setCurrentIndex] = useState(
         characterInformation.selectedRole ? characters.indexOf(characterInformation.selectedRole) : 0
     );
@@ -43,7 +43,7 @@ function CharacterNickname() {
                 {characters.map((char, index) => (
                     <img
                         key={char}
-                        src={`/${char}.png`}
+                        src={`/${char}.PNG`}
                         alt={char}
                         className={`${styles.image} ${styles[`pos${(index - currentIndex + characters.length) % characters.length}`]}`}
                     />

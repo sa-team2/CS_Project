@@ -61,7 +61,7 @@ const QuizTypeSelection = ({setReturnIsDisable}) => {
   return (
     <>
       <div className={styles.header}>
-        <h1 className={styles.title}>請選擇詐騙類型進行測驗</h1>
+        <p className={styles.title}>請選擇詐騙類型進行測驗</p>
 				<MousePointerClick className={styles.clickingIcon} />
       </div>
 

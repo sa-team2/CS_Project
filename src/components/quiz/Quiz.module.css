@@ -23,9 +23,13 @@
 }
 
 .quizTitle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
     background-color: white;
     color: black;
     width: 50%;
+    height:15%;
     border-radius: 20px;
     text-align: center;
     font-size: 4rem;
@@ -201,7 +205,7 @@
 .question {
     position: relative;
     text-align: center;
-    font-size: 20px;
+    font-size: 25px;
     font-weight: bold;
     line-height: 1.5;
 }

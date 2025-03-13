@@ -49,7 +49,7 @@ function Quiz() {
       <motion.div
           className={styles.quizTitle}
           initial={{ scale: 1, width: "25%", y: 0 }} 
-          animate={{ scale: 0.5, width: "50%", y: "-40vh" }}
+          animate={{ scale: 0.5, width: "45%", y: "-41vh" }}
           transition={{ delay: 1, duration: 1 }} 
           onAnimationComplete={() => {
             setSvgColor('#000000');
