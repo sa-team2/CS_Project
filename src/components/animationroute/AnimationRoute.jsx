@@ -4,6 +4,7 @@ import Website from '../website/Website';
 import Statistics from '../statistics/Statistics';
 import Login from '../login/Login';
 import Admin from '../admin/Admin';
+import Report from '../report/Report';
 import Quiz from '../quiz/Quiz';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
@@ -20,6 +21,9 @@ function AnimationRoute() {
           break;
         case '/fraud':
           document.title = '常見手法';
+          break;
+        case '/report':
+          document.title = '詐騙回報';
           break;
         case '/website':
           document.title = '網站檢測';
@@ -51,6 +55,7 @@ function AnimationRoute() {
         <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Home />} />
             <Route path="/website" element={<Website />} />
+            <Route path="/report" element={<Report />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/login" element={<Login />} />
             <Route path="/admin" element={<Admin />} />
