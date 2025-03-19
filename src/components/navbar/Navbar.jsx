@@ -25,6 +25,9 @@ function Navbar({setIsLogoutModalOpen}) {
     } else if (location.pathname === "/website") {
       setSelectedLink("website");
       window.scrollTo(0, 0);
+    } else if (location.pathname === "/report") {
+      setSelectedLink("report");
+      window.scrollTo(0, 0);
     } else if (location.pathname === "/admin") {
         setSelectedLink("admin");
     }
@@ -77,6 +80,18 @@ function Navbar({setIsLogoutModalOpen}) {
                   詐騙檢測
                 </a>
               </div>
+              <div>
+                <a 
+                  className={`${styles.navbarAnchor} ${isActive("report")}`}
+                  onClick={() => { 
+                    setSelectedLink("report");
+                    navigate("/report"); 
+                  }} 
+                >
+                  詐騙回報
+                </a>
+              </div>
+              
               <div>
                 <a 
                   className={`${styles.navbarAnchor} ${isActive("statisticsBox")}`}
