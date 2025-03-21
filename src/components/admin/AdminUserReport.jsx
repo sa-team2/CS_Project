@@ -19,17 +19,15 @@ import Tooltip from "@mui/material/Tooltip";
 import FactCheckIcon from '@mui/icons-material/FactCheck';
 import DeleteIcon from "@mui/icons-material/Delete";
 import CloudUploadIcon from "@mui/icons-material/CloudUpload";
-import EditIcon from "@mui/icons-material/Edit"; // 導入編輯圖標
-import CloseIcon from "@mui/icons-material/Close"; // 導入關閉圖標
+import EditIcon from "@mui/icons-material/Edit"; 
+import CloseIcon from "@mui/icons-material/Close"; 
 import { visuallyHidden } from "@mui/utils";
 import { db } from "../../firebase";
 import { collection, getDocs, addDoc, deleteDoc, updateDoc, doc, query, where, getDoc, serverTimestamp } from "firebase/firestore"; // Firebase Firestore
 import "./AdminPreview.css";
 import { Modal } from "react-bootstrap";
-import TextField from "@mui/material/TextField"; // 導入TextField用於編輯
+import TextField from "@mui/material/TextField"; 
 
-
-// 此行添加一個全局樣式來修正翻頁按鈕顏色
 const globalStyle = document.createElement('style');
 globalStyle.innerHTML = `
   .MuiTablePagination-root .MuiIconButton-root, 
@@ -43,7 +41,6 @@ globalStyle.innerHTML = `
 `;
 document.head.appendChild(globalStyle);
 
-// Updated headCells to include fields from Report table and remove Stars
 const headCells = [
   {
     id: "Report",
@@ -99,7 +96,6 @@ const headCells = [
 const getComparator = (order, orderBy) => {
   return order === "desc"
     ? (a, b) => {
-        // Ensure both values are treated as numbers
         const aValue =
           orderBy === "FraudRate" ? Number(a[orderBy]) : a[orderBy];
         const bValue =
@@ -141,7 +137,7 @@ function EnhancedTableHead(props) {
             inputProps={{
               "aria-label": "select all desserts",
             }}
-            style={{ display: 'none' }} // 隱藏全選鍵
+            style={{ display: 'none' }} 
           />
         </TableCell>
         {headCells.map((headCell) => (
@@ -289,7 +285,7 @@ export default function AdminPreview() {
   const openDeleteModal = () => setIsDeleteModalOpen(true);
   const openFraudCheckModal = () => setIsFraudCheckModalOpen(true);
   const openEditModal = () => {
-    // 取得選中的行資料
+
     if (selected.length > 0) {
       const selectedRow = rows.find(row => row.id === selected[0]);
       if (selectedRow) {
@@ -315,7 +311,6 @@ export default function AdminPreview() {
   };
 
   const handleCloseCheck = () => {
-    // 取消進行中的檢測請求
     if (abortController) {
       abortController.abort();
     }
@@ -323,7 +318,6 @@ export default function AdminPreview() {
     closeReturnModal();
   };
 
-  // 處理編輯資料變更
   const handleEditChange = (e) => {
     const { name, value } = e.target;
     setEditData(prev => ({
@@ -332,7 +326,6 @@ export default function AdminPreview() {
     }));
   };
 
-  // 提交編輯的資料
   const handleEditSubmit = async () => {
     try {
       if (selected.length === 0) {
@@ -342,8 +335,6 @@ export default function AdminPreview() {
 
       const selectedId = selected[0];
       const reportRef = doc(db, "Report", selectedId);
-
-      // 準備更新的資料
       const updateData = {
         Report: editData.Report,
         Source: editData.Source,
@@ -356,7 +347,6 @@ export default function AdminPreview() {
         const matchKeywords = editData.MatchKeyword.split(',').map(k => k.trim()).filter(k => k);
         const matchTypes = editData.MatchType.split(',').map(t => t.trim()).filter(t => t);
         
-        // 確保陣列長度一致
         const maxLength = Math.max(matchKeywords.length, matchTypes.length);
         const matches = [];
         
@@ -374,10 +364,8 @@ export default function AdminPreview() {
         };
       }
 
-      // 更新Firebase
       await updateDoc(reportRef, updateData);
       
-      // 更新本地狀態
       setRows(prevRows => prevRows.map(row => {
         if (row.id === selectedId) {
           return {
@@ -404,11 +392,9 @@ const handleCheckFraud = async () => {
     const controller = new AbortController();
     setAbortController(controller);
     
-    // 開始加載
     openFraudCheckModal();
     setIsLoading(true);
     
-    // 獲取選中的行
     const selectedRows = rows.filter(row => selected.includes(row.id));
     
     if (selectedRows.length === 0) {
@@ -433,7 +419,7 @@ const handleCheckFraud = async () => {
       body: JSON.stringify({
         reports: reportsData
       }),
-      signal: controller.signal // 添加 signal 以支持取消請求
+      signal: controller.signal
     });
     
     if (!response.ok) {
@@ -443,7 +429,6 @@ const handleCheckFraud = async () => {
     const data = await response.json();
     console.log("Fraud check results:", data);
     
-    // 更新行數據
     const updatedRows = [...rows];
     
     for (const result of data.results) {
@@ -473,11 +458,9 @@ const handleCheckFraud = async () => {
         console.error(`處理報告 ${result.id} 失敗: ${result.message}`);
       }
     }
-    // 更新狀態
     setRows(updatedRows);
     
   } catch (error) {
-    // 檢查是否為取消請求的錯誤
     if (error.name === 'AbortError') {
       console.log('Fetch aborted');
     } else {
@@ -494,25 +477,20 @@ const handleCheckFraud = async () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        // Fetch data from the Report collection
         const reportCollection = collection(db, "Report");
         const reportSnapshot = await getDocs(reportCollection);
         
-        // Process each Report document
         const reportData = [];
         
         for (const reportDoc of reportSnapshot.docs) {
           const data = reportDoc.data();
           
-          // Get the FraudResult, MatchKeyword, MatchType, and FraudRate
-          // These might be in different locations depending on your data structure
           let fraudResult = "";
           let matchKeywords = [];
           let matchTypes = [];
           let fraudRate = 0;
           let matches = [];
           
-          // Check if the document has a PythonResult field
           if (data.PythonResult) {
             fraudResult = data.PythonResult.FraudResult || "";
             fraudRate = data.PythonResult.FraudRate || 0;
@@ -524,7 +502,6 @@ const handleCheckFraud = async () => {
             }
           }
           
-          // Add the report data to our array
           reportData.push({
             id: reportDoc.id,
             Report: data.Report || "",
@@ -534,7 +511,7 @@ const handleCheckFraud = async () => {
             MatchKeyword: matchKeywords.join(", "),
             MatchType: matchTypes.join(", "),
             FraudRate: fraudRate,
-            Match: matches, // Keep the original Match array for processing
+            Match: matches,
           });
         }
         
@@ -556,13 +533,11 @@ const handleCheckFraud = async () => {
     console.log(`Order: ${isAsc ? "desc" : "asc"}, Order By: ${property}`);
   };
 
-  // 修改點擊行為單選
+ 
   const handleClick = (event, id) => {
-    // 如果已經選中了這個 ID，則取消選中
     if (selected.indexOf(id) !== -1) {
       setSelected([]);
     } else {
-      // 否則，只選中這個 ID
       setSelected([id]);
     }
   };
@@ -576,7 +551,6 @@ const handleCheckFraud = async () => {
     setPage(0);
   };
 
-  // Avoid a layout jump when reaching the last page with empty rows.
   const emptyRows =
     page > 0 ? Math.max(0, (1 + page) * rowsPerPage - rows.length) : 0;
 
@@ -631,8 +605,8 @@ const handleCheckFraud = async () => {
       let currentTotalDataCount = 0;
       let currentFinalAccuracy = 0;
       if (docSnapshot.exists()) {
-        currentTotalDataCount = docSnapshot.data().totalDataCount || 0; // 預設為 0
-        currentFinalAccuracy = docSnapshot.data().finalAccuracy || 0; // 預設為 0
+        currentTotalDataCount = docSnapshot.data().totalDataCount || 0; 
+        currentFinalAccuracy = docSnapshot.data().finalAccuracy || 0; 
       }
   
       // 4. 計算選中文檔的總準確度
@@ -798,7 +772,6 @@ const handleCheckFraud = async () => {
           
           // 在 Outcome 中創建新文檔 (使用 add 自動生成新 ID)
           const outcomeRef = await addDoc(collection(db, "Outcome"), {
-            // 複製必要的欄位
             Report: reportData.Report || "",
             Source: reportData.Source || "",
             AddNote: reportData.AddNote || "",
@@ -866,7 +839,7 @@ const handleCheckFraud = async () => {
     }
   };
 
-  // 修改刪除函數以真正刪除 Report 資料表中的數據
+
   const handleDelete = async () => {
     try {
       if (selected.length === 0) {
@@ -874,24 +847,21 @@ const handleCheckFraud = async () => {
         return;
       }
 
-      // 保存要刪除的 ID
-      const idToDelete = selected[0]; // 因為現在是單選，所以只有一個 ID
+
+      const idToDelete = selected[0]; 
 
       // 更新統計數據 (如果需要的話)
       await updateStatistics(); 
       await updatetopType(); 
 
-      // 從 Report 資料表中刪除資料
       await deleteDoc(doc(db, "Report", idToDelete));
       console.log(`已從 Report 資料表刪除文檔 ID: ${idToDelete}`);
 
-      // 從本地狀態中移除已刪除的行
       setRows((prevRows) => prevRows.filter(row => row.id !== idToDelete));
       setSelected([]);
       
       console.log("刪除成功");
       
-      // 關閉模態框
       closeReturnModal();
     } catch (error) {
       console.error("刪除失敗: ", error);
@@ -1083,7 +1053,7 @@ const handleCheckFraud = async () => {
         padding: '0 10px 20px', 
         maxHeight: '70vh', 
         overflowY: 'auto',
-        flex: 1 // 讓內容區域自動填滿剩餘空間
+        flex: 1 
       }}>
         <TextField
           label="回報內容"
@@ -1101,9 +1071,9 @@ const handleCheckFraud = async () => {
           InputLabelProps={{
             style: { 
               fontSize: '20px',
-              fontWeight: '700',
-              // color: '#2c3e50'
-            }
+              fontWeight: '700'
+            },
+            shrink: true
           }}
         />
         <TextField
@@ -1115,10 +1085,14 @@ const handleCheckFraud = async () => {
           margin="normal"
           variant="outlined"
           InputProps={{
-            style: { fontSize: '18px'}
+            style: { fontSize: '18px' }
           }}
           InputLabelProps={{
-            style: { fontSize: '20px',fontWeight: '700' }
+            style: { 
+              fontSize: '20px',
+              fontWeight: '700' 
+            },
+            shrink: true
           }}
         />
         <TextField
@@ -1133,7 +1107,11 @@ const handleCheckFraud = async () => {
             style: { fontSize: '18px' }
           }}
           InputLabelProps={{
-            style: { fontSize: '20px' ,fontWeight: '700' }
+            style: { 
+              fontSize: '20px',
+              fontWeight: '700' 
+            },
+            shrink: true
           }}
         />
         <TextField
@@ -1148,7 +1126,11 @@ const handleCheckFraud = async () => {
             style: { fontSize: '18px' }
           }}
           InputLabelProps={{
-            style: { fontSize: '20px' ,fontWeight: '700' }
+            style: { 
+              fontSize: '20px',
+              fontWeight: '700' 
+            },
+            shrink: true
           }}
         />
         <TextField
@@ -1167,7 +1149,11 @@ const handleCheckFraud = async () => {
             style: { fontSize: '18px' }
           }}
           InputLabelProps={{
-            style: { fontSize: '20px' ,fontWeight: '700' }
+            style: { 
+              fontSize: '20px',
+              fontWeight: '700' 
+            },
+            shrink: true
           }}
         />
         <TextField
@@ -1186,7 +1172,11 @@ const handleCheckFraud = async () => {
             style: { fontSize: '18px' }
           }}
           InputLabelProps={{
-            style: { fontSize: '20px' ,fontWeight: '700' }
+            style: { 
+              fontSize: '20px',
+              fontWeight: '700' 
+            },
+            shrink: true
           }}
         />
         <TextField
@@ -1203,11 +1193,14 @@ const handleCheckFraud = async () => {
             style: { fontSize: '18px' }
           }}
           InputLabelProps={{
-            style: { fontSize: '20px' ,fontWeight: '700' }
+            style: { 
+              fontSize: '20px',
+              fontWeight: '700' 
+            },
+            shrink: true
           }}
         />
       </div>
-      {/* 確保按鈕在編輯框內底部 */}
       <div style={{
         padding: '10px 10px 10px',
         display: 'flex',
@@ -1230,7 +1223,6 @@ const handleCheckFraud = async () => {
         padding: '20px',
         position: 'relative' 
       }}>
-      {/* 直接使用內聯樣式強制定位 */}
       <CloseIcon 
         onClick={handleCloseCheck} 
         style={{
