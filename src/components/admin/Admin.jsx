@@ -5,51 +5,39 @@ import { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { SignOutAltIcon } from '@patternfly/react-icons';
 import { motion } from 'framer-motion';
-import { Helmet } from 'react-helmet';
 import Navbar from '../navbar/Navbar';
 import AdminUpload from './AdminUpload';
 import AdminPreview from './AdminPreview';
+import AdminUserReport from './AdminUserReport';
 
 export const MultipleFileUploadBasic = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
-  const [adminPreviewClick, setAdminPreviewClick] = useState(false);
-  const [adminUploadClick, setAdminUploadClick] = useState(true);
+  const [activeTab, setActiveTab] = useState("file");
   const navigate = useNavigate();
   const alertShownRef = useRef(false);
-  const [activeTab, setActiveTab] = useState("file");
 
+  // 計算 Tab 樣式位置
   const getTabStyle = () => {
     switch (activeTab) {
-        case "file":
-            return { width: "180px", left: "0" };
-        case "report":
-            return { width: "180px", left: "170px" };
-        default:
-            return { width: "175px", left: "0" };
+      case "file":
+        return { width: "33.33%", left: "0%" };
+      case "report":
+        return { width: "33.33%", left: "33.33%" };
+      case "userreport":
+        return { width: "33.33%", left: "66.66%" };
+      default:
+        return { width: "33.33%", left: "0%" };
     }
   };
+  
 
   // 檢查登入狀態
   useEffect(() => {
     const userAuthenticated = sessionStorage.getItem('username');
-    const currentView = sessionStorage.getItem('currentView') || 'AdminUpload';
-
     if (!userAuthenticated && !alertShownRef.current) {
       alert('請先登入帳號及密碼');
       alertShownRef.current = true; 
       navigate('/login'); 
-    } else if (userAuthenticated) {
-      sessionStorage.setItem('currentView', currentView);
-
-      if (currentView === 'AdminPreview') {
-        setAdminPreviewClick(true);
-        setAdminUploadClick(false);
-        console.log("Switched to AdminPreview"); // Debugging
-      } else {
-        setAdminPreviewClick(false);
-        setAdminUploadClick(true);
-        console.log("Switched to AdminUpload"); // Debugging
-      }
     }
   }, [navigate]); 
 
@@ -59,11 +47,10 @@ export const MultipleFileUploadBasic = () => {
     navigate("/login");
   };
 
-
   const closeLogoutModal = () => {
     setIsLogoutModalOpen(false);
   };
-  
+
   const userAuthenticated = sessionStorage.getItem('username');
 
   return (
@@ -83,23 +70,27 @@ export const MultipleFileUploadBasic = () => {
               <div className={styles.adminTitle}>
                 資料集更新 Dataset Update
               </div>
-              {/* <div className={styles.adminSubtitle}>
-                Dataset Update
-              </div> */}
             </div>
-            {/* 類似Tab的感覺 */}
+            
+            {/* Tabs 選單 */}
             <div className={styles.tabs}>
-              <a  onClick={() => setActiveTab("file")}>上傳檔案</a>
-              <a  onClick={() => setActiveTab("report")}>檢測回報</a>
+              <a onClick={() => setActiveTab("file")}>上傳檔案</a>
+              <a onClick={() => setActiveTab("report")}>檢測回報</a>
+              <a onClick={() => setActiveTab("userreport")}>使用者回報</a>
               <div className={styles.tabsTransition} style={getTabStyle()}></div>
             </div>
         </div>
+
+        {/* 根據 activeTab 顯示對應內容 */}
         <div>
             {activeTab === "file" && <AdminUpload />}
             {activeTab === "report" && <AdminPreview />}
+            {activeTab === "userreport" && <AdminUserReport />}
         </div>
+
         </motion.div>
 
+        {/* 登出提示框 */}
         {isLogoutModalOpen && (
             <div className={styles.mOverlay}>
               <div className={styles.mContent}>
