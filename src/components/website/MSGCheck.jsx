@@ -16,6 +16,7 @@ function MSGCheckInput() {
   const [prevents, setPrevent] = useState('無');
   const [FraudRate, setFraudRate] = useState(); 
   const [ID, setID] = useState('');
+  const [Emotion, setEmotion] = useState('無');
 
   const handleChange = (e) => {
     setText(e.target.value);
@@ -62,6 +63,7 @@ function MSGCheckInput() {
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
           const roundedFraudRate = Math.round(fraudRate * 100) / 100; 
           setFraudRate(roundedFraudRate);
+          setEmotion(data.pythonResult.Emotion);
           return true;
         } else {
           setID('');
@@ -71,6 +73,7 @@ function MSGCheckInput() {
           setReminds('無');
           setPrevent('無');
           setFraudRate(null); 
+          setEmotion('無')
           return false;
         }
       } catch (error) {
@@ -136,7 +139,7 @@ function MSGCheckInput() {
                 </div>
               )}
               {isLoaded && (
-                <Rating pythonResult={result} keywords={keywords} types={type} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} data={""}/>
+                <Rating pythonResult={result} keywords={keywords} types={type} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} data={""} Emotion={Emotion}/>
               )}
             </Modal.Body>
             {isLoaded && (

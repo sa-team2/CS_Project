@@ -17,6 +17,7 @@ function TXTCheckUpload() {
   const [FraudRate, setFraudRate] = useState(null); // 存储 FraudRate
   const [ID, setID] = useState('');
   const [file, setFile] = useState(null); // 添加一個狀態來存儲上傳的文件
+  const [Emotion, setEmotion] = useState('無');
 
 
   const handleClose = () => {
@@ -63,6 +64,7 @@ function TXTCheckUpload() {
           setPrevent(prevent.join(', '));
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
           setFraudRate(Math.round(fraudRate * 100) / 100); // 保留两位小数
+          setEmotion(data.pythonResult.Emotion);
           return true;
         } else {
           setID('');
@@ -72,6 +74,7 @@ function TXTCheckUpload() {
           setReminds('無');
           setPrevent('無');
           setFraudRate(null); 
+          setEmotion('無')
           return false;      
         }
       } catch (error) {
@@ -148,7 +151,7 @@ function TXTCheckUpload() {
               </div>
             )}
             {isLoaded && (
-              <Rating pythonResult={pythonResult} keywords={keywords} types={types} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} file={file}/>
+              <Rating pythonResult={pythonResult} keywords={keywords} types={types} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} file={file} Emotion={Emotion}/>
             )}
           </Modal.Body>
           {isLoaded && (

@@ -17,6 +17,8 @@ function URLCheckTextArea() {
   const [prevents, setPrevent] = useState('無');
   const [FraudRate, setFraudRate] = useState(null); // 存储 FraudRate
   const [ID, setID] = useState('');
+  const [Emotion, setEmotion] = useState('無');
+
 
   const handleClose = () => {
     setShow(false);
@@ -61,6 +63,7 @@ function URLCheckTextArea() {
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
           const roundedFraudRate = Math.round(fraudRate * 100) / 100; // 保留两位小数
           setFraudRate(roundedFraudRate);
+          setEmotion(data.pythonResult.Emotion);
           return true;
       } else {
           setID('');
@@ -72,6 +75,7 @@ function URLCheckTextArea() {
           setReminds('無');
           setPrevent('無');
           setFraudRate(null); // 无 FraudRate 数据
+          setEmotion('無')
           return false;
       }
     } catch (error) {
@@ -150,7 +154,7 @@ function URLCheckTextArea() {
               </div>
             )}
             {isLoaded && (
-              <Rating pythonResult={pythonResult} keywords={keywords} types={type} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} data={url}/>
+              <Rating pythonResult={pythonResult} keywords={keywords} types={type} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} data={url} Emotion={Emotion}/>
             )}
           </Modal.Body>
           {isLoaded && (
