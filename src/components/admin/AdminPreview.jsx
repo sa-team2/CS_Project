@@ -24,7 +24,7 @@ import CloudUploadIcon from "@mui/icons-material/CloudUpload";
 import FilterListIcon from "@mui/icons-material/FilterList";
 import { visuallyHidden } from "@mui/utils";
 import { db } from "../../firebase";
-import { collection, getDocs, addDoc, deleteDoc, updateDoc, doc, query, where,getDoc } from "firebase/firestore"; // Firebase Firestore
+import { collection, getDocs, addDoc, deleteDoc, updateDoc, doc, query, where,getDoc , Timestamp} from "firebase/firestore"; // Firebase Firestore
 import "./AdminPreview.css";
 import { Modal } from "react-bootstrap";
 import RadioButtonUncheckedIcon from "@mui/icons-material/RadioButtonUnchecked";
@@ -535,6 +535,10 @@ export default function AdminPreview() {
 
   const handleUpdate = async () => {
     try {
+      await updateDoc(doc(db, "Statistics", "finalStatistics"), {
+        time: Timestamp.now()
+      });
+      
       // Step 0: 更新 Statistics 
       await updateStatistics(); 
       await updatetopType(); 
