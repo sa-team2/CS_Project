@@ -65,3 +65,11 @@
     padding: 10px;
     height: 500px;
 }
+
+.updateTimeBox {
+    position: absolute;
+  bottom: 20px;
+  right: 30px;
+  font-size: 14px;
+  color: #555;
+  }
