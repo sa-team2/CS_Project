@@ -409,11 +409,14 @@ export default function AdminPreview() {
       
             if (stars !== undefined && fraudRate !== undefined) {
               let adjustedFraudRate;
-              if ((fraudRate >= 50 && fraudRate <= 75) || (fraudRate >= 0 && fraudRate <= 25)) {
-                adjustedFraudRate = 100 - fraudRate; // 調整後的 fraudRate
-              } else {
-                adjustedFraudRate = fraudRate;
+              if (fraudRate >= 50 && fraudRate <= 100) {
+                // 50~100 等比例放大到 0~100
+                adjustedFraudRate = (fraudRate - 50) * 2;
+              } else if (fraudRate >= 0 && fraudRate <= 50) {
+                // 0~50 等比例轉成 100~0
+                adjustedFraudRate = (50 - fraudRate) * 2;
               }
+              
       
               const starsScore = stars * 20;
               const weightedAccuracy = (starsScore * 0.3) + (adjustedFraudRate * 0.7); // 加權準確度
