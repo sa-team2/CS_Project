@@ -8,6 +8,7 @@ function URLReport() {
   const [url, setUrl] = useState('');
   const [dataSource, setDataSource] = useState('');
   const [additionalNotes, setAdditionalNotes] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const clearAllFields = () => {
     setUrl('');
@@ -19,21 +20,53 @@ function URLReport() {
     if (!url) {
       alert('請輸入或貼上網址。');
       return;
-    }
+    } 
 
+    setIsSubmitting(true);
     try {
+      // 添加到 Firebase
       await addDoc(collection(db, "Report"), {
         Report: url,
         Source: dataSource || '未提供',
         AddNote: additionalNotes || '未提供',
-        Timestamp: new Date().toISOString()
+        Timestamp: new Date().toISOString(),
+        DetectionType: 1 // 明確設定URL檢測類型為1
       });
+
+      // 同時直接向 Python 後端發送檢測請求
+      try {
+        // 確保URL格式正確
+        let formattedUrl = url;
+        if (!url.match(/^https?:\/\//i)) {
+          formattedUrl = 'https://' + url;
+        }
+        
+        const response = await fetch(`${process.env.REACT_APP_API_URL || 'http://localhost:3001'}/api/fetch-content`, {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            url: formattedUrl, // 使用格式化後的URL
+            detectionType: 1    // 明確告訴後端這是URL檢測
+          })
+        });
+        
+        if (response.ok) {
+          console.log('已成功發送URL檢測請求至後端');
+        }
+      } catch (apiError) {
+        console.error('向檢測API發送URL請求時出錯:', apiError);
+        // 即使 API 請求失敗，我們仍然讓用戶知道報告已成功儲存
+      }
 
       alert("回報成功！");
       clearAllFields();
     } catch (error) {
       console.error('回報失敗:', error);
       alert("回報失敗，請稍後再試。");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -78,7 +111,11 @@ function URLReport() {
         </div>
         {/* 按鈕區域 */}
         <div className={styles.btnArea}>
-          <button className={styles.urlSubmit} onClick={handleReportSubmit}>
+          <button 
+            className={styles.urlSubmit} 
+            onClick={handleReportSubmit}
+            disabled={isSubmitting}
+          >
             <svg
               height="24"
               width="24"
@@ -93,7 +130,7 @@ function URLReport() {
             </svg>
             <span>回報</span>
           </button>
-          <button className={styles.urlClear} onClick={clearAllFields}>清除</button>
+          <button className={styles.urlClear} onClick={clearAllFields} disabled={isSubmitting}>清除</button>
         </div>
       </div>
     </div>

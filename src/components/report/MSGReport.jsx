@@ -8,6 +8,7 @@ function MSGReport() {
   const [text, setText] = useState('');
   const [source, setSource] = useState('');
   const [additionalInfo, setAdditionalInfo] = useState('');
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleTextChange = (e) => {
     setText(e.target.value);
@@ -16,10 +17,10 @@ function MSGReport() {
   const handleSourceChange = (e) => {
     setSource(e.target.value);
   };
-
+ 
   const handleAdditionalInfoChange = (e) => {
     setAdditionalInfo(e.target.value);
-  };
+  }; 
 
   const clearAllFields = () => {
     setText('');
@@ -28,22 +29,39 @@ function MSGReport() {
   };
 
   const handleReportSubmit = async () => {
-    if (text) {
-      try {
-        await addDoc(collection(db, "Report"), {
-          Report: text,
-          Source: source || '未提供',
-          AddNote: additionalInfo|| '未提供',
-          timestamp: new Date().toISOString()
-        });
-        alert("回報成功！");
-        clearAllFields();
-      } catch (error) {
-        console.error('Error saving report:', error);
-        alert("回報失敗，請稍後再試。");
-      }
-    } else {
+    if (!text) {
       alert('請輸入或貼上內容。');
+      return;
+    }
+
+    setIsSubmitting(true);
+    try {
+      // 檢查文字是否包含URL
+      const urlPattern = /(https?:\/\/[^\s]+)/g;
+      const containsUrl = urlPattern.test(text);
+      
+      // 根據內容類型設定不同的檢測類型
+      const detectionType = containsUrl ? 1 : 2; // 1 for URL, 2 for text
+
+      // 添加到 Firebase，保存檢測類型
+      await addDoc(collection(db, "Report"), {
+        Report: text,
+        Source: source || '未提供',
+        AddNote: additionalInfo || '未提供',
+        Timestamp: new Date().toISOString(),
+        DetectionType: detectionType // 根據內容動態設定
+      });
+      
+      // 移除向後端發送檢測請求的代碼，僅上傳到 Firebase
+      console.log(`已成功上傳${containsUrl ? 'URL' : '文字'}資料至 Firebase`);
+      
+      alert("回報成功！");
+      clearAllFields();
+    } catch (error) {
+      console.error('Error saving report:', error);
+      alert("回報失敗，請稍後再試。");
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -89,7 +107,11 @@ function MSGReport() {
         </div>
         
         <div className={styles.btnArea}>
-          <button className={styles.msgSubmit} onClick={handleReportSubmit}>
+          <button 
+            className={styles.msgSubmit} 
+            onClick={handleReportSubmit}
+            disabled={isSubmitting}
+          >
           <svg
               height="24"
               width="24"
@@ -104,7 +126,7 @@ function MSGReport() {
             </svg>
             <span>回報</span>
           </button>
-          <button className={styles.msgClear} onClick={clearAllFields}>清除</button>
+          <button className={styles.msgClear} onClick={clearAllFields} disabled={isSubmitting}>清除</button>
         </div>
       </div>
     </div>
