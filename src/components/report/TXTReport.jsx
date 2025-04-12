@@ -33,27 +33,50 @@ function TXTReport() {
 
   const handleReportSubmit = async () => {
     if (file) {
+      const formData = new FormData();
+      formData.append('file', file);
+      formData.append('from', 'Report');     // 加入來源欄位
+
+      // 在這裡列出 FormData 內容，檢查一下
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+  
+      // 送出請求，並立刻回報成功
+      setIsLoading(true);
       try {
-        setIsLoading(true);
+        // 發送請求到後端
+        const response = await fetch('/api/fetch-content', { 
+          method: 'POST',
+          body: formData,
+        });
+  
+        const data = await response.json();
+  
+        // 立即顯示回報成功，不等待 Firestore 儲存的結果
+        alert('回報成功！');
+        clearAllFields();
+  
+        // 儲存回報資料到 Firestore
         await addDoc(collection(db, "Report"), {
           Report: file.name,
           Source: source || '未提供',
           AddNote: additionalInfo || '未提供',
-          timestamp: new Date().toISOString()
+          Timestamp: new Date().toISOString(),
+          // 這裡存入從後端取得的 data
+          Data: data,
         });
-        setIsLoading(false);
-        alert("回報成功！");
-        clearAllFields();
       } catch (error) {
         console.error('回報失敗:', error);
-        setIsLoading(false);
         alert("回報失敗，請稍後再試。");
+      } finally {
+        setIsLoading(false);
       }
     } else {
       alert('請選擇一個文件。');
     }
   };
-
+  
   return (
     <div className={styles.reportContainer}>
       <div className={styles.fileInputContainer}>
