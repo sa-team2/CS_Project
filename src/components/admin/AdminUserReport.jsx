@@ -829,6 +829,14 @@ export default function AdminPreview() {
               console.log(`成功將關鍵字 ${unmatched.MatchKeyword} 添加到 FraudDefine`);
             }
           }
+          
+          // 在處理完當前資料後，從 Report 集合中刪除該筆資料
+          try {
+            await deleteDoc(doc(db, "Report", row.id));
+            console.log(`成功從 Report 資料表刪除文檔 ID: ${row.id}`);
+          } catch (deleteError) {
+            console.error(`刪除 Report 資料表中的文檔 ID: ${row.id} 時發生錯誤:`, deleteError);
+          }
         } catch (error) {
           console.error(`處理 Report ${row.id} 時發生錯誤:`, error);
         }
