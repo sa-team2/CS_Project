@@ -1,8 +1,8 @@
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { db } from '../../firebase';  
+import { db } from '../../firebase'; 
 import { collection, getDocs } from 'firebase/firestore';
 
 ChartJS.register(
@@ -75,32 +75,27 @@ function BarChart() {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const querySnapshot = await getDocs(collection(db, 'Outcome'));
-        const matchTypeCount = {}; 
-
+        const querySnapshot = await getDocs(collection(db, 'Statistics'));
+        const dataArray = [];
+    
         querySnapshot.forEach((doc) => {
           const data = doc.data();
-          const matches = data.PythonResult?.Match; 
-
-          if (matches) {
-            matches.forEach(match => {
-              const matchType = match.MatchType;
-              if (matchTypeCount[matchType]) {
-                matchTypeCount[matchType] += 1; 
-              } else {
-                matchTypeCount[matchType] = 1; 
-              }
-            });
+          if (doc.id !== 'finalStatistics') {
+            dataArray.push({ type: data.Type, frequency: data.Frequency });
           }
         });
+    
+        // 先排序資料，並取出頻率最高的資料
+        dataArray.sort((a, b) => b.frequency - a.frequency);
+        
+        // 取得第五高的頻率，並選取所有與第五高頻率相等的資料
+        const fifthHighestFrequency = dataArray[4]?.frequency; // 第五高的 Frequency
+        const topFiveData = dataArray.filter(item => item.frequency >= fifthHighestFrequency);
 
-        const sortedMatchTypes = Object.entries(matchTypeCount)
-          .sort((a, b) => b[1] - a[1]); 
-
-        const topFive = sortedMatchTypes.slice(0, 5); 
-        const labels = topFive.map(item => item[0]);
-        const datasetData = topFive.map(item => item[1]);
-
+        // 準備繪圖資料
+        const labels = topFiveData.map(item => item.type);
+        const datasetData = topFiveData.map(item => item.frequency);
+    
         const newData = {
           labels,
           datasets: [{
