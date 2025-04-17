@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Pie } from 'react-chartjs-2';
 import { Chart as ChartJS, ArcElement, Tooltip, Legend, Title } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -23,7 +23,8 @@ function PieChart() {
             text: '資料數量占比', 
             font: { size: 18 },
             align: 'start',
-            padding: { bottom: 20 }
+            padding: { bottom: 20 },
+            color: 'white'
         },
         tooltip: {
             enabled: true,
@@ -31,13 +32,15 @@ function PieChart() {
                 label: function(tooltipItem) {
                     return `資料占比: ${tooltipItem.raw}%`;
                 }
-            }
+            },
+            color: 'white'
         },
         legend: {
             display: true, 
             position: 'top',
             labels: {
-              font: { size: 16 }
+              font: { size: 16 },
+              color: 'white'
             }
         },
         datalabels: {
@@ -45,7 +48,8 @@ function PieChart() {
           align: 'end',
           anchor: 'top',
           formatter: (value) => `${value}%`, 
-          font: { size: 18 }
+          font: { size: 18 },
+          color: 'rgba(255,255,255,0.85)'
         }
     }
   };

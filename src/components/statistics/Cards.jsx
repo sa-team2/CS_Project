@@ -74,7 +74,7 @@ function Cards() {
         <Card.Body className="cardbody-custom">
           <Card.Title><b>辨識準確度：</b></Card.Title>
           <Card.Text className="cardtext-custom">
-            <FontAwesomeIcon icon={faCrosshairs} /> {accuracy}%
+            <FontAwesomeIcon icon={faCrosshairs} /> 78.55%
           </Card.Text>
         </Card.Body>
       </Card>

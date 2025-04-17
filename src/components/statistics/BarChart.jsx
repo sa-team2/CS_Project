@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { Bar } from 'react-chartjs-2';
 import { Chart as ChartJS, CategoryScale, LinearScale, BarElement, Tooltip, Legend, Title } from 'chart.js';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
@@ -25,13 +25,15 @@ function BarChart() {
         text: '詐騙類型統計（常見詐騙手法）', 
         font: { size: 18 },
         align: 'start',
-        padding: { bottom: 20 }
+        padding: { bottom: 20 },
+        color: 'white'
       },
       tooltip: {
-        enabled: true
+        enabled: true,
+        color: 'white'
       },
       legend: {
-        display: false
+        display: false,
       },
       datalabels: {
         display: true,
@@ -39,19 +41,32 @@ function BarChart() {
         anchor: 'end',
         formatter: (value) => `${value}`, 
         font: { size: 16 },
-        padding: { top: -10 }
+        padding: { top: -10 },
+        color: 'white'
       },
     },
     scales: {
       y: {
         beginAtZero: true,
         ticks: {
-          font: { size: 16 }
+          font: { size: 16 },
+          color: 'white'
+        },
+        grid: {
+          color: (context) => {
+            return context.index === 0 ? 'white' : '#696969';
+          }
         }
       },
       x: {
         ticks: {
-          font: { size: 16 }
+          font: { size: 16 },
+          color: 'white'
+        },
+        grid: {
+          color: (context) => {
+            return context.index === 0 ? 'white' : 'transparent';
+          }
         }
       }
     }
@@ -92,11 +107,11 @@ function BarChart() {
             label: '資料數量',
             data: datasetData,
             backgroundColor: [
-              'rgba(255, 99, 132, 0.2)',
-              'rgba(54, 162, 235, 0.2)',
-              'rgba(255, 206, 86, 0.2)',
-              'rgba(75, 192, 192, 0.2)',
-              'rgba(153, 102, 255, 0.2)'
+              'rgba(255, 99, 132, 0.75)',
+              'rgba(54, 162, 235, 0.75)',
+              'rgba(255, 206, 86, 0.75)',
+              'rgba(75, 192, 192, 0.75)',
+              'rgba(153, 102, 255, 0.75)'
             ],
             borderColor: [
               'rgba(255,99,132,1)',
