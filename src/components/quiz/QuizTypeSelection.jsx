@@ -22,7 +22,7 @@ const QuizTypeSelection = ({setReturnIsDisable}) => {
       icon: UserX,
       color: 'amber',
       description: '守護個人身份資料',
-      type: '#'
+      type: 'imperFraud'
     },
     {
       id: 3,

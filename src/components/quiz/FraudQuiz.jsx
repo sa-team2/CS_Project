@@ -133,7 +133,7 @@ function FraudQuiz() {
     if (currentIndex + 1 === allScripts[fraudType][currentConversation].script.length) {
         setIsCharacterNameVisible(false);
         setTimeout(() => {
-            setQuestion("請選擇對話中，對方進行詐騙的關鍵句。");
+            setQuestion("請選擇對話中，對方進行詐騙的起始關鍵句。");
         }, 500);
     }
   };
@@ -184,7 +184,7 @@ function FraudQuiz() {
     setIsAutoPlay(false);
     setIsCharacterNameVisible(false);
     setTimeout(() => {
-        setQuestion("請選擇對話中，對方進行詐騙的關鍵句。");
+        setQuestion("請選擇對話中，對方進行詐騙的起始關鍵句。");
     }, 500);
   };
 
@@ -223,7 +223,7 @@ function FraudQuiz() {
             clearInterval(interval);
             setIsCharacterNameVisible(false);
             setTimeout(() => {
-                setQuestion("請選擇對話中，對方進行詐騙的關鍵句。");
+                setQuestion("請選擇對話中，對方進行詐騙的起始關鍵句。");
             }, 1000);
           }
         } else {

@@ -45,6 +45,8 @@ export const QuizProvider = ({ children }) => {
         setTypeName('購物詐騙');
       } else if (fraudType === 'investmentFraud') {
         setTypeName('投資詐騙');
+      } else if (fraudType === 'imperFraud') {
+        setTypeName('冒名詐騙');
       } else {
         setTypeName(null);
       }
@@ -226,6 +228,55 @@ export const QuizProvider = ({ children }) => {
         ],
         tips: "這種佈局通常是以先大量投資某支股票讓你有點獲利，並從中操作其他支股票，讓你在後續的投資上虧損或成為他們的棋子。"
       },
+    ],
+
+    imperFraud: [
+      {
+        background: "你接獲一則來自郵局專員的訊息，說你的帳戶有問題。",
+        script: [
+          { character: "character1", text: "你好，我是新莊郵局專員陳傳媒，請問你是王志翔嗎？" },
+          { character: "character2", text: "沒錯，請問怎麼了嗎？" },
+          { character: "character1", text: "我這邊接到通知，有人拿你的證件授權書去領錢，請問是你認識的人嗎？" },
+          { character: "character2", text: "啊？？？我不知道欸，那我現在應該要怎麼做。" },
+          { character: "character1", text: "需要先將財產移至安全帳戶。" },
+          { character: "character2", text: "是一定要移動嗎？還是我可以先報警呢？" },
+          { character: "character1", text: "不用，我們這邊會幫你處理好，只要先將財產進行移動代管公證，處理好後會再歸還。" },
+          { character: "character2", text: "好，再請你告訴我要怎麼做。" },
+          { character: "character1", text: "你現在帳戶財產有900萬元，等等匯款至以下帳戶即可700-14524879524123。" },
+          { character: "character2", text: "好。" }
+        ],
+        tips: "若有接獲訊息或來電，聲稱為某行員或政府機關，請先查明該身分，勿輕易將錢轉移。"
+      },
+      {
+        background: "你接獲一則來自銀行專員的訊息，說你的帳戶遭凍結。",
+        script: [
+          { character: "character1", text: "您好，請問是劉小姐嗎？" },
+          { character: "character2", text: "是，請問您是？" },
+          { character: "character1", text: "我是中國信託銀行新莊分行人員，王欣義。請問您近期有來辦理提款卡嗎？" },
+          { character: "character2", text: "沒有欸，怎麼了嗎？" },
+          { character: "character1", text: "我們這邊發現有人盜用您的身分辦理提款卡，導致帳戶凍結。" },
+          { character: "character2", text: "那怎麼辦，我現在去分行找您處理嗎？" },
+          { character: "character1", text: "沒關係，不用多跑一趟，在手機app處理即可。" },
+          { character: "character2", text: "好，是中國信託的網銀app嗎？" },
+          { character: "character1", text: "是的，先將錢轉至我們這邊的代管帳戶，等解凍結後就會轉回給您。822-1548751264258496" },
+          { character: "character2", text: "沒問題，我現在馬上轉。" },
+        ],
+        tips: "若有接獲訊息或來電，聲稱為某行員或政府機關，請先查明該身分，勿輕易將錢轉移。"
+      },
+      {
+        background: "你接獲一則來自發票載具的訊息，說你的發票歸戶有誤。",
+        script: [
+          { character: "character1", text: "請問是許小姐嗎？您有一張電子發票的歸戶有錯誤，會導致後續若有中獎無法匯款。" },
+          { character: "character2", text: "那我要怎麼處理呢？" },
+          { character: "character1", text: "請點選我們寄給您的郵件連結，進入頁面後更新您的信用卡與手機號碼以完成驗證。" },
+          { character: "character2", text: "好的，可是只要輸入手機號碼就能歸戶吧。" },
+          { character: "character1", text: "信用卡號是拿來雙重驗證的哦～" },
+          { character: "character2", text: "我填完了，怎麼跳出扣款訊息？是正常的嗎？" },
+          { character: "character1", text: "這是測試金額，不會真正扣款，請您放心。" },
+          { character: "character2", text: "好，謝謝。" },
+        ],
+        tips: "發票載具若歸戶有誤，只需填寫手機號碼、身分證字號及載具號碼，請勿在不明網站中填寫信用卡號等個人資訊。"
+      },
     ]
   };  
 
@@ -237,13 +288,18 @@ export const QuizProvider = ({ children }) => {
     ],
     shoppingFraud: [
       allScripts.shoppingFraud[0].script[2].text,
-      allScripts.shoppingFraud[1].script[6].text,
+      allScripts.shoppingFraud[1].script[4].text,
       allScripts.shoppingFraud[2].script[3].text
     ],
     investmentFraud: [
       allScripts.investmentFraud[0].script[6].text, 
       allScripts.investmentFraud[1].script[1].text, 
       allScripts.investmentFraud[2].script[0].text
+    ],
+    imperFraud: [
+      allScripts.imperFraud[0].script[6].text, 
+      allScripts.imperFraud[1].script[6].text, 
+      allScripts.imperFraud[2].script[2].text
     ]
   };
 
