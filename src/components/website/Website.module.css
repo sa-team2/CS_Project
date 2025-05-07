@@ -128,14 +128,12 @@
     border: none;
     cursor: pointer;
     font-size: 1.25rem;
-    width: 500px;
+    width: 300px; /* Changed from 500px to 300px for equal two-tab layout */
     text-align: center;
     position: relative;
 }
 
-.tabs a:nth-of-type(3) {
-    width: 500px;
-}
+/* Removed the third tab styling since we no longer have a third tab */
 
 .tabsTransition {
     position: absolute;
@@ -151,20 +149,6 @@
     width: 60%;
     margin-bottom: 100px;
 }
-
-/* .tabButton:hover {
-    background-color: #bbb;
-} */
-
-/* .active {
-    background-color: #007bff;
-    color: white;
-    font-weight: bold;
-} */
-
-
-
-
 
 .website-container {
     position: absolute;
@@ -187,7 +171,7 @@
     flex-direction: row;
     align-items: center;
     margin: 0 auto; 
-    margin-top: 100px ;
+    margin-top: 100px;
 }
 
 .function-container > div {
@@ -195,7 +179,7 @@
     position: relative;
     display: flex;
     justify-content: center;
-    width: calc(100%/2);
+    width: calc(100%/2); /* Changed from 3 to 2 divisions */
     padding: 20px 30px;
     display: flex;
     flex-direction: column;
