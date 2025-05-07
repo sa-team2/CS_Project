@@ -3,7 +3,6 @@ import { useLocation } from "react-router-dom";
 import styles from './Website.module.css';
 import Navbar from '../navbar/Navbar';
 import { TXTReport } from './TXTReport';
-import { URLReport } from './URLReport';
 import { MSGReport } from './MSGReport';
 import Statistics from '../statistics/Statistics';
 
@@ -34,13 +33,11 @@ function Report() {
   const getTabStyle = () => {
     switch (activeTab) {
         case "text":
-            return { width: "200px", left: "0" };
-        case "url":
-            return { width: "200px", left: "195px" };
+            return { width: "300px", left: "0" };
         case "file":
-            return { width: "200px", left: "400px" };
+            return { width: "300px", left: "295px" };
         default:
-            return { width: "100px", left: "0" };
+            return { width: "150px", left: "0" };
     }
   };
 
@@ -97,22 +94,15 @@ useEffect(() => {
               <div className={styles.testMain}>
                 {/* 類似Tab的感覺 */}
                   <div className={styles.tabs}>
-                    <a  onClick={() => setActiveTab("text")}>文字回報</a>
-                    <a  onClick={() => setActiveTab("url")}>網址回報</a>
-                    <a  onClick={() => setActiveTab("file")}>檔案、圖片回報</a>
+                    <a onClick={() => setActiveTab("text")}>文字回報</a>
+                    <a onClick={() => setActiveTab("file")}>截圖回報</a>
                     <div className={styles.tabsTransition} style={getTabStyle()}></div>
                   </div>
                   <div className={styles.testTopic}>
                     <div className={styles.testTitle}>
-                      {activeTab === "text" && "文字回報 Text Scan"}
-                      {activeTab === "url" && "網址回報 URL Scan"}
-                      {activeTab === "file" && "檔案、圖片回報 File & Image Scan"} 
+                      {activeTab === "text" && "文字回報 Text Report"}
+                      {activeTab === "file" && "截圖回報 Screenshot Reoprt"} 
                     </div>
-                    {/* <div className={styles.testSubtitle}>
-                      {activeTab === "text" && ""}
-                      {activeTab === "url" && ""}
-                      {activeTab === "file" && ""} 
-                    </div> */}
                   </div>
               </div>
 
@@ -120,7 +110,6 @@ useEffect(() => {
               {/* 顯示對應組件的內容 */}
               <div className={styles.content}>
                     {activeTab === "text" && <MSGReport />}
-                    {activeTab === "url" && <URLReport />}
                     {activeTab === "file" && <TXTReport />}
               </div>
           </div>
@@ -144,8 +133,7 @@ useEffect(() => {
                     <li ref={stepRefs[0]} data-index="1" className={progressHeight > 0 ? styles.active : null}>
                       <p style={{ fontSize: '30px' }}><b>選取回報型態</b></p>
                       <p>若為文字類型、或是文字夾雜網址，選擇「文字回報」；
-                          單純為網址，選擇「網址回報」；
-                          對話紀錄截圖、或是檔案型態，選擇「檔案、圖片回報」。</p>
+                          對話紀錄截圖、文字檔，選擇「截圖回報」。</p>
 
                       <div className={styles.iconHolder}>
                           <span className={styles.stepsNumber}>1</span>
@@ -154,7 +142,7 @@ useEffect(() => {
                     <li ref={stepRefs[1]} data-index="2" className={progressHeight >= 50 ? styles.active : null}>
                       <p style={{ fontSize: '30px' }}><b>輸入內容</b></p>
                       <p>可藉由複製將文字及網址貼上，也可直接在文字框進行輸入；
-                          圖片及檔案可按中間區域的「選擇檔案」上傳。</p>
+                          截圖或文字檔可按中間區域的「選擇檔案」上傳。</p>
 
                       <div className={styles.iconHolder}>
                           <span className={styles.stepsNumber}>2</span>
@@ -163,23 +151,12 @@ useEffect(() => {
                     <li ref={stepRefs[2]} data-index="3" className={progressHeight >= 90 ? styles.active : null}>
                       <p style={{ fontSize: '30px' }}><b>按回報等待結果</b></p>
                       <p>按下方或右側的「回報」後，會藉由系統訓練的模型進行相似度辨識，
-                          若資料內容及圖片過多，可能需要等待一下。</p>
+                          若資料內容及截圖過多，可能需要等待一下。</p>
 
                       <div className={styles.iconHolder}>
                           <span className={styles.stepsNumber}>3</span>
                       </div>
                     </li>
-                    {/* <li ref={stepRefs[2]} data-index="3" className={progressHeight >= 90 ? styles.active : null}>
-                      <p style={{ fontSize: '30px' }}><b>回報結果及回報</b></p>
-                      <p>回報報告左側的百分比為「與詐騙的相似度」，可以藉由百分比高低判斷是否要繼續交易或操作；
-                          右側也會提供可能的「詐騙類型」及「關鍵字依據」，並提供提醒及如何防範。
-                          若想對於回報結果進行「準確度回報」，可按左下方的⭐。
-                      </p>
-
-                      <div className={styles.iconHolder}>
-                          <span className={styles.stepsNumber}>4</span>
-                      </div>
-                    </li> */}
                   </ul>
                 </div>
               </div>

@@ -19,7 +19,7 @@
     flex-direction: row;
     align-items: center;
     margin: 0 auto; 
-    margin-top: 100px ;
+    margin-top: 100px;
 }
 
 .function-container > div {
@@ -27,7 +27,7 @@
     position: relative;
     display: flex;
     justify-content: center;
-    width: calc(100%/2);
+    width: calc(100%/2); /* Changed from 3 to 2 parts */
     padding: 20px 30px;
     display: flex;
     flex-direction: column;
@@ -60,6 +60,35 @@
     align-items: center;
 }
 
+/* For the tabs in the original file */
+.tabs {
+    display: flex;
+    justify-content: flex-start;
+    position: relative;
+    width: 600px; /* Adjust width for two tabs instead of three */
+}
+
+.tabs a {
+    width: 300px; /* Increased width for each tab (previously would be ~200px) */
+    text-align: center;
+    padding: 15px 0;
+    cursor: pointer;
+    color: #333;
+    font-weight: bold;
+    transition: color 0.3s;
+}
+
+.tabs a:hover {
+    color: #007bff;
+}
+
+.tabsTransition {
+    position: absolute;
+    bottom: 0;
+    height: 3px;
+    background-color: #007bff;
+    transition: all 0.3s ease;
+}
 
 @keyframes fadeIn {
     from {
@@ -155,5 +184,3 @@
     box-shadow: 1px 1px 5px lightgray;
     border-radius: 10px;
 }
-
-

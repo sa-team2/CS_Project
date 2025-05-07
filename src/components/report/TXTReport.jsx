@@ -119,13 +119,13 @@ function TXTReport() {
     <div className={styles.reportContainer}>
       <div className={styles.fileInputContainer}>
         <div className={styles.leftColumn}>
-          <div className={styles.fieldLabel}>檔案、圖片回報</div>
+          <div className={styles.fieldLabel}>截圖回報（圖片、文字檔）</div>
           <label htmlFor="file-input" className={styles.dropContainer}>
             <span className={styles.dropTitle}>
               <UploadFileIcon fontSize='large' /> 拖曳檔案至此
             </span>
             <span className={styles.dropTitleOr}>或</span>
-            <input type="file" accept="image/*" id="file-input" onChange={handleFileChange} />
+            <input type="file" accept="image/*" id="file-input" onChange={handleFileChange}  multiple/>
           </label>
 
           <div className={styles.additionalFieldContainer}>
