@@ -29,18 +29,21 @@ function TXTCheckUpload() {
   const handleFileUpload = async (event) => {
     event.preventDefault();
     const fileInput = document.getElementById('file-input');
-    const file = fileInput.files[0];
-    setFile(file);  // 保存文件到状态
+    const files = fileInput.files; // FileList 物件
+    setFile(Array.from(files));
 
-    if (file) {
+    if (files.length > 0) {
       const formData = new FormData();
-      formData.append('file', file);
+      for (let i = 0; i < files.length; i++) {
+        formData.append('files[]', files[i]);  // 多檔用陣列方式傳遞
+      }
+
       for (let [key, value] of formData.entries()) {
         console.log(key, value);
-    } 
+      }
     
       try {
-        const response = await fetch('/api/fetch-content', { // 更新为图片上传的 API 路径
+        const response = await fetch('/api/fetch-content', { 
           method: 'POST',
           body: formData,
         });
@@ -113,7 +116,7 @@ function TXTCheckUpload() {
               <UploadFileIcon fontSize='large'/>拖曳檔案至此
             </span>
             <span className="dropTitleOr">或</span>
-            <input type="file" accept="image/*" required id="file-input"/>
+            <input type="file" accept="image/*" required id="file-input" multiple/>
           </label>
 
           <div>

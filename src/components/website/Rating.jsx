@@ -216,11 +216,18 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
               </div>
               <iframe src={data} style={{ width: "100%", height: "400px" }}></iframe>
             </div>
-          ) : file && file.type.startsWith('image/') ? (
-            // 預覽圖片
+          ) : Array.isArray(file) && file.length > 0 && file[0].type.startsWith('image/') ? (
+            // 預覽多張圖片
             <div className='container-3'>
               <div className='container-3-image-title'><b>預覽圖片：</b></div>
-              <img src={URL.createObjectURL(file)} alt="預覽圖片" style={{ width: "100%", maxWidth: "100%", height: "auto", maxHeight: "400px" }} />
+              {file.map((f, index) => (
+                <img
+                  key={index}
+                  src={URL.createObjectURL(f)}
+                  alt={`預覽圖片 ${index + 1}`}
+                  style={{ width: "100%", maxWidth: "100%", height: "auto", maxHeight: "400px", marginBottom: "1rem" }}
+                />
+              ))}
             </div>
           ) : null}
 
