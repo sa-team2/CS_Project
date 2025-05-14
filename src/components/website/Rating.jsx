@@ -225,7 +225,7 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
                   key={index}
                   src={URL.createObjectURL(f)}
                   alt={`預覽圖片 ${index + 1}`}
-                  style={{ width: "100%", maxWidth: "100%", height: "auto", maxHeight: "400px", marginBottom: "1rem" }}
+                  style={{ width: "100%", maxWidth: "100%", height: "auto", maxHeight: "400px", marginBottom: "1rem", objectFit:"contain" }}
                 />
               ))}
             </div>
