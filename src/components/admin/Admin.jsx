@@ -75,7 +75,7 @@ export const MultipleFileUploadBasic = () => {
             {/* Tabs 選單 */}
             <div className={styles.tabs}>
               <a onClick={() => setActiveTab("file")}>上傳檔案</a>
-              <a onClick={() => setActiveTab("report")}>檢測回報</a>
+              <a onClick={() => setActiveTab("report")}>檢測紀錄</a>
               <a onClick={() => setActiveTab("userreport")}>使用者回報</a>
               <div className={styles.tabsTransition} style={getTabStyle()}></div>
             </div>

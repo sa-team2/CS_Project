@@ -533,7 +533,51 @@ export default function AdminPreview() {
     }    
   };
   
-
+  const updateKeywordStats = async () => {
+    try {
+      const selectedIds = rows.filter((row) => selected.includes(row.id));
+      console.log("Selected rows for keyword stats:", selectedIds);
+      
+      // Extract all keywords from the selected rows
+      const keywordsToUpdate = [];
+      selectedIds.forEach(row => {
+        row.Match.forEach(matchItem => {
+          if (matchItem.MatchKeyword) {
+            keywordsToUpdate.push(matchItem.MatchKeyword.trim());
+          }
+        });
+      });
+      
+      console.log("Keywords to update:", keywordsToUpdate);
+      
+      // Get current KeywordStats document or create it if it doesn't exist
+      const keywordStatsRef = doc(db, "Outcome", "KeywordStats");
+      const keywordStatsSnapshot = await getDoc(keywordStatsRef);
+      
+      let currentStats = {};
+      if (keywordStatsSnapshot.exists()) {
+        currentStats = keywordStatsSnapshot.data();
+      }
+      
+      // Update the counts for each keyword
+      keywordsToUpdate.forEach(keyword => {
+        if (currentStats[keyword]) {
+          // Keyword exists, increment count
+          currentStats[keyword] += 1;
+        } else {
+          // New keyword, set count to 1
+          currentStats[keyword] = 1;
+        }
+      });
+      
+      // Save the updated stats back to Firestore
+      await updateDoc(keywordStatsRef, currentStats);
+      console.log("Keyword statistics updated successfully");
+      
+    } catch (error) {
+      console.error("Error updating keyword statistics:", error);
+    }
+  };
 
 
   const handleUpdate = async () => {
@@ -542,22 +586,23 @@ export default function AdminPreview() {
         time: Timestamp.now()
       });
       
-      // Step 0: 更新 Statistics 
-      await updateStatistics(); 
-      await updatetopType(); 
+      // Step 0: Update Statistics and Keyword Stats
+      await updateStatistics();
+      await updatetopType();
+      await updateKeywordStats(); // Add this line to update keyword statistics
       
       // Step 1: 從 FraudDefine collection 中抓取資料
       const fraudDefineSnapshot = await getDocs(collection(db, "FraudDefine"));
       const fraudDefineKeywords = fraudDefineSnapshot.docs.map(
         (doc) => doc.data().Keyword
       );
-
-      // Step 2: 比對 Outcome 的 MatchKeyword 和 FraudDefine 的 Keyword
+  
+      // Rest of the function remains unchanged
       const matched = [];
       const unmatched = [];
-
+  
       const selectedRows = rows.filter(row => selected.includes(row.id));
-
+  
       for (const row of selectedRows) {
         const same = row.Match.filter((matchItem) =>
           fraudDefineKeywords.includes(matchItem.MatchKeyword)
@@ -565,11 +610,11 @@ export default function AdminPreview() {
         if (same.length > 0) {
           matched.push({ ...row, Match: same });
         }
-
+  
         const updatedMatches = row.Match.filter((matchItem) => {
           return !fraudDefineKeywords.includes(matchItem.MatchKeyword);
         });
-
+  
         if (updatedMatches.length === 0) {
           // 如果所有 Match 都匹配到了 FraudDefine，刪除該筆資料
           await deleteDoc(doc(db, "Outcome", row.id));
@@ -581,10 +626,10 @@ export default function AdminPreview() {
           unmatched.push({ ...row, Match: updatedMatches });
         }
       }
-
+  
       console.log(matched);
       console.log(unmatched);
-
+  
       setMatchedData(matched);
       setUnmatchedData(unmatched);
 
@@ -594,7 +639,7 @@ export default function AdminPreview() {
           combinedData.map(async (row) => {
             for (const matchItem of row.Match) {
               console.log("FraudType:", matchItem.MatchType);
-
+  
               if (!fraudDefineKeywords.includes(matchItem.MatchKeyword)) {
                 await addDoc(collection(db, "FraudDefine"), {
                   Keyword: matchItem.MatchKeyword,
@@ -610,7 +655,7 @@ export default function AdminPreview() {
       }
       const remainingRows = rows.filter(row => !selected.includes(row.id));
       setRows(remainingRows); 
-
+  
       setShow(true);
       closeReturnModal();
       setSelected([]);
@@ -624,8 +669,9 @@ export default function AdminPreview() {
   const handleDelete = async () => {
     try {
       await updateStatistics(); 
-      await updatetopType(); 
-
+      await updatetopType();
+      await updateKeywordStats(); // Add this line to update keyword statistics before deletion
+  
       await Promise.all(
         selected.map(async (id) => {
           await deleteDoc(doc(db, "Outcome", id));
@@ -639,7 +685,7 @@ export default function AdminPreview() {
     } catch (error) {
       console.error("刪除失敗: ", error);
     }
-
+  
     closeReturnModal();
     setSelectedStar([]);
   };
