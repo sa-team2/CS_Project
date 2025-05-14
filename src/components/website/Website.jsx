@@ -94,14 +94,14 @@ useEffect(() => {
               <div className={styles.testMain}>
                 {/* 類似Tab的感覺 */}
                   <div className={styles.tabs}>
-                    <a onClick={() => setActiveTab("text")}>文字檢測</a>
-                    <a onClick={() => setActiveTab("file")}>截圖檢測</a>
+                    <a onClick={() => setActiveTab("text")}>文字、網址檢測</a>
+                    <a onClick={() => setActiveTab("file")}>截圖、檔案檢測</a>
                     <div className={styles.tabsTransition} style={getTabStyle()}></div>
                   </div>
                   <div className={styles.testTopic}>
                     <div className={styles.testTitle}>
-                      {activeTab === "text" && "文字檢測 Text Scan"}
-                      {activeTab === "file" && "截圖檢測 Screenshot Scan"} 
+                      {activeTab === "text" && (<span>文字、網址檢測&nbsp;&nbsp;Text, URL Scan</span>)}
+                      {activeTab === "file" && (<span>截圖、檔案檢測&nbsp;&nbsp;Screenshot, File Scan</span>)}
                     </div>
                   </div>
               </div>
