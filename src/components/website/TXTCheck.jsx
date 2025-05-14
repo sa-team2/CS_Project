@@ -113,10 +113,11 @@ function TXTCheckUpload() {
 
           <label htmlFor="file-input" className="drop-container">
             <span className="dropTitle">
-              <UploadFileIcon fontSize='large'/>拖曳檔案至此
+              <UploadFileIcon fontSize='large'/>拖曳檔案至此 或
             </span>
-            <span className="dropTitleOr">或</span>
+            {/* <span className="dropTitleOr">或</span> */}
             <input type="file" accept="image/*" required id="file-input" multiple/>
+            <span style={{ fontSize: '16px' }}>檔案類型：TXT, JPG, JPEG, PNG </span>
           </label>
 
           <div>
