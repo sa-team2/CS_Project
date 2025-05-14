@@ -121,3 +121,22 @@
 .container-3-title-url {
     margin-bottom: 16px;
 }
+
+.play-icon {
+  color: #3abade;
+  margin-left: 3px;
+  margin-bottom: 0.5px;
+  animation: pulse 1.2s infinite ease-in-out;
+}
+
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.25);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
