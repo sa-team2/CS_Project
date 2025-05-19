@@ -5,10 +5,8 @@ import { Rate, Row } from 'antd';
 import { Card, Button, Popover, OverlayTrigger } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTriangleExclamation, faArrowPointer, faCheck, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
+import { faTriangleExclamation, faArrowPointer, faCheck } from '@fortawesome/free-solid-svg-icons';
 import { db, doc, setDoc } from '../../firebase'; // 确保导入
-import { collection, getDocs } from 'firebase/firestore';
-import { ThLargeIcon } from '@patternfly/react-icons';
 
 const getBackground = (progress) => {
   const degrees = progress * 3.6;
@@ -143,38 +141,6 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
     }
   };
 
-  //類型影片
-  const [videoUrl, setVideoUrl] = React.useState(null);
-
-React.useEffect(() => {
-  const fetchVideoFromStatistics = async () => {
-    try {
-      const querySnapshot = await getDocs(collection(db, 'Statistics'));
-      querySnapshot.forEach((doc) => {
-        const data = doc.data();
-        if (data.Type === types && data.Video) {
-          setVideoUrl(data.Video);
-        }
-      });
-    } catch (error) {
-      console.error("Error fetching Statistics data:", error);
-    }
-  };
-
-  if (types) {
-    fetchVideoFromStatistics();
-  }
-}, [types]);
-
-
-const handlePlayClick = () => {
-  if (videoUrl) {
-    window.open(videoUrl, '_blank');
-  } else {
-    alert('尚未找到對應的影片資源');
-  }
-};
-
   return (
     <div className="rating-container">
       {progress === 0 ? (
@@ -224,7 +190,7 @@ const handlePlayClick = () => {
                         </ul>
 
                         <ul className="rating-ul">
-                           <li>類型：{types || '無'} {videoUrl && (<a onClick={handlePlayClick}><FontAwesomeIcon icon={faPlayCircle} className="play-icon" size="1x"/></a>)}</li>
+                            <li>類型：{types || '無'}</li>
                         </ul>
                         
                         <ul className="rating-ul">

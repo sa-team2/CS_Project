@@ -73,10 +73,9 @@
 
 .container-2 {
     width: 100%;
-    height: 420px;
 
     display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-rows: auto auto 1fr;
     gap: 15px; 
     grid-area: second;
 }
@@ -120,23 +119,4 @@
 
 .container-3-title-url {
     margin-bottom: 16px;
-}
-
-.play-icon {
-  color: #3abade;
-  margin-left: 3px;
-  margin-bottom: 0.5px;
-  animation: pulse 1.2s infinite ease-in-out;
-}
-
-@keyframes pulse {
-  0% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.25);
-  }
-  100% {
-    transform: scale(1);
-  }
 }

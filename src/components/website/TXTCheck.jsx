@@ -17,7 +17,6 @@ function TXTCheckUpload() {
   const [FraudRate, setFraudRate] = useState(null); // 存储 FraudRate
   const [ID, setID] = useState('');
   const [file, setFile] = useState(null); // 添加一個狀態來存儲上傳的文件
-  const [Emotion, setEmotion] = useState('無');
 
 
   const handleClose = () => {
@@ -29,21 +28,18 @@ function TXTCheckUpload() {
   const handleFileUpload = async (event) => {
     event.preventDefault();
     const fileInput = document.getElementById('file-input');
-    const files = fileInput.files; // FileList 物件
-    setFile(Array.from(files));
+    const file = fileInput.files[0];
+    setFile(file);  // 保存文件到状态
 
-    if (files.length > 0) {
+    if (file) {
       const formData = new FormData();
-      for (let i = 0; i < files.length; i++) {
-        formData.append('files[]', files[i]);  // 多檔用陣列方式傳遞
-      }
-
+      formData.append('file', file);
       for (let [key, value] of formData.entries()) {
         console.log(key, value);
-      }
+    } 
     
       try {
-        const response = await fetch('/api/fetch-content', { 
+        const response = await fetch('/api/fetch-content', { // 更新为图片上传的 API 路径
           method: 'POST',
           body: formData,
         });
@@ -67,7 +63,6 @@ function TXTCheckUpload() {
           setPrevent(prevent.join(', '));
           const fraudRate = parseFloat(data.pythonResult.FraudRate);
           setFraudRate(Math.round(fraudRate * 100) / 100); // 保留两位小数
-          setEmotion(data.pythonResult.Emotion);
           return true;
         } else {
           setID('');
@@ -77,7 +72,6 @@ function TXTCheckUpload() {
           setReminds('無');
           setPrevent('無');
           setFraudRate(null); 
-          setEmotion('無')
           return false;      
         }
       } catch (error) {
@@ -109,13 +103,13 @@ function TXTCheckUpload() {
 
   return (
     <>
+    <div className='txtContainer'>
         <div className='fileInputContainer'>
-
           <label htmlFor="file-input" className="drop-container">
             <span className="dropTitle">
-              <UploadFileIcon fontSize='large'/>拖曳檔案至此 或
+              <UploadFileIcon fontSize='large'/>拖曳檔案至此
             </span>
-            {/* <span className="dropTitleOr">或</span> */}
+            <span style={{ fontSize: '16px' }}>或</span>
             <input type="file" accept="image/*" required id="file-input" multiple/>
             <span style={{ fontSize: '16px' }}>檔案類型：TXT, JPG, JPEG, PNG </span>
           </label>
@@ -155,7 +149,7 @@ function TXTCheckUpload() {
               </div>
             )}
             {isLoaded && (
-              <Rating pythonResult={pythonResult} keywords={keywords} types={types} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} file={file} Emotion={Emotion}/>
+              <Rating pythonResult={pythonResult} keywords={keywords} types={types} FraudRate={FraudRate} ID={ID} reminds={reminds} prevents={prevents} file={file}/>
             )}
           </Modal.Body>
           {isLoaded && (
@@ -169,6 +163,7 @@ function TXTCheckUpload() {
             </Modal.Footer>
           )}
           </Modal>
+        </div>
         </div>
     </>
   );
