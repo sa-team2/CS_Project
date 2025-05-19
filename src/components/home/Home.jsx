@@ -4,14 +4,26 @@ import { useLocation } from "react-router-dom";
 import Navbar from '../navbar/Navbar';
 import NewsList from './NewsList';
 import { Link } from 'react-router-dom';
+import { motion, useAnimation } from 'framer-motion'; 
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 function Home() {
     const [scrollY, setScrollY] = useState(0);
     const [animate, setAnimate] = useState(false); 
     const imagesRef = useRef(null);
+      const carouselRef = useRef(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const commonFraudRef = useRef(null);
     const location = useLocation();
+
+      const [isMobile, setIsMobile] = useState(false);
+  const [currentIndex, setCurrentIndex] = useState(0);
+  const totalItems = 6;
+
+
+
+
 
     if (!sessionStorage.getItem("hasRefreshed")) {
         sessionStorage.clear();  
@@ -150,25 +162,163 @@ function Home() {
       ];
     const duration = 10;
 
+    //圖片動畫
+    const img1 = useAnimation();
+    const img2 = useAnimation();
+    const img3 = useAnimation();
+    const img4 = useAnimation();
+  
+    useEffect(() => {
+        const loop = async () => {
+          await new Promise((r) => setTimeout(r, 3000));
+      
+          while (true) {
+            await img1.start({ scale: 1.05 });
+            await new Promise((r) => setTimeout(r, 1000));
+            await img1.start({ scale: 1 });
+      
+            await img2.start({ scale: 1.05 });
+            await new Promise((r) => setTimeout(r, 1000));
+            await img2.start({ scale: 1 });
+      
+            await img3.start({ scale: 1.05 });
+            await new Promise((r) => setTimeout(r, 1000));
+            await img3.start({ scale: 1 });
+      
+            await img4.start({ scale: 1.05 });
+            await new Promise((r) => setTimeout(r, 1000));
+            await img4.start({ scale: 1 });
+          }
+        };
+      
+        loop();
+      }, []);
+      
+
+    //輪播
+    const [deg, setDeg] = useState(0);
+
+    useEffect(() => {
+         if (isMobile) return;
+        let animationFrameId;
+
+        const rotate = () => {
+        setDeg(prev => prev - 0.075); // 每次轉一點點
+        animationFrameId = requestAnimationFrame(rotate);
+        };
+
+        rotate(); // 啟動動畫
+
+        return () => cancelAnimationFrame(animationFrameId); // 清除動畫
+    }, []);
+
+      // 響應式判斷手機版
+  useEffect(() => {
+    const checkIsMobile = () => {
+      setIsMobile(window.innerWidth <= 768);
+    };
+    checkIsMobile();
+    window.addEventListener('resize', checkIsMobile);
+    return () => window.removeEventListener('resize', checkIsMobile);
+  }, []);
+
+  // 左右切換邏輯（手機時）
+  const handlePrev = () => {
+    setCurrentIndex((prev) => (prev === 0 ? totalItems - 1 : prev - 1));
+  };
+
+  const handleNext = () => {
+    setCurrentIndex((prev) => (prev === totalItems - 1 ? 0 : prev + 1));
+  };
+  
+useEffect(() => {
+  if (!carouselRef.current) return;
+
+  if (isMobile) {
+    const gap = 20; 
+    const containerWidth = carouselRef.current.offsetWidth;
+    const itemWidthWithGap = containerWidth + gap;
+    const moveX = currentIndex * itemWidthWithGap;
+    
+    carouselRef.current.style.transform = `translateX(-${moveX}px)`;
+  } else {
+    carouselRef.current.style.transform = `rotateY(${deg}deg)`;
+  }
+}, [deg, currentIndex, isMobile]);
+
     return (
         <>
-            
             <div className={styles.homeContainer}>
                 <Navbar scrollToCommonFraudBox={scrollToCommonFraudBox}></Navbar>
+                <div className={styles.displaySlogan} style={{ "--duration": `${duration}s` }}>
+                        {slogans.map((text, index) => (
+                            <p key={index}><b>{text}</b></p>
+                        ))}
+                    </div>
+                
+                <motion.div 
+                className={styles.testbg1}
+                initial={{ left: '-20vw' }}
+                animate={{ left: '13vw' }}
+                transition={{ duration: 1, delay: 1 }} 
+                >   
+                     <motion.img
+                        src="/homepic1.jpg"
+                        style={{ scale: 1 }}
+                        animate={img1}
+                        transition={{ duration: 1 }}
+                    />
+                </motion.div>
+                <motion.div 
+                    className={styles.testbg2}
+                    initial={{ left: '-27.5vw' }}
+                    animate={{ left: '27.5vw' }}
+                    transition={{ duration: 1, delay: 1}} 
+                >  
+                    <motion.img
+                        src="/homepic2.jpg"
+                        initial={{ scale: 1 }}
+                        animate={img2}
+                        transition={{ duration: 1 }}
+                    />
+                </motion.div>
+                <motion.div 
+                    className={styles.testbg3}
+                    initial={{ right: '-20vw', rotate:'0' }}
+                    animate={{ right: '13vw', rotate:'360' }}
+                    transition={{ duration: 1, delay: 1}} 
+                >   
+                    <motion.img
+                        src="/homepic3.jpg"
+                        initial={{ scale: 1 }}
+                        animate={img4}
+                        transition={{ duration: 1 }}
+                    />
+                </motion.div>
+                <motion.div 
+                    className={styles.testbg4}
+                    initial={{ right: '-20vw' }}
+                    animate={{ right: '27.5vw' }}
+                    transition={{ duration: 1, delay: 1}} 
+                >  
+                    <motion.img
+                        src="/homepic4.jpg"
+                        style={{ filter: 'scale(1)' }}
+                        animate={img3}
+                        transition={{ duration: 1 }}
+                    />
+                </motion.div>
+
                 <div className={styles.homeBox}>
-                    {/* <div className={styles.homeMain}>
+                    <div className={styles.homeMain}>
                         <div className={styles.homeTitle}>
                             騙局雷達 
                         </div>
                         <div className={styles.homeSubtitle}>
                             Fraud Radar
                         </div>
-                    </div> */}
-                    <div className={styles.displaySlogan} style={{ "--duration": `${duration}s` }}>
-                        {slogans.map((text, index) => (
-                            <p key={index}><b>{text}</b></p>
-                        ))}
                     </div>
+                    {/* <div className={styles.radar}><img src='/radar.gif'></img></div> */}
                     <div className={styles.buttonBox}>
                         <Link to='./website'>
                             <button className={styles.buttonBtn}>
@@ -189,43 +339,29 @@ function Home() {
 
 
             <div className={styles.imageBox}>
-                <div ref={imagesRef} className={styles.images}>
-                    <div
-                        className={styles.imageLeft}
-                        style={{
-                            width: animate ? `${30 + Math.min(scrollY * 0.05, 60)}vw` : "30vw",
-                            height: animate ? `${50 + Math.min(scrollY * 0.03, 40)}vh` : "50vh",
-                            marginTop: animate ? `${5 - Math.min(scrollY * 0.005, 5)}vh` : "5vh",
-                            transform: animate ? `translateX(-${0 + Math.min(scrollY * 0.033, 40)}vw)` : "translateX(0px)", // 根據 scrollY 計算水平位移
-                            transition: "width 0.5s linear, height 0.3s linear, marginTop 0.2s linear, transform 0.3s linear", 
-                        }}
-                    >
-                        <img src='/homeleft.png' alt="Eren" />
-                    </div>
-                    <div
-                        className={styles.imageCenter}
-                        style={{
-                            width: animate ? `${40 + Math.min(scrollY * 0.05, 60)}vw` : "40vw",
-                            height: animate ? `${50 + Math.min(scrollY * 0.03, 40)}vh` : "50vh",
-                            transition: "width 0.3s linear, height 0.3s linear"
-                        }}
-                    >
-                        <video src="/demotest.mp4" autoPlay loop muted playsInline />
-                    </div>
-                    <div
-                        className={styles.imageRight}
-                        style={{
-                            width: animate ? `${30 + Math.min(scrollY * 0.05, 60)}vw` : "30vw",
-                            height: animate ? `${50 + Math.min(scrollY * 0.03, 40)}vh` : "50vh",
-                            marginTop: animate ? `${5 - Math.min(scrollY * 0.005, 5)}vh` : "5vh",
-                            transform: animate ? `translateX(${0 + Math.min(scrollY * 0.033, 40)}vw)` : "translateX(0px)", // 根據 scrollY 計算水平位移
-                            transition: "width 0.5s linear, height 0.3s linear, marginTop 0.2s linear, transform 0.3s linear"
-                        }}
-                    >
-                        <img src='/homeright.png' alt="Eren" />
-                    </div>
+      <div ref={imagesRef} className={styles.images}>
+        <div>
+          <div className={styles.container}>
+            {isMobile && (
+              <>
+                <button onClick={handlePrev} className={`${styles.arrowButton} ${styles.arrowLeft}`}><ArrowBackIosNewIcon /></button>
+                <button onClick={handleNext} className={`${styles.arrowButton} ${styles.arrowRight}`}><ArrowForwardIosIcon /></button>
+              </>
+            )}
+            <div
+              className={styles.carousel}
+              ref={carouselRef}
+            >
+              {[1, 2, 3, 4, 5, 6].map((i) => (
+                <div key={i} className={`${styles.item} ${styles[`carousel${i}`]}`}>
+                  <img src={`/carousel${i}.png`} alt={`carousel${i}`} />
                 </div>
+              ))}
             </div>
+          </div>
+        </div>
+      </div>
+    </div>
              
             <div className={styles.commonFraudBox} ref={commonFraudRef}>
                 <div className={styles.commonFraudBoxMain}>
@@ -279,9 +415,6 @@ function Home() {
                     </div>
                 )}
             </div>
-             <div className={styles.newsBox}>
-                <NewsList />
-             </div>
         </>
     )
 }

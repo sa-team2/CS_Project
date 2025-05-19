@@ -5,16 +5,20 @@
     background-color: black;
     display: flex; 
     flex-direction: column;
-    justify-content: center;
-    padding-right: 10rem;
-    padding-left: 10rem;
+    padding: 7.5rem 10rem 0 10rem;
+    height: 100vh;
+    overflow: hidden;
+    background-image: url('/blackbg1.jpg');
+    background-position: center;
+    background-size: cover;
 }
 
 .homeBox {
     display: flex;
     flex-direction: column;
     align-items: center;
-    margin-top: 15vh;
+    margin-top: 10vh;
+    margin-bottom: 20vh;
 }
 
 .homeMain {
@@ -27,14 +31,26 @@
 }
 
 .homeTitle {
-    font-size: 6rem;
+    font-size: clamp(3rem, 5vw, 6rem);
     font-weight: 700;
     line-height: 5rem;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 1s;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
 }
 
 .homeSubtitle {
-    font-size: 2.5rem;
+    font-size: clamp(1rem, 2vw, 2.5rem);
     font-weight: 700;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 1s;
 }
 
 .buttonBox {
@@ -43,19 +59,22 @@
     align-items: center;
     justify-content: center;
     gap: 3.5rem;
-    margin-top: 2.8rem
+    margin-top: 2.8rem;
+    opacity: 0;
+    animation: fadeIn 0.5s ease-in forwards;
+    animation-delay: 1s;
 }
 
 
 
 .buttonBtn, .buttonBtnQuiz {
     padding: 0.1em 0.25em;
-    width: 15em;
-    height: 5em;
+    width: 13em;
+    height: 4.2em;
     background-color: goldenrod;
     border: 0.08em solid #fff;
     border-radius: 0.3em;
-    font-size: 15px;
+    font-size: 12px;
     cursor: pointer;
 }
 .buttonBtnQuiz {
@@ -68,13 +87,13 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    bottom: 0.5em;
-    width: 9.65em;
-    height: 3em;
+    bottom: 0.4em;
+    width: 8.25em;
+    height: 2.5em;
     background-color: goldenrod;
     border-radius: 0.2em;
     font-size: 1.5em;
-    font-weight: bolder;
+    font-weight: 700;
     color: #fff;
     border: 0.08em solid #fff;
     box-shadow: 0 0.35em 0.1em 0.019em black;
@@ -132,8 +151,6 @@
     overflow: hidden;
     width: 100%;
     height: 50px;
-    margin-top: 1.5rem;
-    margin-bottom: 1.5rem;
     display: flex;
     align-items: center;
 }
@@ -141,7 +158,7 @@
 .displaySlogan p {
     position: absolute;
     font-size: 2rem;
-    color: rgb(171, 30, 30);
+    color: red;
     white-space: nowrap;
     margin: 0;
     opacity: 0;
@@ -182,11 +199,15 @@
 .imageBox {
     display: flex;
     background-color: black;
-    height: 200vh; 
+    position: relative;
+    background-image: url('/test2.jpg');
+    background-position: center; 
+    background-repeat: no-repeat;
+    background-size: cover;
 }
 
 .images {
-    margin-top: 5.5rem;
+    margin-top: 7rem;
     width: 100%;
     height: 100vh;
     display: flex;
@@ -198,52 +219,14 @@
     overflow: hidden;
 }
 
-.imageLeft {
-    margin-top: 5vh;
-    height: 50vh;
-    width: 30vw;
-    border-radius: 1.5rem;
-    /* background-color: aliceblue; */
-}
-
-.imageLeft img {
-    border-radius: 0.5rem;
-}
-
-.imageCenter {
-    position: absolute;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 50vh;
-    width: 30vw;
-    border-radius: 1.5rem;
-    z-index: 1;
-}
-
-.imageCenter video {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-}
-
-.imageRight {
-    margin-top: 5vh;
-    height: 50vh;
-    width: 30vw;
-    border-radius: 1.5rem;
-    /* background-color: blue; */
-}
-
-.imageRight img {
-    border-radius: 0.5rem;
-}
-
-
 
 .commonFraudBox {
     color: white;
     background-color: black;
-    padding: 0 10rem 5rem 10rem;
+    padding: 5rem 10rem 5rem 10rem;
+    background-image: url('/blackbg2.jpg');
+    background-position: top;
+    background-size: cover;
 }
 
 .commonFraudBoxMain {
@@ -441,13 +424,123 @@
     height: 100%;
     object-fit: contain;
 }
+  
 
-.newsBox {
-    background-color: black;
-    padding-right: 10rem;
-    padding-left: 10rem;
+
+/* 輪播 */
+.container {
+    margin: 100px auto;
+    width: 600px;
+    height: 100px;
+    position: relative;
+    perspective: 1200px;
+  }
+  
+.carousel {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    transform-style: preserve-3d;
+    transition: transform 1s;
 }
   
+.item {
+    display: block;
+    position: absolute;
+    background: #000;
+    width: 550px;
+    height: 300px;
+    line-height: 200px;
+    font-size: 5em;
+    text-align: center;
+    color: #FFF;
+    border-radius: 10px;
+}
+  
+.item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover; 
+    border-radius: 10px; 
+}
+
+.carousel1 {
+    transform: rotateY(0deg) translateZ(600px);
+}
+.carousel2 {
+    transform: rotateY(60deg) translateZ(600px);
+}
+.carousel3 {
+    transform: rotateY(120deg) translateZ(600px);
+}
+.carousel4 {
+    transform: rotateY(180deg) translateZ(600px);
+}
+.carousel5 {
+    transform: rotateY(240deg) translateZ(600px);
+}
+.carousel6 {
+    transform: rotateY(300deg) translateZ(600px);
+}
+
+/* .radar {
+    position: absolute;
+    top: 25%;
+    right: -15%;
+    
+}
+.radar img {
+    width: 900px;         
+    height: 900px;
+    object-fit: cover;    
+    border-radius: 50%;
+  } */
+
+  .testbg1 {
+    position: absolute;
+    top: 25vh;
+    height: auto;    
+    width: clamp(200px, 20vw, 400px);
+    z-index: 1;
+    
+  }
+  .testbg2 {
+    position: absolute;
+    top: 65vh;
+    height: auto; 
+    width: clamp(200px, 20vw, 350px);
+    z-index: 1;
+  }
+
+  .testbg3 {
+    position: absolute;
+    top: 30vh;
+    right: 0;
+    height: auto;    
+    width: clamp(200px, 20vw, 400px);
+    z-index: 1;
+  }
+  
+  .testbg4 {
+    position: absolute;
+    top: 65vh;
+    right: 0;
+    height: auto;    
+    width: clamp(200px, 20vw, 350px);
+    z-index: 1;
+  }
+
+  .testbg1 > img,
+  .testbg2 > img,
+  .testbg3 > img,
+  .testbg4 > img {
+    border: 1px solid gray;
+    border-radius: 10px;
+  }
+  
+  .testbg1 > img {
+    height: 400px;
+  }
 
 
 /* RWD */
@@ -466,17 +559,185 @@
     }
 }
 
+@media (max-width: 1300px) {
+    .homeMain {
+        gap: 20px; /* 增加間距，使內容更加分散 */
+    }
 
+    .testbg1,
+    .testbg2,
+    .testbg3,
+    .testbg4 {
+        display: block; /* 顯示背景圖片或元素，適應較大屏幕 */
+    }
+
+    .homeContainer {
+        padding: 6rem 3rem 2rem 3rem; /* 更大內邊距，使內容更居中 */
+    }
+
+    .displaySlogan p {
+        font-size: 1.5rem; 
+    }
+
+    .buttonBox {
+        margin-top: 2rem; /* 增加按鈕區塊的間距 */
+    }
+}
+
+@media (max-width: 1236px) {
+    .exampleCard {
+        height: 57vh;
+    }
+}
 @media (max-width: 1095px) {
     .description {
         max-height: 22.5vh;
     }
 }
 
+@media (max-width: 1024px) {
+  .container {
+    width: 90vw;
+    height: 250px;
+  }
+
+  .item {
+    width: 90%;
+    height: 250px;
+  }
+
+  .carousel1 {
+    transform: rotateY(0deg) translateZ(450px);
+  }
+  .carousel2 {
+    transform: rotateY(60deg) translateZ(450px);
+  }
+  .carousel3 {
+    transform: rotateY(120deg) translateZ(450px);
+  }
+  .carousel4 {
+    transform: rotateY(180deg) translateZ(450px);
+  }
+  .carousel5 {
+    transform: rotateY(240deg) translateZ(450px);
+  }
+  .carousel6 {
+    transform: rotateY(300deg) translateZ(450px);
+  }
+}
+
 @media (max-width: 950px) {
     .commonFraudBox, .newsBox {
         padding-right: 5rem;
         padding-left: 5rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .homeMain {
+        gap: 5px;
+    }
+
+    .testbg1,
+    .testbg2,
+    .testbg3,
+    .testbg4 {
+      display: none;
+    }
+  
+    .homeContainer {
+        height: auto;
+    }
+  
+    .buttonBox {
+        margin-top: 1rem;
+    }
+    
+    .buttonBtn,
+    .buttonBtnQuiz {
+      width: 100%;          
+      height: 3.5em;
+      margin: 0.5em auto;   
+      font-size: 14px;
+    }
+  
+    .buttonBtn span,
+    .buttonBtnQuiz span {
+      width: 100%;
+      height: 2.5em;
+      font-size: 1.2em;
+      letter-spacing: 2px;
+      padding: 0 5px;
+    }
+
+    .imageBox {
+        height: auto;
+        background-image: none;
+    }
+    .images {
+        height: auto;
+        margin-top: 0;
+        overflow: visible;
+    }
+
+    .container {
+        overflow: hidden;
+        margin: 0;
+        height: auto;
+    }
+
+    .carousel {
+        display: flex;
+        position: relative;
+        width: 100%;
+        height: 400px;
+        transition: transform 0.5s ease-in-out;
+    }
+
+.item {
+    flex: 0 0 100%;
+    position: relative;
+    margin-right: 20px;
+    transition: transform 0.5s ease-in-out, opacity 1s ease-in-out;
+    height: 100%;
+    opacity: 0;              /* 一開始為 0 */
+    animation: fadeIn 1s ease-in-out 1s forwards;
+}
+
+@keyframes fadeIn {
+    to {
+        opacity: 1;
+    }
+}
+
+    .item:last-child {
+        margin-right: 0; 
+    }
+
+    .carousel1, .carousel2, .carousel3,
+    .carousel4, .carousel5, .carousel6 {
+        transform: none;
+    }
+    .arrowButton {
+        all: unset;
+        position: absolute;
+        top: 50%;
+        transform: translateY(-50%);
+        background: rgba(0,0,0,0.5);
+        border: none;
+        color: white;
+        z-index: 10;
+        cursor: pointer;
+        padding: 0.5rem;
+        border-radius: 50%;
+    }
+
+    .arrowLeft {
+        left: 10px;
+    }
+
+    .arrowRight {
+        right: 10px;
     }
 }
 
@@ -494,4 +755,24 @@
     .description {
         font-size: 0.8rem;
     }
+}
+
+@media (max-width: 480px) {
+  .container {
+    height: 180px;
+  }
+
+  .item {
+    height: 180px;
+    font-size: 1.5em;
+  }
+
+  .carousel1,
+  .carousel2,
+  .carousel3,
+  .carousel4,
+  .carousel5,
+  .carousel6 {
+    transform: rotateY(var(--angle)) translateZ(250px);
+  }
 }
