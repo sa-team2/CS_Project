@@ -73,11 +73,24 @@
 
 .question {
     position: relative;
+    margin-top: 15px;
     text-align: center;
     font-size: 25px;
     font-weight: bold;
     line-height: 1.5;
+    color: goldenrod;
+    animation: scaleChange 2s ease-in-out infinite;
 }
+
+@keyframes scaleChange {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.15);
+    }
+}
+
 
 .content {
     display: flex;

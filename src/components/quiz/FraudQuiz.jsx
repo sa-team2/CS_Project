@@ -18,6 +18,8 @@ import MicIcon from '@mui/icons-material/Mic';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import PanoramaIcon from '@mui/icons-material/Panorama';
+import VolumeUpIcon from '@mui/icons-material/VolumeUp';
+import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
 function FraudQuiz() {
   // 教學導引步驟
@@ -61,7 +63,7 @@ function FraudQuiz() {
         <>
           <p style={{fontSize: '20px'}}><b>紀錄框：顯示當前的對話紀錄。</b></p>
           <hr></hr>
-          <h6>對話結束時，當點選的句子呈現：</h6>
+          <p style={{fontSize: '19px'}}><b>可隨時點選<span style={{ color: "goldenrod" }}>最具引誘</span>的關鍵句</b></p>
           <h5><span style={{ color: "green" }}>綠色</span> ➜ "<span style={{ color: "green" }}>回答正確</span>"</h5>
           <h5><span style={{ color: "red" }}>紅色</span> ➜ "<span style={{ color: "red" }}>回答錯誤</span>"</h5>
         </>
@@ -92,6 +94,10 @@ function FraudQuiz() {
   const [hiddenDuringTransition, setHiddenDuringTransition] = useState(false)
   const [errorCounts, setErrorCounts] = useState({});
   const { setIsFirstRender, svgColor, characterInformation, typeName, allScripts, fraudType, correctAnswer, errorCount, updateErrorCount} = useQuizContext();
+  // 音樂
+  const [isPlayingBgm, setIsPlayingBgm] = useState(false); //背景音樂
+  const bgmRef = useRef(null); //背景音樂
+  const correctSoundRef = useRef(null); //答對音效
 
   const navigate = useNavigate();
 
@@ -112,6 +118,7 @@ function FraudQuiz() {
       setQuestion("");
       setHiddenDuringTransition(true);
       setNextStageTransition(true);
+      togglePlayBgm();
     }
     
   
@@ -133,7 +140,7 @@ function FraudQuiz() {
     if (currentIndex + 1 === allScripts[fraudType][currentConversation].script.length) {
         setIsCharacterNameVisible(false);
         setTimeout(() => {
-            setQuestion("請選擇對話中，對方進行詐騙的起始關鍵句。");
+            setQuestion("請選擇對話中，對方進行詐騙的關鍵句。");
         }, 500);
     }
   };
@@ -166,6 +173,7 @@ function FraudQuiz() {
             return { ...prevCounts, [currentConversation]: newCount };
         });
     } else {
+      playCorrectSound();
       const currentMistakes = errorCount[currentConversation] || 0;
       updateErrorCount(currentConversation, currentMistakes);
   }
@@ -184,7 +192,7 @@ function FraudQuiz() {
     setIsAutoPlay(false);
     setIsCharacterNameVisible(false);
     setTimeout(() => {
-        setQuestion("請選擇對話中，對方進行詐騙的起始關鍵句。");
+        setQuestion("請選擇對話中，對方進行詐騙的關鍵句。");
     }, 500);
   };
 
@@ -223,7 +231,7 @@ function FraudQuiz() {
             clearInterval(interval);
             setIsCharacterNameVisible(false);
             setTimeout(() => {
-                setQuestion("請選擇對話中，對方進行詐騙的起始關鍵句。");
+                setQuestion("請選擇對話中，對方進行詐騙的關鍵句。");
             }, 1000);
           }
         } else {
@@ -303,6 +311,63 @@ function FraudQuiz() {
     return '';
   };
     
+
+  // 背景音樂
+  useEffect(() => {
+    if (bgmRef.current) {
+      bgmRef.current.pause();
+      bgmRef.current.currentTime = 0;
+    }
+  
+    let audioSrc = '/bgm.mp3'; 
+  
+    if (fraudType === 'romanceFraud') {
+      audioSrc = '/romanceBgm.mp3';
+    } else if (fraudType === 'imposterFraud') {
+      audioSrc = '/imposterBgm.mp3';
+    } else if (fraudType === 'shoppingFraud') {
+      audioSrc = '/shoppingBgm.mp3';
+    } else if (fraudType === 'investmentFraud') {
+      audioSrc = '/investmentBgm.mp3';
+    }
+  
+    const audio = new Audio(audioSrc);
+    audio.loop = true;
+    audio.volume = 0.5;
+    bgmRef.current = audio;
+  
+    correctSoundRef.current = new Audio('/correct.mp3');
+    correctSoundRef.current.volume = 0.7; 
+
+    return () => {
+      if (bgmRef.current) {
+        bgmRef.current.pause();
+        bgmRef.current = null;
+      }
+      if (correctSoundRef.current) {
+        correctSoundRef.current = null;
+      }
+    };
+  }, [fraudType]);
+
+  const togglePlayBgm = () => {
+    if (isPlayingBgm) {
+      bgmRef.current.pause();
+    } else {
+      bgmRef.current.play().catch(error => {
+        console.error("BGM播放失敗:", error);
+      });
+    }
+    setIsPlayingBgm(!isPlayingBgm);
+  };
+  
+  const playCorrectSound = () => {
+    correctSoundRef.current.currentTime = 0; 
+    correctSoundRef.current.play().catch(error => {
+      console.error("正確音效播放失敗:", error);
+    });
+  };
+
   return (
     <div className={styles.gameContainer} id="gameContainer">
       
@@ -360,7 +425,8 @@ function FraudQuiz() {
           <div className={styles.kickOff}>
             <button onClick={() => {
               setHiddenDuringTransition(false);
-              setShowBackStory(false)
+              setShowBackStory(false);
+              togglePlayBgm();
               }}>
                 開始測驗
             </button>
@@ -381,7 +447,7 @@ function FraudQuiz() {
 
       {!hiddenDuringTransition && (
         <div className={styles.dialogueBox} id="dialogueBox" onClick={handleDialogueClick}>
-        {!isGuideTourActive && isCharacterNameVisible && (
+        {isCharacterNameVisible && (
           <div className={allScripts[fraudType][currentConversation].script[currentIndex]?.character === "character1" ? styles.characterName1 : styles.characterName2}>
            {allScripts[fraudType][currentConversation].script[currentIndex]?.character === "character1" ? "詐騙犯" : (characterInformation.confirmNickname || "我")}
           </div>
@@ -500,6 +566,9 @@ function FraudQuiz() {
 
       {!hiddenDuringTransition && (
         <div className={styles.recordsControls}>
+          <button onClick={togglePlayBgm} id="bgm">
+            {isPlayingBgm ? <VolumeUpIcon /> : <VolumeOffIcon />}
+          </button>
           <button onClick={toggleAutoPlay} id="autoPlay">
             {isAutoPlay ? (<><PauseIcon /> 暫停播放</>) : (<><PlayArrowIcon /> 自動播放</>)}
           </button>
