@@ -1028,9 +1028,9 @@ export default function AdminPreview() {
         <div className="m-overlay">
           <div className="m-content">
             {isUpdateModalOpen ? (
-              <CloudUploadIcon className="icon-large" />
+              <CloudUploadIcon className="icon-large" style={{fontSize:'80px'}}/>
             ) : (
-              <DeleteIcon className="icon-large" />
+              <DeleteIcon className="icon-large" style={{fontSize:'80px'}}/>
             )}
             <h4 className="m-title">
               {isUpdateModalOpen ? '是否確定要更新？' : '是否確定要刪除？'}
