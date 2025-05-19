@@ -1,8 +1,8 @@
 .card-custom {
-    width: 450px !important;
+     flex: 1 1 300px; /* 💡 這行是重點：讓每張卡片初始寬度為 300px，且允許縮放和換行 */
+    max-width: 100%;
     border: 0 !important;
     color: white !important;
-    margin: 15px;
 }
 
 .cardbody-custom {

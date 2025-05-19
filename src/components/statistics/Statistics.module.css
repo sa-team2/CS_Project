@@ -6,10 +6,12 @@
     justify-content: center;
     color: white;
     background-color: #1f1f1f;
-    margin: 50px 100px;
+    max-width: 1440px;
+    margin: 50px auto;
     padding: 50px 100px;
     border: 2px solid #353535;
     border-radius: 25px;
+    overflow: hidden;
 }
 
 .statisticsMain {
@@ -73,3 +75,9 @@
   font-size: 14px;
   color: #555;
   }
+
+@media (max-width: 1450px) {
+    .pieChart {
+        flex: 1;
+    }
+}
