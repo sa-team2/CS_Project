@@ -2,15 +2,16 @@ import React, { useEffect } from 'react'
 import Home from '../home/Home';
 import Website from '../website/Website';
 import Statistics from '../statistics/Statistics';
+import Report from '../report/Report';
 import Login from '../login/Login';
 import Admin from '../admin/Admin';
-import Report from '../report/Report';
 import Quiz from '../quiz/Quiz';
 import { Routes, Route, useLocation } from 'react-router-dom';
 import { AnimatePresence } from 'framer-motion';
 import FraudQuiz from '../quiz/FraudQuiz';
 import QuizTypeSelection from '../quiz/QuizTypeSelection';
 import FinalResults from '../quiz/FinalResults';
+import Promotion from '../promotion/Promotion';
 
 function AnimationRoute() {
     const location = useLocation();
@@ -55,9 +56,10 @@ function AnimationRoute() {
         <Routes location={location} key={location.pathname}>
             <Route path="/" element={<Home />} />
             <Route path="/website" element={<Website />} />
-            <Route path="/report" element={<Report />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/report" element={<Report />} />
+            <Route path="/promotion" element={<Promotion />} />
             <Route path="/admin" element={<Admin />} />
             <Route path="/quiz" element={<Quiz />} />
             <Route path="/quiz/fraudquiz" element={<FraudQuiz />} />
