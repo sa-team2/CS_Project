@@ -116,7 +116,7 @@ useEffect(() => {
       </div> 
       
       <div className={styles.stepsBox}>
-        <video src="/faurdtest.mp4" autoPlay loop muted playsInline></video>
+        <video src="/fraudtest.mp4" autoPlay loop muted playsInline></video>
         <div className={styles.stepsOverlay}></div>
         <div className={styles.stepsMain}>
           <div className={styles.stepsContent}>
