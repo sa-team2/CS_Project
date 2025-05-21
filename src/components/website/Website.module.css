@@ -1,3 +1,7 @@
+:global(body.modal-open){
+  padding-right: 0 !important;
+}
+
 .websiteContainer {
     height: 100vh;
     background-image: url('/background8.png');
@@ -193,7 +197,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(0, 0, 0, 0.817); 
+    background-color: rgba(0, 0, 0, 0.717); 
     z-index: 1; 
 }
 

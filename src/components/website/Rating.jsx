@@ -5,8 +5,10 @@ import { Rate, Row } from 'antd';
 import { Card, Button, Popover, OverlayTrigger } from 'react-bootstrap';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faTriangleExclamation, faArrowPointer, faCheck } from '@fortawesome/free-solid-svg-icons';
+import { faTriangleExclamation, faArrowPointer, faCheck, faPlayCircle } from '@fortawesome/free-solid-svg-icons';
 import { db, doc, setDoc } from '../../firebase'; // 确保导入
+import { collection, getDocs } from 'firebase/firestore';
+import { ThLargeIcon } from '@patternfly/react-icons';
 
 const getBackground = (progress) => {
   const degrees = progress * 3.6;
@@ -141,6 +143,47 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
     }
   };
 
+  //類型影片
+const [videoUrlMap, setVideoUrlMap] = React.useState({});
+
+React.useEffect(() => {
+  const fetchVideosFromStatistics = async () => {
+    try {
+      const querySnapshot = await getDocs(collection(db, 'Statistics'));
+      const newVideoMap = {};
+
+      const typeList = types?.split(',').map(t => t.trim()) || [];
+
+      querySnapshot.forEach((doc) => {
+        const data = doc.data();
+        if (data.Type && data.Video && typeList.includes(data.Type)) {
+          newVideoMap[data.Type] = data.Video;
+        }
+      });
+
+      setVideoUrlMap(newVideoMap);
+    } catch (error) {
+      console.error("Error fetching Statistics data:", error);
+    }
+  };
+
+  if (types) {
+    fetchVideosFromStatistics();
+  }
+}, [types]);
+
+
+
+const handlePlayClick = (type) => {
+  const url = videoUrlMap[type];
+  if (url) {
+    window.open(url, '_blank');
+  } else {
+    alert(`找不到「${type}」對應的影片資源`);
+  }
+};
+
+
   return (
     <div className="rating-container">
       {progress === 0 ? (
@@ -190,8 +233,28 @@ function Rating({ pythonResult, keywords, types , FraudRate , ID ,prevents ,remi
                         </ul>
 
                         <ul className="rating-ul">
-                            <li>類型：{types || '無'}</li>
+                          <li>
+                            類型：
+                            {types
+                              ? types.split(',').map((type, index) => (
+                                  <span key={index} style={{ marginRight: '8px' }}>
+                                    {type.trim()}
+                                    {videoUrlMap[type.trim()] && (
+                                      <a onClick={() => handlePlayClick(type.trim())}>
+                                        <FontAwesomeIcon
+                                          icon={faPlayCircle}
+                                          className="play-icon"
+                                          size="1x"
+                                        />
+                                      </a>
+                                    )}
+                                  </span>
+                                ))
+                              : '無'}
+                          </li>
                         </ul>
+
+
                         
                         <ul className="rating-ul">
                           <li>關鍵字詞：{keywords && keywords.length > 0 ? keywords.join(', ') : '無'}</li>
