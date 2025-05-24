@@ -534,50 +534,49 @@ export default function AdminPreview() {
   };
   
   const updateKeywordStats = async () => {
-    try {
-      const selectedIds = rows.filter((row) => selected.includes(row.id));
-      console.log("Selected rows for keyword stats:", selectedIds);
-      
-      // Extract all keywords from the selected rows
-      const keywordsToUpdate = [];
-      selectedIds.forEach(row => {
-        row.Match.forEach(matchItem => {
-          if (matchItem.MatchKeyword) {
-            keywordsToUpdate.push(matchItem.MatchKeyword.trim());
-          }
-        });
-      });
-      
-      console.log("Keywords to update:", keywordsToUpdate);
-      
-      // Get current KeywordStats document or create it if it doesn't exist
-      const keywordStatsRef = doc(db, "Outcome", "KeywordStats");
-      const keywordStatsSnapshot = await getDoc(keywordStatsRef);
-      
-      let currentStats = {};
-      if (keywordStatsSnapshot.exists()) {
-        currentStats = keywordStatsSnapshot.data();
-      }
-      
-      // Update the counts for each keyword
-      keywordsToUpdate.forEach(keyword => {
-        if (currentStats[keyword]) {
-          // Keyword exists, increment count
-          currentStats[keyword] += 1;
-        } else {
-          // New keyword, set count to 1
-          currentStats[keyword] = 1;
+  try {
+    const selectedIds = rows.filter((row) => selected.includes(row.id));
+    console.log("Selected rows for keyword stats:", selectedIds);
+    
+    // Extract all keywords from the selected rows
+    const keywordsToUpdate = [];
+    selectedIds.forEach(row => {
+      row.Match.forEach(matchItem => {
+        if (matchItem.MatchKeyword) {
+          keywordsToUpdate.push(matchItem.MatchKeyword.trim());
         }
       });
-      
-      // Save the updated stats back to Firestore
-      await updateDoc(keywordStatsRef, currentStats);
-      console.log("Keyword statistics updated successfully");
-      
-    } catch (error) {
-      console.error("Error updating keyword statistics:", error);
+    });
+    
+    console.log("Keywords to update:", keywordsToUpdate);
+    
+    const keywordStatsRef = doc(db, "KeywordFrequency", "KeywordStats");
+    const keywordStatsSnapshot = await getDoc(keywordStatsRef);
+    
+    let currentStats = {};
+    if (keywordStatsSnapshot.exists()) {
+      currentStats = keywordStatsSnapshot.data();
     }
-  };
+    
+    // Update the counts for each keyword
+    keywordsToUpdate.forEach(keyword => {
+      if (currentStats[keyword]) {
+        // Keyword exists, increment count
+        currentStats[keyword] += 1;
+      } else {
+        // New keyword, set count to 1
+        currentStats[keyword] = 1;
+      }
+    });
+    
+
+    await updateDoc(keywordStatsRef, currentStats);
+    console.log("Keyword statistics updated successfully");
+    
+  } catch (error) {
+    console.error("Error updating keyword statistics:", error);
+  }
+};
 
 
   const handleUpdate = async () => {
@@ -597,7 +596,7 @@ export default function AdminPreview() {
         (doc) => doc.data().Keyword
       );
   
-      // Rest of the function remains unchanged
+      
       const matched = [];
       const unmatched = [];
   
