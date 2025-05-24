@@ -1,3 +1,4 @@
+// File: FinalResults.jsx
 import React, { useState, useEffect, useRef } from 'react';
 import styles from './FraudQuiz.module.css';
 import UndoIcon from '@mui/icons-material/Undo';
@@ -18,6 +19,8 @@ import MicIcon from '@mui/icons-material/Mic';
 import TelegramIcon from '@mui/icons-material/Telegram';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import PanoramaIcon from '@mui/icons-material/Panorama';
+import { doc, setDoc, getDoc } from "firebase/firestore";
+import { db } from "../../firebase"; 
 import VolumeUpIcon from '@mui/icons-material/VolumeUp';
 import VolumeOffIcon from '@mui/icons-material/VolumeOff';
 
@@ -98,17 +101,159 @@ function FraudQuiz() {
   const [isPlayingBgm, setIsPlayingBgm] = useState(false); //背景音樂
   const bgmRef = useRef(null); //背景音樂
   const correctSoundRef = useRef(null); //答對音效
-
   const navigate = useNavigate();
 
-  const handleNextStage = () => {
+const submitScoresToFirebase = async () => {
+  try {
+    console.log("正在提交分數和錯誤次數到 Firebase...");
+    console.log("errorCount 原始資料:", errorCount);
+    
+    // 1. 確保錯誤次數是陣列格式
+    let errors = [0, 0, 0]; // 預設錯誤次數
+    
+    if (Array.isArray(errorCount)) {
+      // 如果已經是陣列，直接使用
+      errors = [...errorCount];
+      console.log("errorCount 是陣列格式:", errors);
+    } else if (typeof errorCount === 'object' && errorCount !== null) {
+      // 如果是物件格式，轉換為陣列
+      for (let i = 0; i < 3; i++) {
+        errors[i] = errorCount[i] || 0;
+      }
+      console.log("errorCount 是物件格式，轉換後:", errors);
+    }
+    
+    // 2. 根據錯誤次數計算分數
+    const calculatedScores = errors.map(err => Math.max(0, 100 - (err * 20)));
+    console.log("計算的分數:", calculatedScores);
+    
+    // 3. 映射詐騙類型
+    const fraudTypeMap = {
+      "交友戀愛詐騙": "romanceFraud",
+      "冒名詐騙": "impersonationFraud",
+      "購物詐騙": "shoppingFraud",
+      "投資詐騙": "investmentFraud"
+    };
+    
+    const dbFraudType = fraudTypeMap[typeName];
+    
+    if (!dbFraudType) {
+      console.error("無效的詐騙類型:", typeName);
+      return;
+    }
+    
+    // 獲取 ScoreStatistics Firestore 文檔
+    const scoreStatisticsRef = doc(db, "QuizScore", "ScoreStatistics");
+    let docSnap = await getDoc(scoreStatisticsRef);
+    
+    // 5. 如果文檔不存在，則創建完整的初始結構
+    if (!docSnap.exists()) {
+      console.log("創建新的 ScoreStatistics 文檔...");
+      const initialData = {
+        romanceFraud: {
+          playCount: 0,
+          level1Score: 0,
+          level2Score: 0,
+          level3Score: 0,
+          error1Count: 0,
+          error2Count: 0,
+          error3Count: 0
+        },
+        impersonationFraud: {
+          playCount: 0,
+          level1Score: 0,
+          level2Score: 0,
+          level3Score: 0,
+          error1Count: 0,
+          error2Count: 0,
+          error3Count: 0
+        },
+        shoppingFraud: {
+          playCount: 0,
+          level1Score: 0,
+          level2Score: 0,
+          level3Score: 0,
+          error1Count: 0,
+          error2Count: 0,
+          error3Count: 0
+        },
+        investmentFraud: {
+          playCount: 0,
+          level1Score: 0,
+          level2Score: 0,
+          level3Score: 0,
+          error1Count: 0,
+          error2Count: 0,
+          error3Count: 0
+        }
+      };
+      
+      await setDoc(scoreStatisticsRef, initialData);
+      docSnap = await getDoc(scoreStatisticsRef);
+    }
+    
+    // 6. 獲取當前數據
+    const currentData = docSnap.data();
+    console.log("當前 Firebase 數據:", currentData);
+    
+    // 7. 確保該類型的數據結構存在
+    let fraudData = currentData[dbFraudType] || {
+      playCount: 0,
+      level1Score: 0,
+      level2Score: 0,
+      level3Score: 0,
+      error1Count: 0,
+      error2Count: 0,
+      error3Count: 0
+    };
+    
+    // 8. 更新數據
+    const updatedFraudData = {
+      playCount: fraudData.playCount + 1,
+      level1Score: fraudData.level1Score + (calculatedScores[0] || 0),
+      level2Score: fraudData.level2Score + (calculatedScores[1] || 0),
+      level3Score: fraudData.level3Score + (calculatedScores[2] || 0),
+      error1Count: fraudData.error1Count + (errors[0] || 0),
+      error2Count: fraudData.error2Count + (errors[1] || 0),
+      error3Count: fraudData.error3Count + (errors[2] || 0)
+    };
+    
+    console.log("更新後的詐騙數據:", updatedFraudData);
+    
+    // 9. 更新 Firestore
+    await setDoc(scoreStatisticsRef, {
+      ...currentData,
+      [dbFraudType]: updatedFraudData
+    });
+    
+    console.log(`已成功提交 ${typeName} 的分數和錯誤次數到 ScoreStatistics`);
+    
+  } catch (error) {
+    console.error("提交分數到 Firebase 時出錯:", error);
+    console.error("錯誤詳情:", error.message);
+    if (error.stack) {
+      console.error("錯誤堆疊:", error.stack);
+    }
+  }
+};
+
+const handleNextStage = () => {
     if ((currentConversation + 1) === allScripts[fraudType].length) {
-      setGoFinalResults(true);
-      setNextStageTransition(true);
-      setTimeout(() => {
-        navigate("/quiz/finalresults");
-      }, 1500);
-      // clearSession();
+      // 確保在導航前提交分數和錯誤次數
+      submitScoresToFirebase().then(() => {
+        setGoFinalResults(true);
+        setNextStageTransition(true);
+        setTimeout(() => {
+          navigate("/quiz/finalresults");
+        }, 1500);
+      }).catch(error => {
+        console.error("提交分數時出錯，但仍然繼續到結果頁:", error);
+        setGoFinalResults(true);
+        setNextStageTransition(true);
+        setTimeout(() => {
+          navigate("/quiz/finalresults");
+        }, 1500);
+      });
     } else {
       setCurrentConversation(currentConversation + 1);
       setCurrentIndex(0);  
@@ -120,8 +265,6 @@ function FraudQuiz() {
       setNextStageTransition(true);
       togglePlayBgm();
     }
-    
-  
 };
 
   const handleDialogueClick = () => {
@@ -157,25 +300,36 @@ function FraudQuiz() {
   };
 
   const handleRecordClick = (clickedCharacter, clickedText) => {
-    if (clickedCharacter === "character2") {
-      return;
-    } else {
-      setClickedText(clickedText);
-    }
+  // 如果點擊的是角色2的對話，直接返回
+  if (clickedCharacter === "character2") {
+    return;
+  } else {
+    setClickedText(clickedText);
+  }
 
-    if (correctAnswer[currentConversation] !== clickedText) {
-        setErrorCounts(prevCounts => {
-            const newCount = (prevCounts[currentConversation] || 0) + 1;
-            setTimeout(() => {
-                updateErrorCount(currentConversation, newCount);
-            }, 0);
+  // 檢查是否選擇正確答案
+  if (correctAnswer[currentConversation] !== clickedText) {
+    // 選擇錯誤，增加錯誤計數
+    setErrorCounts(prevCounts => {
+      const newCount = (prevCounts[currentConversation] || 0) + 1;
+      
+      // 記錄錯誤次數變化
+      console.log(`錯誤次數變化: ${currentConversation} 階段從 ${prevCounts[currentConversation] || 0} 增加到 ${newCount}`);
+      
+      // 立即更新 context 中的錯誤計數
+      setTimeout(() => {
+        console.log(`更新第 ${currentConversation} 個對話的錯誤次數為: ${newCount}`);
+        updateErrorCount(currentConversation, newCount);
+      }, 0);
 
-            return { ...prevCounts, [currentConversation]: newCount };
-        });
-    } else {
-      playCorrectSound();
-      const currentMistakes = errorCount[currentConversation] || 0;
-      updateErrorCount(currentConversation, currentMistakes);
+      return { ...prevCounts, [currentConversation]: newCount };
+    });
+  } else {
+    // 選擇正確，保持當前錯誤次數
+    playCorrectSound();
+    const currentMistakes = errorCount[currentConversation] || 0;
+    console.log(`第 ${currentConversation} 個對話選擇正確，保持錯誤次數為: ${currentMistakes}`);
+    updateErrorCount(currentConversation, currentMistakes);
   }
 };
 
@@ -281,38 +435,7 @@ function FraudQuiz() {
     };
   }, [run]);
 
-  useEffect(() => {
-    if (correctAnswer[currentConversation] === clickedText) {
-      setTimeout(() => handleNextStage(), 1000); 
-    }
-  }, [clickedText])
-  
-  const stages = [
-    { title: "測 驗 一", stage: "Stage 1" },
-    { title: "測 驗 二", stage: "Stage 2" },
-    { title: "測 驗 三", stage: "Stage 3" },
-  ];
-
-  const colorMap = {
-    "#ffe4e6": "rgb(255, 154, 184)",
-    "#fef3c7": "rgb(255, 204, 128)",
-    "#d1fae5": "rgb(79, 218, 169)",
-    "#EDE9FE": "rgb(201, 172, 255)"
-  };
-
-  const getFillColor = (svgColor) => {
-    return colorMap[svgColor] || "white"; 
-    };
-
-  const getFraudBackgroundClass = (fraudType) => {
-    if (fraudType === 'shoppingFraud') return styles.shoppingFraud;
-    if (fraudType === 'romanceFraud') return styles.romanceFraud;
-    if (fraudType === 'investmentFraud') return styles.investmentFraud;
-    return '';
-  };
-    
-
-  // 背景音樂
+// 背景音樂
   useEffect(() => {
     if (bgmRef.current) {
       bgmRef.current.pause();
@@ -368,6 +491,36 @@ function FraudQuiz() {
     });
   };
 
+  useEffect(() => {
+    if (correctAnswer[currentConversation] === clickedText) {
+      setTimeout(() => handleNextStage(), 1000); 
+    }
+  }, [clickedText])
+  
+  const stages = [
+    { title: "測 驗 一", stage: "Stage 1" },
+    { title: "測 驗 二", stage: "Stage 2" },
+    { title: "測 驗 三", stage: "Stage 3" },
+  ];
+
+  const colorMap = {
+    "#ffe4e6": "rgb(255, 154, 184)",
+    "#fef3c7": "rgb(255, 204, 128)",
+    "#d1fae5": "rgb(79, 218, 169)",
+    "#EDE9FE": "rgb(201, 172, 255)"
+  };
+
+  const getFillColor = (svgColor) => {
+    return colorMap[svgColor] || "white"; 
+    };
+
+  const getFraudBackgroundClass = (fraudType) => {
+    if (fraudType === 'shoppingFraud') return styles.shoppingFraud;
+    if (fraudType === 'romanceFraud') return styles.romanceFraud;
+    if (fraudType === 'investmentFraud') return styles.investmentFraud;
+    return '';
+  };
+    
   return (
     <div className={styles.gameContainer} id="gameContainer">
       
@@ -566,7 +719,7 @@ function FraudQuiz() {
 
       {!hiddenDuringTransition && (
         <div className={styles.recordsControls}>
-          <button onClick={togglePlayBgm} id="bgm">
+                    <button onClick={togglePlayBgm} id="bgm">
             {isPlayingBgm ? <VolumeUpIcon /> : <VolumeOffIcon />}
           </button>
           <button onClick={toggleAutoPlay} id="autoPlay">

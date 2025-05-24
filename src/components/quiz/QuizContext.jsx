@@ -1,10 +1,7 @@
+// File: FinalResults.jsx
 import { createContext, useState, useContext, useEffect } from "react";
-
 const QuizContext = createContext();
-
-
 export const QuizProvider = ({ children }) => {
-  //---
   const [isFirstRender, setIsFirstRender] = useState(() => {
     const sessionFirstRender = sessionStorage.getItem("isFirstRender");
     return sessionFirstRender ? JSON.parse(sessionFirstRender) : true;  
@@ -14,14 +11,12 @@ export const QuizProvider = ({ children }) => {
     sessionStorage.setItem("isFirstRender", JSON.stringify(isFirstRender));
   }, [isFirstRender]);
 
-  //---
   const [svgColor, setSvgColor] = useState(() => sessionStorage.getItem("svgColor") || "#000000");
 
   useEffect(() => {
     sessionStorage.setItem("svgColor", svgColor);
   }, [svgColor]);
 
-  //---
   const [characterInformation, setCharacterInformation] = useState(() => {
     const sessionCharacterInformation = sessionStorage.getItem("characterInformation");
     return sessionCharacterInformation ? JSON.parse(sessionCharacterInformation) : { selectedRole: "male", confirmNickname: "" };
@@ -31,7 +26,6 @@ export const QuizProvider = ({ children }) => {
     sessionStorage.setItem("characterInformation", JSON.stringify(characterInformation));
   }, [characterInformation.confirmNickname]); 
 
-  //---
   const [fraudType, setFraudType] = useState(sessionStorage.getItem("fraudType") || null);
   const [typeName, setTypeName] = useState(sessionStorage.getItem("typeName") || null);
    
@@ -310,7 +304,7 @@ export const QuizProvider = ({ children }) => {
     }
   }, [fraudType]); 
 
-  const [errorCount, setErrorCount] = useState({});
+const [errorCount, setErrorCount] = useState([0, 0, 0]);
   const [scores, setScores] = useState({});
 
   // 計算錯誤次數對應的分數
@@ -324,11 +318,21 @@ export const QuizProvider = ({ children }) => {
   };
 
   // 更新錯誤次數（但不直接更新分數）
-  const updateErrorCount = (level, mistakes) => {
-    setErrorCount(prev => ({ ...prev, [level]: mistakes }));
-  };
+  
+const updateErrorCount = (level, mistakes) => {
+  console.log(`更新第 ${level} 階段的錯誤次數為: ${mistakes}`);
+  
+  setErrorCount(prevErrorCount => {
+    // 創建一個新的陣列，避免直接修改原始狀態
+    const newErrorCount = [...prevErrorCount];
+    // 更新特定位置的錯誤次數
+    newErrorCount[level] = mistakes;
+    console.log(`更新後的錯誤次數陣列: [${newErrorCount.join(', ')}]`);
+    return newErrorCount;
+  });
+};
 
-  // 當 `errorCount` 變更時，透過 `useEffect` 更新 `scores`
+
   useEffect(() => {
     setScores(prevScores => {
       const newScores = { ...prevScores };
@@ -337,7 +341,7 @@ export const QuizProvider = ({ children }) => {
     });
       return newScores;
     });
-  }, [errorCount]); // ✅ 只有 `errorCount` 更新時才會執行
+  }, [errorCount]); 
 
 
 

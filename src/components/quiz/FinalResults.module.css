@@ -5,7 +5,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  background: #121212; /* Fallback for browsers that don't support gradients */
+  background: #121212;
   background-image: url("/test2.gif");
   background-size: cover;
   z-index: 0;
@@ -64,7 +64,6 @@
   background: linear-gradient(135deg, rgba(255, 255, 255, 1),rgba(255, 255, 255, 0.6));
   border-radius: 10px;
   border: 1px solid #ddd;
-  /* margin-bottom: 40px; */
   font-size: 1.5rem;
   color: black;
   line-height: 3rem;
@@ -88,131 +87,123 @@
   transform-style: preserve-3d;
 }
 
-  .conversationReview::-webkit-scrollbar {
-    width: 10px;
+.conversationReview::-webkit-scrollbar {
+  width: 10px;
 }
 .conversationReview::-webkit-scrollbar-thumb {
-    background: rgba(0, 0, 0, 0.25) ; 
-    border-radius: 10px ; 
-  }
-  
-  
-  .conversationReview::-webkit-scrollbar-thumb:hover {
-    background: rgba(0, 0, 0, 0.5); 
-  }
-  .card {
-    position: relative;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    background: linear-gradient(135deg, rgba(255, 255, 255, 1),rgba(255, 255, 255, 0.6));
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    padding: 20px;
-    height: 100%;
-    width: 100%;
-    flex: 1 1 400px;
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
-    transform-style: preserve-3d; 
-    transition: transform 0.6s ease-in-out; 
-  }
-
-  .card.rotate {
-    transform: rotateY(-180deg) ;
+  background: rgba(0, 0, 0, 0.25); 
+  border-radius: 10px; 
 }
 
-  .front {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    backface-visibility: hidden;
-    border-radius: 10px;
-  }
-
-  .back {
-    height: 100%;
-    width: 100%;
-    position: absolute;
-    top: 0;
-    left: 0;
-    transform: rotateY(180deg);
-    backface-visibility: hidden;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    border-radius: 10px;
-  }
-  
-  .front > div {
-    display: flex;
-    justify-content: center;
-    gap: 40px;
-  }
-  /* .card:hover {
-    transform: translateY(-10px);
-  } */
-  
-  .levelTitle {
-    font-size: 1.5rem;
-    margin-bottom: 0;
-    color: black;
-    text-align: center;
-    font-weight: bolder;
-  }
-  
-  .scores,
-  .incorrectClicks {
-    margin: 0;
-    font-size: 25px;
-    font-weight: 700;
-    text-align: center;
-  }
-
-  .label {
-    color: rgb(141, 141, 141);
-  }
-
-  .reviewButton {
-    background-color: rgba(0, 0, 0, 0.3);
-    color: white;
-    font-size: 18px;
-    font-weight: 700;
-    border: none;
-    border-radius: 5px;
-    padding: 10px 15px;
-    cursor: pointer;
-    transition: background-color 0.35s ease-in-out;
-    margin-top: 10px;
-  }
-  
-  .reviewButton:hover {
-    background-color: rgba(0, 0, 0, 0.5);
-  }
-  
-  /* .front > .reviewButton {
-    width: 50%;
-  } */
-
-  .back > .reviewButton {
-    margin: 20px;
-    width: 25%;
-  }
-
-  .pageTransition {
-    z-index: 150;
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    top: 0;
-    left: 0;
-    pointer-events: none;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+.conversationReview::-webkit-scrollbar-thumb:hover {
+  background: rgba(0, 0, 0, 0.5); 
 }
 
+.card {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1),rgba(255, 255, 255, 0.6));
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  padding: 20px;
+  height: 100%;
+  width: 100%;
+  flex: 1 1 400px;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.5);
+  transform-style: preserve-3d; 
+  transition: transform 0.6s ease-in-out; 
+}
+
+.card.rotate {
+  transform: rotateY(-180deg);
+}
+
+.front {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  backface-visibility: hidden;
+  border-radius: 10px;
+}
+
+.back {
+  height: 100%;
+  width: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  transform: rotateY(180deg);
+  backface-visibility: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 10px;
+}
+
+.front > div {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+}
+
+.levelTitle {
+  font-size: 1.5rem;
+  margin-bottom: 0;
+  color: black;
+  text-align: center;
+  font-weight: bolder;
+}
+
+.scores,
+.incorrectClicks {
+  margin: 0;
+  font-size: 25px;
+  font-weight: 700;
+  text-align: center;
+}
+
+.label {
+  color: rgb(141, 141, 141);
+}
+
+.reviewButton {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  font-size: 18px;
+  font-weight: 700;
+  border: none;
+  border-radius: 5px;
+  padding: 10px 15px;
+  cursor: pointer;
+  transition: background-color 0.35s ease-in-out;
+  margin-top: 10px;
+}
+
+.reviewButton:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.back > .reviewButton {
+  margin: 20px;
+  width: 25%;
+}
+
+.pageTransition {
+  z-index: 150;
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  pointer-events: none;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
 
 .nextStage {
   width: 100%;
@@ -246,8 +237,8 @@
 
 .recordsLeft {
   display: flex;
-  flex-direction: column; /* 讓內部元素垂直排列 */
-  align-items: flex-start; /* 確保內部元素靠左 */
+  flex-direction: column;
+  align-items: flex-start;
   margin: 10px 0;
 }
 
@@ -279,7 +270,11 @@
 }
 
 .correctAnswer {
-  background-color: green; 
+  background-color: green !important; 
+}
+
+.incorrectAnswer {
+  background-color: #e74c3c !important;
 }
 
 .displayCorrectAnswer {
@@ -317,7 +312,140 @@
 .returnButton button:hover {
   background-color: rgba(255, 255, 255, 0.9);
 }
-/* .rose {
+
+/* 平均分數統計樣式 */
+.averageStatsContainer {
+  background: linear-gradient(135deg, rgba(255, 255, 255, 1),rgba(255, 255, 255, 0.6));
+  border-radius: 10px;
+  border: 1px solid #ddd;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  color: black;
+}
+
+.averageStatsTitle {
+  text-align: center;
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 20px;
+  color: #333;
+}
+
+/* 表格樣式 */
+.statsTable {
+  width: 100%;
+  border-collapse: collapse;
+  border-radius: 5px;
+  overflow: hidden;
+}
+
+.statsRow {
+  display: flex;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.statsRow:last-child {
+  border-bottom: none;
+}
+
+.statsHeader {
+  flex: 1;
+  padding: 10px;
+  background-color: rgba(0, 0, 0, 0.1);
+  font-weight: 700;
+  text-align: center;
+}
+
+.statsCell {
+  flex: 1;
+  padding: 12px 8px;
+  text-align: center;
+}
+
+.statsRow:nth-child(even) {
+  background-color: rgba(0, 0, 0, 0.05);
+}
+
+.statsRow:hover {
+  background-color: rgba(0, 0, 0, 0.08);
+}
+
+/* 錯誤信息樣式 */
+.errorMessage {
+  background-color: rgba(255, 200, 200, 0.7);
+  border: 1px solid #f88;
+  color: #800;
+  padding: 10px 15px;
+  border-radius: 5px;
+  margin-bottom: 15px;
+}
+
+.noStatsInfo {
+  background-color: rgba(255, 255, 200, 0.7);
+  border: 1px solid #dda;
+  color: #660;
+  padding: 15px;
+  border-radius: 10px;
+  margin-top: 20px;
+}
+
+.noStatsInfo p {
+  font-weight: bold;
+  margin-top: 0;
+  margin-bottom: 10px;
+}
+
+.noStatsInfo ul {
+  margin: 0;
+  padding-left: 20px;
+}
+
+.noStatsInfo li {
+  margin-bottom: 5px;
+}
+
+.noScripts {
+  color: #777;
+  text-align: center;
+  padding: 20px;
+  font-style: italic;
+}
+
+/* 加載中統計數據 */
+.loadingStats {
+  background-color: rgba(255, 255, 255, 0.7);
+  text-align: center;
+  padding: 15px;
+  border-radius: 20px;
+  color: #333;
+  font-style: italic;
+  margin-top: 20px;
+}
+
+/* 調試按鈕 */
+.debugButton {
+  text-align: center;
+  margin-top: 10px;
+  margin-bottom: 20px;
+}
+
+.debugButton button {
+  background-color: rgba(0, 0, 0, 0.3);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  padding: 8px 15px;
+  cursor: pointer;
+  font-size: 14px;
+}
+
+.debugButton button:hover {
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+/* 為不同詐騙類型設置不同顏色 */
+.rose {
   background-color: rgb(255, 154, 184);
 }
 .blue {
@@ -347,4 +475,52 @@
 }
 .reviewButton.purple:hover {
   background-color: rgb(164, 123, 240);
-} */
+}
+
+/* PR 值樣式 */
+.prValue {
+  padding: 0 5px;
+  border-radius: 4px;
+  font-weight: bold;
+  display: inline-block;
+}
+
+.prValueHigh {
+  background-color: rgba(16, 185, 129, 0.1);
+  color: #047857;
+}
+
+.prValueMedium {
+  background-color: rgba(79, 70, 229, 0.1);
+  color: #4F46E5;
+}
+
+.prValueLow {
+  background-color: rgba(220, 38, 38, 0.1);
+  color: #DC2626;
+}
+
+.prValueZero {
+  background-color: rgba(107, 114, 128, 0.1);
+  color: #6B7280;
+}
+
+/* PR 值說明區塊樣式 */
+.prExplanation {
+  margin-top: 15px;
+  background-color: rgba(243, 244, 246, 0.5);
+  padding: 12px;
+  border-radius: 8px;
+  font-size: 14px;
+}
+
+.prExplanationTitle {
+  font-weight: bold;
+  margin-bottom: 8px;
+}
+
+.prExampleContainer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 8px;
+}
