@@ -16,6 +16,8 @@ function Cards() {
   useEffect(() => {
     const fetchData = async () => {
       try {
+        console.log("開始獲取數據...");
+        
         // 撈取 Statistics 資料
         const querySnapshot = await getDocs(collection(db, 'Statistics'));
         let maxFrequency = 0;
@@ -30,6 +32,9 @@ function Cards() {
           setTotalDataCount(finalData.totalDataCount || 0);
           const formattedAccuracy = finalData.finalAccuracy !== undefined ? finalData.finalAccuracy.toFixed(2) : 0;
           setAccuracy(formattedAccuracy);
+          console.log("成功獲取 finalStatistics 數據");
+        } else {
+          console.log("finalStatistics 文檔不存在");
         }
 
         querySnapshot.forEach((doc) => {
@@ -41,20 +46,42 @@ function Cards() {
         });
 
         setTopType(topScamType);
+        console.log("熱門詐騙類型:", topScamType);
 
-        // 讀取 Outcome/KeywordStats 文件
-// 找出出現次數最多的關鍵字
-const keywordStatsRef = doc(db, 'Outcome', 'KeywordStats');
-const keywordStatsSnap = await getDoc(keywordStatsRef);
-const keywordStats = keywordStatsSnap.data();
-if (keywordStats) {
-  const sortedKeywords = Object.entries(keywordStats).sort((a, b) => b[1] - a[1]);
-  setTopKeyword(sortedKeywords[0][0]);
-}
-
+        
+        console.log("正在嘗試讀取 KeywordFrequency/KeywordStats...");
+        const keywordStatsRef = doc(db, 'KeywordFrequency', 'KeywordStats');
+        const keywordStatsSnap = await getDoc(keywordStatsRef);
+        
+        console.log("KeywordStats 文檔是否存在:", keywordStatsSnap.exists());
+        
+        if (keywordStatsSnap.exists()) {
+          const keywordStats = keywordStatsSnap.data();
+          console.log("KeywordStats 數據:", keywordStats);
+          
+          if (keywordStats && Object.keys(keywordStats).length > 0) {
+            const sortedKeywords = Object.entries(keywordStats).sort((a, b) => b[1] - a[1]);
+            console.log("排序後的關鍵字:", sortedKeywords);
+            
+            if (sortedKeywords.length > 0) {
+              setTopKeyword(sortedKeywords[0][0]);
+              console.log("設置熱門關鍵字:", sortedKeywords[0][0]);
+            } else {
+              console.log("沒有關鍵字數據");
+              setTopKeyword('暫無數據');
+            }
+          } else {
+            console.log("KeywordStats 文檔為空或沒有數據");
+            setTopKeyword('暫無數據');
+          }
+        } else {
+          console.log("KeywordStats 文檔不存在");
+          setTopKeyword('文檔不存在');
+        }
 
       } catch (error) {
         console.error('Error fetching data from Firestore:', error);
+        setTopKeyword('讀取錯誤');
       }
     };
 
@@ -85,12 +112,10 @@ if (keywordStats) {
         <Card.Body className="cardbody-custom">
           <Card.Title><b>熱門詐騙關鍵字：</b></Card.Title>
           <Card.Text className="cardtext-custom">
-          <FontAwesomeIcon icon={faCrosshairs} /> {topKeyword || '載入中...'}
-          {/* icon={faCrosshairs} */}
+            <FontAwesomeIcon icon={faCrosshairs} /> {topKeyword || '載入中...'}
           </Card.Text>
         </Card.Body>
       </Card>
-
     </>
   );
 }
