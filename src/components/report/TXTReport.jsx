@@ -10,6 +10,7 @@ function TXTReport() {
   const [file, setFile] = useState(null);
   const [sourceType, setSourceType] = useState('');
   const [otherSource, setOtherSource] = useState('');
+  const [ShortVideo, setShortVideo] = useState('');
   const [additionalInfo, setAdditionalInfo] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
@@ -42,6 +43,10 @@ function TXTReport() {
     setOtherSource(e.target.value);
   };
 
+  const handleShortVideoChange = (e) => {
+    setShortVideo(e.target.value);
+  }; 
+
   const handleAdditionalInfoChange = (e) => {
     setAdditionalInfo(e.target.value);
   };
@@ -50,6 +55,7 @@ function TXTReport() {
     setFile(null);
     setSourceType('');
     setOtherSource('');
+    setShortVideo('');
     setAdditionalInfo('');
     document.getElementById('file-input').value = ''; // Clear file input
   };
@@ -98,6 +104,7 @@ function TXTReport() {
         Report: file.name,
         Source: finalSource,
         // SourceType: sourceType, // 已移除此欄位
+        ShortVideo:ShortVideo|| '未提供',
         AddNote: additionalInfo || '未提供',
         Timestamp: new Date().toISOString(),
         // 這裡存入從後端取得的 data
@@ -156,7 +163,20 @@ function TXTReport() {
               )}
             </div>
           </div>
-          
+
+          <div className={styles.additionalFieldContainer}>
+            <label className={styles.fieldLabel}>影片連結</label>
+            <div className={styles.inputWrapper}>
+              <textarea 
+                className={styles.additionalTextarea}
+                rows="1"
+                value={ShortVideo} 
+                onChange={handleShortVideoChange} 
+                placeholder='請輸入影片網址...'
+              />
+            </div>
+          </div>
+
           <div className={styles.additionalFieldContainer}>
             <label className={styles.fieldLabel}>補充說明</label>
             <div className={styles.inputWrapper}>
