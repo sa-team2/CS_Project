@@ -8,6 +8,7 @@ function MSGReport() {
   const [text, setText] = useState('');
   const [sourceType, setSourceType] = useState('');
   const [otherSource, setOtherSource] = useState('');
+  const [ShortVideo, setShortVideo] = useState('');
   const [additionalInfo, setAdditionalInfo] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -37,6 +38,10 @@ function MSGReport() {
   const handleOtherSourceChange = (e) => {
     setOtherSource(e.target.value);
   };
+
+  const handleShortVideoChange = (e) => {
+    setShortVideo(e.target.value);
+  }; 
  
   const handleAdditionalInfoChange = (e) => {
     setAdditionalInfo(e.target.value);
@@ -46,6 +51,7 @@ function MSGReport() {
     setText('');
     setSourceType('');
     setOtherSource('');
+    setShortVideo('');
     setAdditionalInfo('');
   };
 
@@ -82,6 +88,7 @@ function MSGReport() {
         Report: text,
         Source: finalSource,
         // SourceType 欄位已被移除
+        ShortVideo:ShortVideo|| '未提供',
         AddNote: additionalInfo || '未提供',
         Timestamp: new Date().toISOString(),
         DetectionType: detectionType
@@ -137,6 +144,17 @@ function MSGReport() {
                 className={`${styles.textArea} ${styles.marginTop10}`}
               />
             )}
+          </div>
+
+          <div className={styles.fieldGroup}>
+            <div className={styles.inputLabel}>影片連結</div>
+            <textarea 
+              rows="1" 
+              value={ShortVideo} 
+              onChange={handleShortVideoChange} 
+              placeholder='請輸入影片網址...' 
+              className={styles.textArea}
+            />
           </div>
           
           <div className={styles.fieldGroup}>
