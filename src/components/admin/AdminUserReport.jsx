@@ -23,7 +23,7 @@ import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close"; 
 import { visuallyHidden } from "@mui/utils";
 import { db } from "../../firebase";
-import { collection,getDocs, addDoc, deleteDoc, updateDoc, doc, query, getDoc, serverTimestamp,onSnapshot } 
+import { collection,getDocs, addDoc, deleteDoc, updateDoc, doc, query, getDoc, serverTimestamp,onSnapshot,where,orderBy,limit } 
 from "firebase/firestore"; 
 import "./AdminUserReport.css";
 import { Modal } from "react-bootstrap";
@@ -78,6 +78,13 @@ const headCells = [
     numeric: true,
     disablePadding: false,
     label: "FraudRate",
+    sortable: true,
+  },
+  {
+    id: "ShortVideo",
+    numeric: true,
+    disablePadding: false,
+    label: "ShortVideo",
     sortable: true,
   },
 ];
@@ -266,7 +273,8 @@ export default function AdminPreview() {
     FraudResult: "",
     MatchKeyword: "",
     MatchType: "",
-    FraudRate: ""
+    FraudRate: "",
+    ShortVideo:""
   });
 
   // 定義TextField共用樣式
@@ -300,7 +308,8 @@ export default function AdminPreview() {
           FraudResult: selectedRow.FraudResult || "",
           MatchKeyword: selectedRow.MatchKeyword || "",
           MatchType: selectedRow.MatchType || "",
-          FraudRate: selectedRow.FraudRate || ""
+          FraudRate: selectedRow.FraudRate || "",
+          ShortVideo:selectedRow.ShortVideo|| ""
         });
         setIsEditModalOpen(true);
       }
@@ -342,7 +351,8 @@ export default function AdminPreview() {
       const updateData = {
         Report: editData.Report,
         Source: editData.Source,
-        AddNote: editData.AddNote
+        AddNote: editData.AddNote,
+        ShortVideo:editData.ShortVideo
       };
 
       // 如果有PythonResult相關資料，則更新它們
@@ -497,6 +507,7 @@ export default function AdminPreview() {
         let fraudRate = 0;
         let matches = [];
         let detectionType = data.DetectionType || null;
+        let ShortVideo =[];
         
         if (data.PythonResult) {
           fraudResult = data.PythonResult.FraudResult || "";
@@ -540,7 +551,8 @@ export default function AdminPreview() {
           DetectionType: detectionType,
           FileType: fileType,
           FileIcon: fileIcon,
-          LastUpdated: data.LastUpdated 
+          LastUpdated: data.LastUpdated ,
+          ShortVideo:data.ShortVideo|| "",
         });
       });
       
@@ -767,27 +779,71 @@ export default function AdminPreview() {
     }
   };
 
+const uploadShortVideoIfNotExists = async (videoURL) => {
+  if (!videoURL) {
+    console.warn("⚠️ videoURL 為空，跳過");
+    return;
+  }
+
+  try {
+    const trimmedURL = videoURL.trim();
+    console.log("處理影片 URL:", trimmedURL);
+
+    const q = query(
+      collection(db, "ShortVideo"),
+      where("VideoURL", "==", trimmedURL)
+    );
+    const snapshot = await getDocs(q);
+
+    if (!snapshot.empty) {
+      console.log(`影片已存在，略過上傳: ${trimmedURL}`);
+      return;
+    }
+
+    let platform = "未知";
+    if (trimmedURL.includes("instagram.com")) {
+      platform = "instagram";
+    } else if (trimmedURL.includes("tiktok.com")) {
+      platform = "tikTok";
+    } else if (trimmedURL.includes("youtube.com") || trimmedURL.includes("youtu.be")) {
+      platform = "youTube";
+    }
+
+    const newVideo = {
+      VideoURL: trimmedURL,
+      Platform: platform,
+      Timestamp: serverTimestamp(),
+    };
+
+    console.log("寫入 ShortVideo 資料:", newVideo);
+
+    await addDoc(collection(db, "ShortVideo"), newVideo);
+
+    console.log(`✅ 成功新增影片，平台: ${platform}`);
+  } catch (error) {
+    console.error("❌ 上傳 ShortVideo 發生錯誤: ", error.message);
+  }
+};
+
+
+
   const handleUpdate = async () => {
     try {
-      // Step 0: 更新 Statistics 
-      await updateStatistics(); 
-      await updatetopType(); 
-      
-      // Step 1: 從 FraudDefine collection 中抓取現有資料，檢查是否有重複關鍵字
+      await updateStatistics();
+      await updatetopType();
+
       const fraudDefineSnapshot = await getDocs(collection(db, "FraudDefine"));
-      const fraudDefineKeywords = fraudDefineSnapshot.docs.map(
-        (doc) => doc.data().Keyword
-      );
-  
-      // Step 2: 準備處理選中的 Report 資料
+      const fraudDefineKeywords = fraudDefineSnapshot.docs
+        .map((doc) => (doc.data().Keyword || "").trim())
+        .filter((k) => k);
+
       const matched = [];
       const unmatched = [];
 
-      const selectedRows = rows.filter(row => selected.includes(row.id));
+      const selectedRows = rows.filter((row) => selected.includes(row.id));
 
       for (const row of selectedRows) {
         try {
-          // 從 Report 獲取完整資料
           const reportRef = doc(db, "Report", row.id);
           const reportDoc = await getDoc(reportRef);
 
@@ -795,48 +851,48 @@ export default function AdminPreview() {
             console.error(`Report 文檔不存在: ${row.id}`);
             continue;
           }
-          
+
           const reportData = reportDoc.data();
-          
-          // 處理 Match 資料
-          // 尋找已存在的關鍵字
-          console.log("row:", row);
-          console.log("reportData:", reportData);
+          const videoURL = reportData.ShortVideo;
 
-          const same = row.Match.filter((matchItem) =>
-            fraudDefineKeywords.includes(matchItem.MatchKeyword)
-          );
-          console.log("same:", same);
+          // ✅ 避免重複上傳影片
+          await uploadShortVideoIfNotExists(videoURL);
 
-          if (same.length > 0) {
-            matched.push({ ...row, Match: same });
-          }
-          
-          // 尋找新的關鍵字
-          const newKeywords = row.Match.filter((matchItem) => 
-            !fraudDefineKeywords.includes(matchItem.MatchKeyword)
-          );
-          
-          if (newKeywords.length > 0) {
-            unmatched.push({ ...row, Match: newKeywords });
-            // 將新的關鍵字直接加入 FraudDefine，不需要添加到 Outcome
-            for (const unmatched of newKeywords) {
-              await addDoc(collection(db, "FraudDefine"), {
-                Keyword: unmatched.MatchKeyword,
-                Type: unmatched.MatchType || "未知",
-                Result: row.FraudResult === "詐騙" ? true : false,
-              });
-              console.log(`成功將關鍵字 ${unmatched.MatchKeyword} 添加到 FraudDefine`);
+          // ✅ 比對關鍵字
+          if (Array.isArray(row.Match)) {
+            const matchKeywords = row.Match.map((item) => item.MatchKeyword?.trim());
+            console.log("FraudDefine Keywords:", fraudDefineKeywords);
+            console.log("row.Match Keywords:", matchKeywords);
+
+            const same = row.Match.filter((matchItem) =>
+              fraudDefineKeywords.includes(matchItem.MatchKeyword?.trim())
+            );
+            if (same.length > 0) {
+              matched.push({ ...row, Match: same });
             }
+
+            const newKeywords = row.Match.filter((matchItem) =>
+              !fraudDefineKeywords.includes(matchItem.MatchKeyword?.trim())
+            );
+            if (newKeywords.length > 0) {
+              unmatched.push({ ...row, Match: newKeywords });
+
+              for (const newItem of newKeywords) {
+                await addDoc(collection(db, "FraudDefine"), {
+                  Keyword: newItem.MatchKeyword,
+                  Type: newItem.MatchType || "未知",
+                  Result: row.FraudResult === "詐騙" ? true : false,
+                });
+                console.log(`成功將關鍵字 ${newItem.MatchKeyword} 添加到 FraudDefine`);
+              }
+            }
+          } else {
+            console.warn(`row.Match 資料格式不正確:`, row.Match);
           }
-          
-          // 在處理完當前資料後，從 Report 集合中刪除該筆資料
-          try {
-            await deleteDoc(doc(db, "Report", row.id));
-            console.log(`成功從 Report 資料表刪除文檔 ID: ${row.id}`);
-          } catch (deleteError) {
-            console.error(`刪除 Report 資料表中的文檔 ID: ${row.id} 時發生錯誤:`, deleteError);
-          }
+
+          // ✅ 刪除處理完成的 Report
+          await deleteDoc(reportRef);
+          console.log(`成功刪除 Report ID: ${row.id}`);
         } catch (error) {
           console.error(`處理 Report ${row.id} 時發生錯誤:`, error);
         }
@@ -847,7 +903,6 @@ export default function AdminPreview() {
 
       setMatchedData(matched);
       setUnmatchedData(unmatched);
-      
       setShow(true);
       closeReturnModal();
       setSelected([]);
@@ -855,6 +910,8 @@ export default function AdminPreview() {
       console.error("資料比對時發生錯誤: ", error);
     }
   };
+
+
 
   const handleDelete = async () => {
     try {
@@ -947,6 +1004,7 @@ export default function AdminPreview() {
                       <TableCell align="right" className="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight MuiTableCell-sizeMedium css-3ssuu9-MuiTableCell-root">{row.MatchKeyword}</TableCell>
                       <TableCell align="right" className="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight MuiTableCell-sizeMedium css-3ssuu9-MuiTableCell-root">{row.MatchType}</TableCell>
                       <TableCell align="right" className="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight MuiTableCell-sizeMedium css-3ssuu9-MuiTableCell-root">{row.FraudRate}</TableCell>
+                      <TableCell align="right" className="MuiTableCell-root MuiTableCell-body MuiTableCell-alignRight MuiTableCell-sizeMedium css-3ssuu9-MuiTableCell-root">{row.ShortVideo}</TableCell>
                     </TableRow>
                   );
                 })}
@@ -1129,6 +1187,18 @@ export default function AdminPreview() {
                 margin="normal"
                 variant="outlined"
                 type="number"
+                inputProps={{ min: 0, max: 100 }}
+                {...textFieldProps}
+              />
+              <TextField
+                label="短影音"
+                name="ShortVideo"
+                value={editData.ShortVideo}
+                onChange={handleEditChange}
+                fullWidth
+                margin="normal"
+                variant="outlined"
+                type="string"
                 inputProps={{ min: 0, max: 100 }}
                 {...textFieldProps}
               />
