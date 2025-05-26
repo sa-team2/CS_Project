@@ -2,6 +2,8 @@ import { useState, useEffect, useRef } from 'react';
 import ReactPlayer from 'react-player/youtube';
 import { InstagramEmbed } from 'react-social-media-embed';
 import styles from './Shorts.module.css';
+import { collection, getDocs, query, orderBy } from 'firebase/firestore';
+import { db } from '../../firebase';
 
 function Shorts() {
     const [isFullscreen, setIsFullscreen] = useState(false);
@@ -75,39 +77,25 @@ function Shorts() {
       };
   }, [isFullscreen]);
 
-  const videos = [
-  {
-    title: "傻眼！警察支援打詐遭騙千萬 上班6度親送錢給車手",
-    views: "3萬次觀看",
-    duration: "0:30",
-    src: "https://www.youtube.com/shorts/di8DRo-rnts"
-  },
-  {
-    title: "【6點樂炒電】娛樂城詐騙",
-    views: "3000次觀看",
-    duration: "0:30",
-    src: "https://www.youtube.com/shorts/fLFOHyMhQUE"
-  },
-  {
-    title: "BABYMONSTER - 'DRIP' M/V",
-    views: "2億次觀看",
-    duration: "0:30",
-    src: "https://www.tiktok.com/@m1491344/video/7206894402684357914?q=%E8%A9%90%E9%A8%99&t=1747382539288"
-  },
-  {
-    title: "我被詐騙 12360 元",
-    views: "2500次觀看",
-    duration: "0:30",
-    src: "https://www.instagram.com/p/DIlhnJVSbgg/"
-  },
-    {
-    title: "新型騙局～謹慎開通免密支付",
-    views: "2萬次觀看",
-    duration: "0:30",
-    src: "https://www.youtube.com/shorts/xtnWLbVZ1WA"
-  },
-];
+  const [videos, setVideos] = useState([]);
 
+  useEffect(() => {
+    async function fetchVideos() {
+      const colRef = collection(db, "ShortVideo");
+      const q = query(colRef, orderBy("Timestamp", "desc")); // 最新時間在前面
+      const querySnapshot = await getDocs(q);
+      const videoArray = [];
+      querySnapshot.forEach(doc => {
+        const data = doc.data();
+        if (data.VideoURL) {
+          videoArray.push({ src: data.VideoURL, timestamp: data.Timestamp });
+        }
+      });
+      setVideos(videoArray);
+    }
+    fetchVideos();
+  }, []);
+console.log("videos",videos)
 const getVideoType = (url) => {
   if (url.includes("youtube.com")) {
     return "youtube";
