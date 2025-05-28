@@ -29,6 +29,10 @@ function Navbar({setIsLogoutModalOpen}) {
     } else if (location.pathname === "/report") {
       setSelectedLink("report");
       window.scrollTo(0, 0);
+    }
+      else if (location.pathname === "/promotion") {
+      setSelectedLink("promotion");
+      window.scrollTo(0, 0);
     } else if (location.pathname === "/admin") {
         setSelectedLink("admin");
     }
