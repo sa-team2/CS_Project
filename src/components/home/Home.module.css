@@ -258,9 +258,8 @@
     border: 1px solid #393939;
     border-radius: 1rem;
     width: 100%;
-    height: 60vh;
+    height: 100%;
     display: flex;
-    overflow: hidden;
     transform: scale(0.9);
     transition: transform 1s linear;
     flex-wrap: wrap;
@@ -272,7 +271,7 @@
     flex: 1;
     flex-direction: column;
     justify-content: center;
-    gap: 0.5rem;
+    gap: 20px;
     min-width: 450px;
 }
 
@@ -387,6 +386,8 @@
     display: flex;
     flex: 1;
     min-width: 450px;
+    overflow: hidden;
+    border-radius: 0 1rem 1rem 0;
 }
 
 .rightContent img {
@@ -502,7 +503,6 @@
     height: auto;    
     width: clamp(200px, 20vw, 400px);
     z-index: 1;
-    
   }
   .testbg2 {
     position: absolute;
@@ -557,22 +557,35 @@
     .description {
         max-height: 25vh;
     }
+
+    .testbg1 {
+        left: 10vw !important;
+    }
+    .testbg2 {
+        top: 67.5vh !important;
+        left: 20vw !important;
+    }
+    .testbg3 {
+        right: 10vw !important;
+    }
+    .testbg4 {
+        top: 67.5vh !important;
+        right: 20vw !important;
+    }
 }
 
 @media (max-width: 1300px) {
     .homeMain {
-        gap: 20px; /* 增加間距，使內容更加分散 */
+        gap: 20px; 
     }
 
-    .testbg1,
     .testbg2,
-    .testbg3,
     .testbg4 {
-        display: block; /* 顯示背景圖片或元素，適應較大屏幕 */
+        top: 60vh !important; 
     }
 
     .homeContainer {
-        padding: 6rem 3rem 2rem 3rem; /* 更大內邊距，使內容更居中 */
+        padding: 6rem 3rem 2rem 3rem; 
     }
 
     .displaySlogan p {
@@ -580,15 +593,24 @@
     }
 
     .buttonBox {
-        margin-top: 2rem; /* 增加按鈕區塊的間距 */
+        margin-top: 2rem; 
     }
 }
 
 @media (max-width: 1236px) {
-    .exampleCard {
-        height: 57vh;
+    .rightContent {
+        height: 40px;
+        border-radius: 0 0 1rem 1rem;
+    }
+
+    .rightContent img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+        object-position: center top; 
     }
 }
+
 @media (max-width: 1095px) {
     .description {
         max-height: 22.5vh;
@@ -631,12 +653,6 @@
         padding-right: 5rem;
         padding-left: 5rem;
     }
-}
-
-@media (max-width: 768px) {
-    .homeMain {
-        gap: 5px;
-    }
 
     .testbg1,
     .testbg2,
@@ -644,9 +660,16 @@
     .testbg4 {
       display: none;
     }
-  
+
     .homeContainer {
         height: auto;
+    }
+
+}
+
+@media (max-width: 768px) {
+    .homeMain {
+        gap: 5px;
     }
   
     .buttonBox {
