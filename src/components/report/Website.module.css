@@ -1,3 +1,6 @@
+:global(body.modal-open){
+  padding-right: 0 !important;
+}
 .testContainer {
     position: relative;
     margin: 0;
@@ -325,6 +328,7 @@
 }
 
 
+
 .stepsBox {
     position: relative;
     padding: 0;
@@ -340,7 +344,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover; 
-    z-index: -1; 
+    z-index: 0; 
 }
 
 .stepsOverlay {
@@ -357,8 +361,8 @@
 .stepsMain {
     position: relative;
     z-index: 1;
-    max-width: calc(100% - 500px);
-    margin: 0 auto;
+    max-width: 1200px;
+    margin: 85px auto 0;
 }
 
 .stepsContent {
@@ -404,13 +408,13 @@
 
 .stepsDescription ul li.active .iconHolder,
 .stepsDescription ul li.active .iconHolder::before {
-    background-color: #1f1f1f;
+    background-color: #9d9d9d;
 }
 
 .stepsProgress {
     width: 8px;
     height: 78.5%; 
-    background-color: #9d9d9d;
+    background-color: #1f1f1f;
     position: absolute;
     left: 48px;
     top: 0;
@@ -422,7 +426,7 @@
     top: 0;
     right: 0;
     height: 100%;
-    background-color:  #1f1f1f;
+    background-color:  #9d9d9d;
     width: 100%;
 }
 
@@ -445,7 +449,7 @@ li p {
     display: flex;
     justify-content: center;
     align-items: center;
-    background-color: #9d9d9d;
+    background-color: #1f1f1f;
     border-radius: 50%;
     z-index: 1;
 }
@@ -456,7 +460,7 @@ li p {
     width: 80px;
     height: 80px;
     border: 4px solid #fff;
-    background-color: #9d9d9d;
+    background-color: #1f1f1f;
     border-radius: 50%;
     z-index: -1;
 }
