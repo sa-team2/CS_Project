@@ -128,7 +128,7 @@ const AdminUpload = () => {
                 onChange={handleFileDrop}
                 />
                 <div className={styles.adminUploadButton}>選擇檔案</div>
-                <span style={{ fontSize: '16px',marginTop:'20px' }}>檔案類型：JPEG, DOC, PDF, PNG, XLS, XLSX</span>
+                <span style={{ fontSize: '16px',marginTop:'20px' }}>檔案類型：XLS, XLSX</span>
             </label>
             <div>
                 {showStatus && currentFiles.length > 0 && (
