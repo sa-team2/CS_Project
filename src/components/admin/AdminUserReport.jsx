@@ -637,7 +637,7 @@ export default function AdminPreview() {
       const selectedDocs = await Promise.all(
         ids.map(async (id) => {
           console.log(id)
-          console.log("当前处理的 ID:", id, "类型:", typeof id);
+
 
           const docRef = doc(outcomeCollectionRef, id);
           const docSnapshot = await getDoc(docRef);
@@ -825,8 +825,6 @@ const uploadShortVideoIfNotExists = async (videoURL) => {
   }
 };
 
-
-
   const handleUpdate = async () => {
     try {
       await updateStatistics();
@@ -881,7 +879,7 @@ const uploadShortVideoIfNotExists = async (videoURL) => {
                 await addDoc(collection(db, "FraudDefine"), {
                   Keyword: newItem.MatchKeyword,
                   Type: newItem.MatchType || "未知",
-                  Result: row.FraudResult === "詐騙" ? true : false,
+                  Result: row.FraudResult === "詐騙" ? 1 : 0,
                 });
                 console.log(`成功將關鍵字 ${newItem.MatchKeyword} 添加到 FraudDefine`);
               }
@@ -910,8 +908,6 @@ const uploadShortVideoIfNotExists = async (videoURL) => {
       console.error("資料比對時發生錯誤: ", error);
     }
   };
-
-
 
   const handleDelete = async () => {
     try {
