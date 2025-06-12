@@ -3,9 +3,6 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import { Helmet } from 'react-helmet';
 import { useNavigate } from 'react-router-dom';
-import welcome_user from '../../images/welcome_user.png';
-import user from '../../images/user.png';
-import padlock from '../../images/padlock.png';
 import { collection, query, where, getDocs } from 'firebase/firestore'; 
 import { db } from '../../firebase'; 
 
@@ -58,7 +55,7 @@ function Login() {
           transition={{ duration: 2.5 }} 
         >
           <div>
-            <img src={ welcome_user } alt="welcome_user icon" width="200px" />
+            <img src="/welcome_user.png" alt="welcome_user icon" width="200px" />
           </div>
           <div className="welcome">管理員</div>
           <form className="login" onSubmit={(e) => { e.preventDefault(); handleLogin(); }}> 
@@ -71,7 +68,7 @@ function Login() {
                 onDragOver={ handleDragOver }
                 className={ error.usernameError ? 'login-error' : ''}
               />
-              <img src={ user } alt="user icon" width="23px" />
+              <img src="/user.png" alt="user icon" width="23px" />
             </div>
             {error.usernameError && <p style={{ color: 'red' }}>{ error.usernameError }</p>}
 
@@ -83,7 +80,7 @@ function Login() {
                 onChange={(e) => setPassword(e.target.value)} 
                 className={ error.passwordError ? 'login-error' : ''}
               />
-              <img src={ padlock } alt="padlock icon" width="23px" />
+              <img src="/padlock.png" alt="padlock icon" width="23px" />
             </div>
             {error.passwordError && <p className='login-error-msg'>{ error.passwordError }</p>} 
             <button type="submit" className="login-btn">
