@@ -240,19 +240,14 @@ const submitScoresToFirebase = async () => {
 const handleNextStage = () => {
     if ((currentConversation + 1) === allScripts[fraudType].length) {
       // 確保在導航前提交分數和錯誤次數
+      navigate("/quiz/finalresults");
       submitScoresToFirebase().then(() => {
         setGoFinalResults(true);
         setNextStageTransition(true);
-        setTimeout(() => {
-          navigate("/quiz/finalresults");
-        }, 1500);
       }).catch(error => {
         console.error("提交分數時出錯，但仍然繼續到結果頁:", error);
         setGoFinalResults(true);
         setNextStageTransition(true);
-        setTimeout(() => {
-          navigate("/quiz/finalresults");
-        }, 1500);
       });
     } else {
       setCurrentConversation(currentConversation + 1);
@@ -493,7 +488,7 @@ const handleNextStage = () => {
 
   useEffect(() => {
     if (correctAnswer[currentConversation] === clickedText) {
-      setTimeout(() => handleNextStage(), 1000); 
+      setTimeout(() => handleNextStage(), 750); 
     }
   }, [clickedText])
   
