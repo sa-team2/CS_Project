@@ -6,7 +6,7 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    background: url(../../images/circles.svg);
+    background: url(/circles.svg);
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
