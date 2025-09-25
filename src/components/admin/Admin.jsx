@@ -9,12 +9,14 @@ import Navbar from '../navbar/Navbar';
 import AdminUpload from './AdminUpload';
 import AdminPreview from './AdminPreview';
 import AdminUserReport from './AdminUserReport';
+import { useAuth } from '../auth/AuthContext';
 
 export const MultipleFileUploadBasic = () => {
   const [isLogoutModalOpen, setIsLogoutModalOpen] = useState(false);
   const [activeTab, setActiveTab] = useState("file");
   const navigate = useNavigate();
   const alertShownRef = useRef(false);
+  const { logout } = useAuth();
 
   // 計算 Tab 樣式位置
   const getTabStyle = () => {
@@ -41,10 +43,14 @@ export const MultipleFileUploadBasic = () => {
     }
   }, [navigate]); 
 
-  const handleLogout = () => {
+  const handleLogout = async () => {
+    // 使用 AuthContext 的登出函數
+    await logout();
+    // 清除 Admin 相關的 sessionStorage
     sessionStorage.clear();
     alertShownRef.current = false; 
-    navigate("/login");
+    // 登出後強制導向首頁
+    window.location.href = "/";
   };
 
   const closeLogoutModal = () => {
