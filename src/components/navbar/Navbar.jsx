@@ -1,15 +1,37 @@
 import { useState, useEffect } from 'react';
 import styles from './Navbar.module.css';
 import { useLocation, useNavigate } from 'react-router-dom';
+import { useAuth } from '../auth/AuthContext';
 
 function Navbar({setIsLogoutModalOpen}) {
   const [selectedLink, setSelectedLink] = useState("home");
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { userInfo, logout } = useAuth();
   const navigate = useNavigate();
   const location = useLocation();
 
   const isAdminPath = location.pathname === '/admin';
 
+  const handleUserLogout = async () => {
+    await logout();
+    // 登出後強制導向首頁，避免受保護頁面的重定向邏輯干擾
+    window.location.href = '/';
+  };
+
+
+  const handleProtectedNavigation = (targetPath, linkName) => {
+    if (userInfo) {
+   
+      setSelectedLink(linkName);
+      navigate(targetPath);
+      setIsMobileMenuOpen(!isMobileMenuOpen);
+    } else {
+      // 未登入，儲存目標路徑並導向登入頁面
+      localStorage.setItem('redirectPath', targetPath);
+      navigate('/login-user');
+      setIsMobileMenuOpen(false);
+    }
+  };
 
   const isActive = (link) => {
     return selectedLink === link ? styles.active : ''; 
@@ -58,18 +80,32 @@ function Navbar({setIsLogoutModalOpen}) {
 
         <div className={`${styles.navbarList} ${isMobileMenuOpen ? styles.showMenu : ""}`}>
           {!isAdminPath ? (
-            <div className={styles.navbarLink}>
-              <a className={`${styles.navbarAnchor} ${isActive("home")}`} onClick={() => {navigate("/"); setIsMobileMenuOpen(!isMobileMenuOpen);}}>首頁</a>
-              <a className={`${styles.navbarAnchor} ${isActive("commonFraudBox")}`} onClick={() => { setSelectedLink("commonFraudBox"); navigate("/#commonFraudBox"); setIsMobileMenuOpen(!isMobileMenuOpen);}}>常見手法</a>
-              <a className={`${styles.navbarAnchor} ${isActive("website")}`} onClick={() => { setSelectedLink("website"); navigate("/website"); setIsMobileMenuOpen(!isMobileMenuOpen);}}>詐騙檢測</a>
-              <a className={`${styles.navbarAnchor} ${isActive("report")}`} onClick={() => { setSelectedLink("report"); navigate("/report"); setIsMobileMenuOpen(!isMobileMenuOpen);}}>詐騙回報</a>
-              <a className={`${styles.navbarAnchor} ${isActive("promotion")}`} onClick={() => { setSelectedLink("promotion"); navigate("/promotion"); setIsMobileMenuOpen(!isMobileMenuOpen);}}>宣導專區</a>
-              <a className={`${styles.navbarAnchor} ${isActive("statisticsBox")}`} onClick={() => { setSelectedLink("statisticsBox"); navigate("/website#statisticsBox"); setIsMobileMenuOpen(!isMobileMenuOpen);}}>統計圖表</a>
-            </div>
+            <>
+              <div className={styles.navbarLink}>
+                <a className={`${styles.navbarAnchor} ${isActive("home")}`} onClick={() => {navigate("/"); setIsMobileMenuOpen(!isMobileMenuOpen);}}>首頁</a>
+                <a className={`${styles.navbarAnchor} ${isActive("commonFraudBox")}`} onClick={() => { setSelectedLink("commonFraudBox"); navigate("/#commonFraudBox"); setIsMobileMenuOpen(!isMobileMenuOpen);}}>常見手法</a>
+                <a className={`${styles.navbarAnchor} ${isActive("website")}`} onClick={() => handleProtectedNavigation("/website", "website")}>詐騙檢測</a>
+                <a className={`${styles.navbarAnchor} ${isActive("report")}`} onClick={() => handleProtectedNavigation("/report", "report")}>詐騙回報</a>
+                <a className={`${styles.navbarAnchor} ${isActive("promotion")}`} onClick={() => { setSelectedLink("promotion"); navigate("/promotion"); setIsMobileMenuOpen(!isMobileMenuOpen);}}>宣導專區</a>
+                <a className={`${styles.navbarAnchor} ${isActive("statisticsBox")}`} onClick={() => handleProtectedNavigation("/website#statisticsBox", "statisticsBox")}>統計圖表</a>
+              </div>
+              <div className={styles.navbarLink}>
+                {userInfo ? (
+                  <a className={styles.navbarAnchor} onClick={handleUserLogout}>登出</a>
+                ) : (
+                  <a className={styles.navbarAnchor} onClick={() => {
+                    // 儲存當前路徑供登入後導向
+                    localStorage.setItem('redirectPath', location.pathname + location.search + location.hash);
+                    navigate('/login-user'); 
+                    setIsMobileMenuOpen(false);
+                  }}>登入</a>
+                )}
+              </div>
+            </>
           ) : (
             <div className={styles.navbarLink}>
               <a className={`${styles.navbarAnchor} ${isActive("admin")}`} onClick={() => {navigate("/admin"); setIsMobileMenuOpen(!isMobileMenuOpen);}}>資料集更新</a>
-              <a className={`${styles.navbarAnchor} ${isActive("logout")}`} onClick={() => {setIsLogoutModalOpen(true); setIsMobileMenuOpen(!isMobileMenuOpen);}}>登出</a>
+              <a className={`${styles.navbarAnchor} ${isActive("logout")}`} onClick={handleUserLogout}>登出</a>
             </div>
           )}
         </div>
