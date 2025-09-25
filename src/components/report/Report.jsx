@@ -29,18 +29,6 @@ function Report() {
   }, [isLoading, isLoggedIn, navigate, requireAuth]);
 
 
-  const scrollToStatistics = () => {
-      if (statisticsRef.current) {
-          statisticsRef.current.scrollIntoView({ behavior: "smooth" });
-      }
-  };
-
-
-  useEffect(() => {
-      if (location.hash === "#statisticsBox") {
-          scrollToStatistics();
-      }
-  }, [location]);
 
 
   const getTabStyle = () => {
@@ -97,7 +85,6 @@ useEffect(() => {
   };
 }, []);
   
-
   if (isLoading) {
     return (
       <div style={{ 
@@ -112,7 +99,6 @@ useEffect(() => {
     );
   }
 
-
   if (!isLoggedIn) {
     return null;
   }
@@ -120,7 +106,7 @@ useEffect(() => {
   return (
     <>
       <div className={styles.testContainer}>
-          <Navbar scrollToStatistics={scrollToStatistics}></Navbar>
+          <Navbar></Navbar>
           <div className={styles.testBox}>
               <div className={styles.testMain}>
                 {/* 類似Tab的感覺 */}
@@ -138,7 +124,7 @@ useEffect(() => {
               </div>
 
               
-            
+              {/* 顯示對應組件的內容 */}
               <div className={styles.content}>
                     {activeTab === "text" && <MSGReport />}
                     {activeTab === "file" && <TXTReport />}
