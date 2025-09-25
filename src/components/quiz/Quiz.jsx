@@ -5,14 +5,26 @@ import { useNavigate } from "react-router-dom";
 import QuizTypeSelection from './QuizTypeSelection';
 import CharacterNickname from './CharacterNickname';
 import { useQuizContext } from "./QuizContext";
+import { useAuth } from '../auth/AuthContext';
 import UndoIcon from '@mui/icons-material/Undo';
 
 function Quiz() {
   const [isLoading, setIsLoading] = useState(true);
   const [returnIsDisable, setReturnIsDisable] = useState(true);
   const { isFirstRender, setIsFirstRender, svgColor, setSvgColor, characterInformation } = useQuizContext();
+  const { isLoggedIn, isLoading: authLoading, requireAuth } = useAuth();
   const [dimensions, setDimensions] = useState({width: 0, height: 0})
   const navigate = useNavigate();
+
+  // 檢查登入狀態並重定向
+  useEffect(() => {
+    if (!authLoading) {
+      const redirectPath = requireAuth();
+      if (redirectPath) {
+        navigate(redirectPath, { replace: true });
+      }
+    }
+  }, [authLoading, isLoggedIn, navigate, requireAuth]);
 
   if (sessionStorage.getItem("hasRefreshed")) {
     sessionStorage.removeItem("hasRefreshed");  
@@ -29,6 +41,26 @@ function Quiz() {
     window.addEventListener("resize", resize)
     return () => window.removeEventListener("resize", resize)
   }, [])
+
+  // 如果還在檢查登入狀態，顯示載入畫面
+  if (authLoading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '18px'
+      }}>
+        檢查登入狀態中...
+      </div>
+    );
+  }
+
+  // 如果未登入，不渲染內容（會導轉到登入頁面）
+  if (!isLoggedIn) {
+    return null;
+  }
 
 
   return (
