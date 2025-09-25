@@ -4,6 +4,7 @@ import Website from '../website/Website';
 import Statistics from '../statistics/Statistics';
 import Report from '../report/Report';
 import Login from '../login/Login';
+import LoginUser from '../login_user/LoginUser';
 import Admin from '../admin/Admin';
 import Quiz from '../quiz/Quiz';
 import { Routes, Route, useLocation } from 'react-router-dom';
@@ -33,7 +34,10 @@ function AnimationRoute() {
           document.title = '統計數據';
           break;
         case '/login':
-          document.title = '登入頁面';
+          document.title = '管理員登入';
+          break;
+        case '/login-user':
+          document.title = '使用者登入';
           break;
         case '/admin':
           document.title = '管理頁面';
@@ -58,6 +62,7 @@ function AnimationRoute() {
             <Route path="/website" element={<Website />} />
             <Route path="/statistics" element={<Statistics />} />
             <Route path="/login" element={<Login />} />
+            <Route path="/login-user" element={<LoginUser />} />
             <Route path="/report" element={<Report />} />
             <Route path="/promotion" element={<Promotion />} />
             <Route path="/admin" element={<Admin />} />
