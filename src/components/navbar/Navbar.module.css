@@ -189,3 +189,37 @@
     }
 }
 
+/* 用戶資訊樣式 */
+.userInfo {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: 2rem;
+    
+}
+
+.userName {
+    color: #ffffff;
+    font-weight: 600;
+    font-size: 1.2rem;
+}
+
+
+
+@media (max-width: 768px) {
+    .userInfo {
+        flex-direction: column;
+        margin-left: 0;
+        margin-top: 1rem;
+        gap: 0.5rem;
+    }
+    
+    .userName {
+        font-size: 1rem;
+    }
+    
+    .logoutBtn {
+        font-size: 1rem;
+    }
+}
+
