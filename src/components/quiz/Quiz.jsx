@@ -16,7 +16,6 @@ function Quiz() {
   const [dimensions, setDimensions] = useState({width: 0, height: 0})
   const navigate = useNavigate();
 
-  // 檢查登入狀態並重定向
   useEffect(() => {
     if (!authLoading) {
       const redirectPath = requireAuth();
@@ -57,7 +56,6 @@ function Quiz() {
     );
   }
 
-  // 如果未登入，不渲染內容（會導轉到登入頁面）
   if (!isLoggedIn) {
     return null;
   }
@@ -163,3 +161,4 @@ function SVG({ width, height, isFirstRender, svgColor}) {
     </motion.svg>
     );
 }
+
