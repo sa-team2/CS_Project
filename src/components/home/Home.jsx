@@ -1,21 +1,25 @@
 import styles from './Home.module.css';
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import Navbar from '../navbar/Navbar';
 import NewsList from './NewsList';
 import { Link } from 'react-router-dom';
 import { motion, useAnimation } from 'framer-motion'; 
 import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import { useAuth } from '../auth/AuthContext';
 
 function Home() {
     const [scrollY, setScrollY] = useState(0);
     const [animate, setAnimate] = useState(false); 
+    const [isMounted, setIsMounted] = useState(false);
     const imagesRef = useRef(null);
       const carouselRef = useRef(null);
     const [selectedImage, setSelectedImage] = useState(null);
     const commonFraudRef = useRef(null);
     const location = useLocation();
+    const navigate = useNavigate();
+    const { isLoggedIn, requireAuth } = useAuth();
 
       const [isMobile, setIsMobile] = useState(false);
   const [currentIndex, setCurrentIndex] = useState(0);
@@ -31,19 +35,23 @@ function Home() {
         window.location.reload();  
     }
 
-    // 滾動到 statisticsBox
+    // 滾動到常見詐騙區塊
     const scrollToCommonFraudBox = () => {
         if (commonFraudRef.current) {
             commonFraudRef.current.scrollIntoView({ behavior: "smooth" });
         }
     };
 
-    // 如果網址中帶有 #statisticsBox，自動滾動
-    useEffect(() => {
-        if (location.hash === "#commonFraudBox") {
-            scrollToCommonFraudBox();
+    const handleButtonClick = (targetPath) => {
+        if (isLoggedIn) {
+           
+            navigate(targetPath);
+        } else {
+            // 未登入，儲存目標路徑並導向登入頁面
+            localStorage.setItem('redirectPath', targetPath);
+            navigate('/login-user');
         }
-    }, [location]);
+    };
     
 
     useEffect(() => {
@@ -68,7 +76,7 @@ function Home() {
         };
     }, [animate]); 
 
-    //---
+
     useEffect(() => {
         const exampleCards = document.querySelectorAll(`.${styles.exampleCard}`);
 
@@ -102,7 +110,6 @@ function Home() {
         };
     }, []);
 
-    //---
     const exampleData = [
         {
             id: "01",
@@ -167,32 +174,48 @@ function Home() {
     const img2 = useAnimation();
     const img3 = useAnimation();
     const img4 = useAnimation();
+
+    // 設定組件已掛載狀態
+    useEffect(() => {
+        setIsMounted(true);
+        return () => setIsMounted(false);
+    }, []);
   
     useEffect(() => {
+        if (!isMounted) return;
+
         const loop = async () => {
           await new Promise((r) => setTimeout(r, 3000));
       
           while (true) {
+            if (!isMounted) break; // 檢查組件是否仍然掛載
             await img1.start({ scale: 1.05 });
             await new Promise((r) => setTimeout(r, 1000));
+            if (!isMounted) break;
             await img1.start({ scale: 1 });
       
+            if (!isMounted) break;
             await img2.start({ scale: 1.05 });
             await new Promise((r) => setTimeout(r, 1000));
+            if (!isMounted) break;
             await img2.start({ scale: 1 });
       
+            if (!isMounted) break;
             await img3.start({ scale: 1.05 });
             await new Promise((r) => setTimeout(r, 1000));
+            if (!isMounted) break;
             await img3.start({ scale: 1 });
       
+            if (!isMounted) break;
             await img4.start({ scale: 1.05 });
             await new Promise((r) => setTimeout(r, 1000));
+            if (!isMounted) break;
             await img4.start({ scale: 1 });
           }
         };
       
         loop();
-      }, []);
+      }, [isMounted, img1, img2, img3, img4]);
       
 
     //輪播
@@ -320,18 +343,14 @@ useEffect(() => {
                     </div>
                     {/* <div className={styles.radar}><img src='/radar.gif'></img></div> */}
                     <div className={styles.buttonBox}>
-                        <Link to='./website'>
-                            <button className={styles.buttonBtn}>
-                                <span> 立即檢測 </span>
-                            </button>
-                        </Link>
-                        <Link to='./quiz'>
-                            <button className={styles.buttonBtnQuiz}>
-                                <div className={styles.buttonQuiz}>
-                                    <span> 詐騙測驗 </span>
-                                </div>
-                            </button>
-                        </Link>
+                        <button className={styles.buttonBtn} onClick={() => handleButtonClick('/website')}>
+                            <span> 立即檢測 </span>
+                        </button>
+                        <button className={styles.buttonBtnQuiz} onClick={() => handleButtonClick('/quiz')}>
+                            <div className={styles.buttonQuiz}>
+                                <span> 詐騙測驗 </span>
+                            </div>
+                        </button>
                     </div>
                     
                 </div>
