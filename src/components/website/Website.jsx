@@ -1,35 +1,122 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from './Website.module.css';
 import Navbar from '../navbar/Navbar';
 import { TXTCheckUpload } from './TXTCheck';
 import { MSGCheckInput } from './MSGCheck';
 import Statistics from '../statistics/Statistics';
+import { useAuth } from '../auth/AuthContext';
 
 function Website() {
   const [activeTab, setActiveTab] = useState("text");
   const [activeStep, setActiveStep] = useState(0);
   const [progressHeight, setProgressHeight] = useState(0);
   const [tabsWidth, setTabsWidth] = useState(0);
+  const { isLoggedIn, isLoading, requireAuth } = useAuth();
   const tabsRef = useRef(null);
   const stepRefs = [useRef(null), useRef(null), useRef(null)];
   const liHeights = useRef([]); // 用來記錄每個 li 的高度
   const statisticsRef = useRef(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // 滾動到 statisticsBox
+
   const scrollToStatistics = () => {
       if (statisticsRef.current) {
           statisticsRef.current.scrollIntoView({ behavior: "smooth" });
       }
   };
 
-  // 如果網址中帶有 #statisticsBox，自動滾動
+  useEffect(() => {
+    if (!isLoading) {
+      const redirectPath = requireAuth();
+      if (redirectPath) {
+        navigate(redirectPath, { replace: true });
+      }
+    }
+  }, [isLoading, isLoggedIn, navigate, requireAuth]);
+
+
   useEffect(() => {
       if (location.hash === "#statisticsBox") {
           scrollToStatistics();
       }
   }, [location]);
+
+  useEffect(() => {
+    const updateWidth = () => {
+      if (tabsRef.current) {
+        setTabsWidth(tabsRef.current.offsetWidth);
+      }
+    };
+
+    updateWidth(); 
+    window.addEventListener("resize", updateWidth);
+    return () => window.removeEventListener("resize", updateWidth);
+  }, []);
+
+  useEffect(() => {
+    const updateLiHeights = () => {
+      liHeights.current = stepRefs.map(ref => ref.current?.getBoundingClientRect().height || 0);
+    };
+
+    updateLiHeights();
+
+    const handleScroll = () => {
+      const stepsBox = document.querySelector(`.${styles.stepsBox}`);
+      if (!stepsBox) return;
+
+      const stepsBoxTop = stepsBox.offsetTop - window.scrollY * 0.5; 
+      const totalHeight = liHeights.current.reduce((acc, height) => acc + height, 0);
+      const currentScrollY = window.scrollY;
+
+      if (currentScrollY < stepsBoxTop) {
+        setProgressHeight(0); 
+        setActiveStep(0);
+        return;
+      }
+
+      const progress = ((currentScrollY - stepsBoxTop) / totalHeight) * 100;
+      setProgressHeight(Math.min(Math.max(progress, 0), 100)); // 限制範圍在 0~100%
+
+      let cumulativeHeight = stepsBoxTop;
+      for (let i = 0; i < liHeights.current.length; i++) {
+        cumulativeHeight += liHeights.current[i];
+        if (currentScrollY < cumulativeHeight) {
+          setActiveStep(i);
+          break;
+        }
+      }
+    };
+
+    window.addEventListener('scroll', handleScroll);
+    window.addEventListener('resize', updateLiHeights);
+
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('resize', updateLiHeights);
+    };
+  }, []);
+
+  // 如果還在檢查登入狀態，顯示載入畫面
+  if (isLoading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '18px'
+      }}>
+        檢查登入狀態中...
+      </div>
+    );
+  }
+
+  // 如果未登入，不渲染內容（會導轉到登入頁面）
+  if (!isLoggedIn) {
+    return null;
+  }
 
 
 const getTabStyle = () => {
@@ -44,61 +131,6 @@ const getTabStyle = () => {
         return { width: "0px", left: "0px" };
     }
   };
-
-  useEffect(() => {
-    const updateWidth = () => {
-      if (tabsRef.current) {
-        setTabsWidth(tabsRef.current.offsetWidth);
-      }
-    };
-
-    updateWidth(); // 初始化時執行一次
-    window.addEventListener("resize", updateWidth);
-    return () => window.removeEventListener("resize", updateWidth);
-  }, []);
-
-useEffect(() => {
-  const updateLiHeights = () => {
-    liHeights.current = stepRefs.map(ref => ref.current?.getBoundingClientRect().height || 0);
-  };
-
-  updateLiHeights();
-
-  const handleScroll = () => {
-    const stepsBox = document.querySelector(`.${styles.stepsBox}`);
-    if (!stepsBox) return;
-
-    const stepsBoxTop = stepsBox.offsetTop - window.scrollY * 0.5; 
-    const totalHeight = liHeights.current.reduce((acc, height) => acc + height, 0);
-    const currentScrollY = window.scrollY;
-
-    if (currentScrollY < stepsBoxTop) {
-      setProgressHeight(0); 
-      setActiveStep(0);
-      return;
-    }
-
-    const progress = ((currentScrollY - stepsBoxTop) / totalHeight) * 100;
-    setProgressHeight(Math.min(Math.max(progress, 0), 100)); // 限制範圍在 0~100%
-
-    let cumulativeHeight = stepsBoxTop;
-    for (let i = 0; i < liHeights.current.length; i++) {
-      cumulativeHeight += liHeights.current[i];
-      if (currentScrollY < cumulativeHeight) {
-        setActiveStep(i);
-        break;
-      }
-    }
-  };
-
-  window.addEventListener('scroll', handleScroll);
-  window.addEventListener('resize', updateLiHeights);
-
-  return () => {
-    window.removeEventListener('scroll', handleScroll);
-    window.removeEventListener('resize', updateLiHeights);
-  };
-}, []);
   
 
 
@@ -128,7 +160,6 @@ useEffect(() => {
               </div>
 
               
-              {/* 顯示對應組件的內容 */}
                   {activeTab === "text" && <MSGCheckInput />}
                   {activeTab === "file" && <TXTCheckUpload />}
 
