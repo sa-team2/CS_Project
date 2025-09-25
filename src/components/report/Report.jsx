@@ -1,10 +1,11 @@
 import { useState, useEffect, useRef } from 'react';
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import styles from './Website.module.css';
 import Navbar from '../navbar/Navbar';
 import { TXTReport } from './TXTReport';
 import { MSGReport } from './MSGReport';
 import Statistics from '../statistics/Statistics';
+import { useAuth } from '../auth/AuthContext';
 
 function Report() {
   const [activeTab, setActiveTab] = useState("text");
@@ -13,16 +14,28 @@ function Report() {
   const stepRefs = [useRef(null), useRef(null), useRef(null)];
   const liHeights = useRef([]); // 用來記錄每個 li 的高度
   const statisticsRef = useRef(null);
+  const { isLoggedIn, isLoading, requireAuth } = useAuth();
   const location = useLocation();
+  const navigate = useNavigate();
 
-  // 滾動到 statisticsBox
+
+  useEffect(() => {
+    if (!isLoading) {
+      const redirectPath = requireAuth();
+      if (redirectPath) {
+        navigate(redirectPath, { replace: true });
+      }
+    }
+  }, [isLoading, isLoggedIn, navigate, requireAuth]);
+
+
   const scrollToStatistics = () => {
       if (statisticsRef.current) {
           statisticsRef.current.scrollIntoView({ behavior: "smooth" });
       }
   };
 
-  // 如果網址中帶有 #statisticsBox，自動滾動
+
   useEffect(() => {
       if (location.hash === "#statisticsBox") {
           scrollToStatistics();
@@ -85,6 +98,24 @@ useEffect(() => {
 }, []);
   
 
+  if (isLoading) {
+    return (
+      <div style={{ 
+        display: 'flex', 
+        justifyContent: 'center', 
+        alignItems: 'center', 
+        height: '100vh',
+        fontSize: '18px'
+      }}>
+        檢查登入狀態中...
+      </div>
+    );
+  }
+
+
+  if (!isLoggedIn) {
+    return null;
+  }
 
   return (
     <>
@@ -107,7 +138,7 @@ useEffect(() => {
               </div>
 
               
-              {/* 顯示對應組件的內容 */}
+            
               <div className={styles.content}>
                     {activeTab === "text" && <MSGReport />}
                     {activeTab === "file" && <TXTReport />}
